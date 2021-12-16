@@ -1,0 +1,19 @@
+{
+  "name": "groupomania_backend",
+  "version": "1.0.0",
+  "description": "HTTP server for Groupomania => API REST ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChriZoizo/ChristopherBoyer_7_16122021.git"
+  },
+  "author": "Christopher Boyer chris.0101.dev@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChriZoizo/ChristopherBoyer_7_16122021/issues"
+  },
+  "homepage": "https://github.com/ChriZoizo/ChristopherBoyer_7_16122021#readme"
+}
