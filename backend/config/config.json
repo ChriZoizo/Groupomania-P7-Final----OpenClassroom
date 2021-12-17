@@ -9,14 +9,14 @@
   "test": {
     "username": "newuser",
     "password": "newpassword",
-    "database": "groupomaniadb_test",
+    "database": "groupomania_db_test",
     "host": "localhost",
     "dialect": "mysql"
   },
   "production": {
     "username": "newuser",
     "password": "newpassword",
-    "database": "groupomaniadb_prod",
+    "database": "groupomania_db_prod",
     "host": "localhost",
     "dialect": "mysql"
   }
