@@ -11,6 +11,7 @@ const Sequelize = require('sequelize') /* ORM de BDD */
 const dbConfig = require('./config/config.json') /* Constante objet JSON contenant les informations de connections a la BDD */
 
 const userRoutes = require('./routes/userRoutes')
+const postRoutes = require('./routes/postRoutes')
 
 dotenv.config() /* configuration de "dotenv" pour utiliser des variables d'environnement */
 
@@ -25,6 +26,7 @@ const sequelize = new Sequelize(
   }
 )
 
+/* Connection a la BDD Sequelize */
 sequelize
   .authenticate()
   .then(() => {
@@ -43,12 +45,7 @@ app.use(cors(corsOptions))
 /* Body-parser */
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-
-/* middleware permettant de verifier l'etats de la connectio au server */
-/* app.use((res, req, next) => {
-    if(connection.state === 'disconnected'){
-      return respond(null, { status: 'fail', message: 'server down'});
-    }})  */
+ 
 
 /*------------*/
 /* Fonction TESTING */
@@ -69,14 +66,15 @@ app.use(bodyParser.json())
   }) 
  */
 
-/*------------*/
-
 /* POUR TESTER MULTER PLUS TARD: creer un fichier html avec un formuilaire pour up des images */
 /* app.use(
     '/images',
     express.static(path.join(__dirname, 'images'))
   )  */
+/*------------*/
 
-  app.use('/users', userRoutes)
+
+  app.use('/api/user', userRoutes)
+    app.use('/api/post', postRoutes)  
 
 module.exports = app
