@@ -1,39 +1,48 @@
+/* Importation des modules */
 const express = require('express')
 const app = express()
-const cors = require('cors')
- const path = require('path') 
-const dotenv = require('dotenv') /* Dotenv permet de travailler avec des variables d'environnement */
-const mysql = require('mysql2')
-const bodyParser = require('body-parser')
+const cors = require('cors') /* Module pour resoudre probléme de cross origin */
+const path = require('path') /* Module facilitant les operation avec fichiers et chemins */
+const dotenv = require('dotenv') /* Module permet d'utiliser des variables d'environnement */
+const mysql = require('mysql2') /* module du language de la base de données */
+const bodyParser = require('body-parser') /* Module de parser les bodies des requêtes */
 
-const Sequelize = require('sequelize')
+const Sequelize = require('sequelize') /* ORM de BDD */
+const dbConfig = require('./config/config.json') /* Constante objet JSON contenant les informations de connections a la BDD */
 
-const sequelize = new Sequelize('groupomaniadb_dev', 'newuser', 'newpassword', {
-host: 'localhost',
-dialect: 'mysql'
-})
+const userRoutes = require('./routes/userRoutes')
+
+dotenv.config() /* configuration de "dotenv" pour utiliser des variables d'environnement */
+
+/* Connection a la base de données en créant une instance 'Sequelize' avex les infos du fichier .ENV ou du fichier config.json */
+const sequelize = new Sequelize(
+  process.env.DB_CONNECTION_DATABASE || dbConfig.development.database,
+  process.env.DB_CONNECTION_USER || dbConfig.development.username,
+  process.env.DB_CONNECTION_PASSWORD || dbConfig.development.password,
+  {
+    host: process.env.DB_CONNECTION_HOST || dbConfig.development.host,
+    dialect: 'mysql'
+  }
+)
 
 sequelize
-.authenticate()
-.then(()=> {
+  .authenticate()
+  .then(() => {
     console.log('connection etablis')
-})
-.catch(err => {
+  })
+  .catch(err => {
     console.error('Problémé de conneciton:', err)
-})
-
-console.log(Sequelize.Model)
-dotenv.config() /* configuration de "dotenv" pour utiliser des variables d'environnement */
+  })
 
 /* Configuration de "cors" pour eviter les erreurs de cross-origin */
 var corsOptions = {
-    origin: "*" /* A CHANGER QUAND FRONT SERVEUR OK */
+  origin: '*' /* A CHANGER QUAND FRONT SERVEUR OK */
 }
 app.use(cors(corsOptions))
 
 /* Body-parser */
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 
 /* middleware permettant de verifier l'etats de la connectio au server */
 /* app.use((res, req, next) => {
@@ -44,12 +53,10 @@ app.use(bodyParser.json());
 /*------------*/
 /* Fonction TESTING */
 
-  app.use((req,res, next) => {
-     console.log(Date.now())
+/* app.use((req, res, next) => {
+  console.log(Date.now())
   next()
-}) 
- 
-
+}) */
 
 /* Fonction test db user */
 
@@ -70,6 +77,6 @@ app.use(bodyParser.json());
     express.static(path.join(__dirname, 'images'))
   )  */
 
-
+  app.use('/users', userRoutes)
 
 module.exports = app

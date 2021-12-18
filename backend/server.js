@@ -1,6 +1,8 @@
 const http = require('http')
 const app = require('./app')
+const db = require('./models')
 
+ db.sequelize.sync() 
 
 /* Fonction permettant de renvoyer un numero de port valide.
 Prend un chiffre en paramétres (String ou Number) et renvoie un Number.
