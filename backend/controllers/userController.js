@@ -70,7 +70,7 @@ exports.login = (req, res, next) => {
 }
 
 
-
+/* A FINIR */
 exports.updateUserProfil = (req, res, next) => {
 console.log(req.headers)
     User.findByPk(req.headers.userid)
