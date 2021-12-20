@@ -7,7 +7,7 @@ const userController = require('../controllers/userController')
 router.get('/', userController.getAllUsers)
 router.post('/signup', userController.signup)
 router.post('/login', userController.login) /* Route 'login' en POST pour raison de securité (GET met en cache les données)  */
-router.get('/update', userController.updateUserProfil)
+router.put('/:id', userController.updateUserProfil)
 
 router.get('/find/:id', userController.getOneUser)
 router.get('/findByEmail/:email', userController.findByEmail)
