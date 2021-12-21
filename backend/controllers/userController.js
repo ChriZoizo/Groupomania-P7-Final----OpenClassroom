@@ -43,7 +43,6 @@ exports.login = (req, res, next) => {
   if (!email || !password) {
     res.status(400).json({ error: 'Paramétre(s) manquant(s)' })
   }
-
   User.findOne({ where: { email: email } })
     .then(user => {
       /* Check si le user a ete trouvé */
@@ -65,35 +64,27 @@ exports.login = (req, res, next) => {
             })
           })
         })
-        .catch(error => res.status(500).json({ error: 'A' }))
+        .catch(err => res.status(500).json({ error: 'Problem with bcrypt validation in user Login function' + err  }))
     })
-    .catch(error => res.status(500).json({ error: 'B' }))
+    .catch(err => res.status(500).json({ error: 'Problem in user Login function' + err }))
 }
 
 /* UPDATE PROFIL */
 exports.updateUserProfil = (req, res, next) => {
-  newUserDatas = { ...req.body }
-  const user = User.findByPk(req.params.id)  
-  /* RECUPERERA L'ID DU USER DANS LE HEADER DE LA REQUêTE a l'avenir (a voir avec Raoul) */
+ User.findByPk(req.params.id)
   .then(user => {
-  user.set(
-
-    { firstName: req.body.firstName },
-    { lastName: req.body.lastName },
-    { nickname: req.body.nickname },
-    { bio: req.body.bio },
-
-    /*       newUserDatas  <<==== Utilisable a la place de toutes les lignes ci dessus ? */
+      user.update(
+    { firstName: req.body.firstName ,
+     lastName: req.body.lastName ,
+     nickname: req.body.nickname ,
+     bio: req.body.bio }
   )
-    .then(user => {
-      user.save()
-    })})
-    .then(user => {
-      res.status(200).json({ user })
-    })
-    .catch(err => {
-      res.json({ error: err })
-    })
+})
+.then(user => res.status(200).json({ message: 'this is value ' + user }))
+.catch(err => res.json({ error: 'Problem with user updateProfil (PUT) function' + err}))
+
+
+
  /* -------------------------------- */
 /*  const user = User.findByPk(req.body.id)  
     if (req.file) {
@@ -139,15 +130,7 @@ exports.getOneUser = (req, res, next) => {
       res.json({ error: 'Request getOneUser have an issue ' + err })
     })
 }
-/* FIND ONE BY EMAIL
- ** Changer le req.body en req.params pour tester facilement ***/
-exports.findByEmail = (req, res, next) => {
-  User.findOne({ where: { email: req.body.email } }).then(user => {
-    res.json({ user }).catch(err => {
-      res.json({ error: 'Request findByEmail have an issue ' + err })
-    })
-  })
-}
+
 
 /* FIND BY NAME */
 exports.findByName = (req, res) => {

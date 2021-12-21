@@ -9,7 +9,6 @@ router.post('/login', userController.login) /* Route 'login' en POST pour raison
 
 router.get('/', userController.getAllUsers)
 router.get('/find/:id', userController.getOneUser)
-router.get('/findByEmail/:email', userController.findByEmail)
 router.get('/findByName', userController.findByName)
 
 router.put('/:id', userController.updateUserProfil)

@@ -8,7 +8,6 @@ puis le compare avec celui contenus dans la requête. Si ils sont identiques, la
 Si ils sont differents, renvois une erreurs.
 En cas d'erreurs lors de l'executions des instructions, renvoie une erreur 401 */
 module.exports = (req, res, next) => {
-    console.log('@@@@@@@@@@@@@@@@@@@@@')
     try {
         const token = req.headers.authorization.split(' ')[1] /* recupere le token dans le header (ne recupere pas "bearer") */
         const decodedToken = jwt.verify(token, process.env.ILOVESALT) /* enregistre le token decodé et verifié */
