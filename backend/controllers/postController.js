@@ -1,24 +1,31 @@
+/* Importation des modules */
 const models = require('../models')
-const Post = models.Post
-const User = models.User
-
-const reactionTable = models.LikePost
-
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
 
+/* Importation des Tables de la BDD */
+const User = models.User
+const Post = models.Post
+const reactionTable = models.LikePost
+
+/* --------------------------------- Fonctions C R U  ------------------------------------*/
+
+/* GET ALL POSTS (GET)
+*/
 exports.getAllPosts = (req, res) => {
   Post.findAll()
-    .then(posts => {
-      res.status(200).json({ posts })
+  .then(posts => {
+    res.status(200).json({ posts })
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: 'Problem with post getAll function or GET query' + err
     })
-    .catch(err => {
-      res
-        .status(500)
-        .json({ error: 'Problem with post getAll function or GET query' + err })
-    })
+  })
 }
 
+/* GET ONE POSTS (GET)
+*/
 exports.getOnePost = (req, res) => {
   Post.findByPk(req.params.id)
     .then(user => {
@@ -31,7 +38,8 @@ exports.getOnePost = (req, res) => {
     })
 }
 
-/* Fonction de creation de 'Post' (publication) */
+/* CREATE POST (POST)
+Fonction de creation de 'Post' (publication) */
 exports.createPost = (req, res) => {
   /* Utiliser le token pour l'id ? */
   /*   const postObject = JSON.parse(req.body.sauce)  !!! POSE PROBLéME*/
@@ -51,7 +59,8 @@ exports.createPost = (req, res) => {
     })
 }
 
-/* Fonction de modification de 'Post' (publication) */
+/* UPDATE POST (PUT)
+Fonction de modification de 'Post' (publication) */
 exports.updatePost = (req, res) => {
   Post.update(
     { postImageUrl: req.body.imageUrl },
@@ -63,6 +72,8 @@ exports.updatePost = (req, res) => {
     )
 }
 
+/* DELETE POST (DELETE)
+*/
 exports.deletePost = (req, res) => {
   Post.destroy({ where: { id: req.params.id } })
     .then(result => res.status(200).json({ result }))
@@ -71,7 +82,10 @@ exports.deletePost = (req, res) => {
     )
 }
 
-/* Fonction qui gére les 'Like' et 'Dislike' */
+/* --------------------------------- Fonctions Supplémentaires ------------------------------------*/
+
+/* LIKE OF DISLIKE POST
+ Fonction qui gére les 'Like' et 'Dislike' */
 exports.likeOrDislikePost = (req, res) => {
   const likeValue = req.body.value
   let alreadyReact = false
@@ -91,7 +105,6 @@ exports.likeOrDislikePost = (req, res) => {
       .then(() => {
         Post.findByPk(req.body.postId)
           .then(post => {
-            console.log('DECREASE')
             post.decrement('likeCounter')
           })
           .then(() =>
@@ -169,6 +182,8 @@ exports.likeOrDislikePost = (req, res) => {
   }
 }
 
+/* UPVOTE POST 
+*/
 exports.upvotePost = (req, res) => {
   const voteValue = req.body.voteValue
 

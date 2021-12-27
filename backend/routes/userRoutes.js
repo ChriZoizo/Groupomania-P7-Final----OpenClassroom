@@ -1,6 +1,5 @@
 /* Importation des modules */
 const express = require('express')
-/* const { user } = require('../../../../P7_boyer_christopher/backend/config/db.config') */
 const router = express.Router()
 const userController = require('../controllers/userController')
 

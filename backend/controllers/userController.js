@@ -1,11 +1,15 @@
+/* Importation des modules */
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const auth = require('../middlewares/auth')
 const models = require('../models')
+
+/* Importation de la table 'User' de la BDD */
 const User = models.User
 
-/* GET ALL USERS
+/* ---------------------------------- Fonctions C R U D --------------------------------------*/
+/* GET ALL USERS (GET)
 Fonction retournant tout les "Users" inscrit dans la BDD "User" */
 exports.getAllUsers = (req, res) => {
   User.findAll()
@@ -15,7 +19,20 @@ exports.getAllUsers = (req, res) => {
     .catch(err => res.status(500).json({ err }))
 }
 
-/* SIGNUP */
+/*GET ONE USER (GET)
+ */
+exports.getOneUser = (req, res, next) => {
+  User.findByPk(req.params.id)
+    .then(user => {
+      res.json({ user })
+    })
+    .catch(err => {
+      res.json({ error: 'Request getOneUser have an issue ' + err })
+    })
+}
+
+
+/* SIGNUP (POST) */
 exports.signup = (req, res, next) => {
   console.log(req.body)
   bcrypt /* hashage du mots de passe - Promise */
@@ -37,7 +54,8 @@ exports.signup = (req, res, next) => {
     })
 }
 
-/* LOGIN */
+/* LOGIN (POST)
+*/
 exports.login = (req, res, next) => {
   const email = req.body.email
   const password = req.body.password
@@ -80,7 +98,8 @@ exports.login = (req, res, next) => {
     )
 }
 
-/* UPDATE PROFIL */
+/* UPDATE PROFIL (PUT)
+*/
 exports.updateUserProfil = (req, res, next) => {
   User.findByPk(req.params.id)
     .then(user => {
@@ -129,6 +148,8 @@ exports.updateUserProfil = (req, res, next) => {
   /* const user = User.findByPk(req.body.id) */
 }
 
+/* DELETE USER (DELETE)
+*/
 exports.deleteUser = (req, res, next) => {
   User.findByPk(req.params.id)
     .then(user => {
@@ -142,17 +163,7 @@ exports.deleteUser = (req, res, next) => {
     })
 }
 
-/* FIND ONE BY ID */
-exports.getOneUser = (req, res, next) => {
-  User.findByPk(req.params.id)
-    .then(user => {
-      res.json({ user })
-    })
-    .catch(err => {
-      res.json({ error: 'Request getOneUser have an issue ' + err })
-    })
-}
-
+/* --------------------------------- Fonctions Supplémentaires ------------------------------------*/
 /* FIND BY NAME */
 exports.findByName = (req, res) => {
   User.findOne({ where: { firstName: req.params.firstName } }).then(user => {
