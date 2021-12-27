@@ -19,12 +19,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       firstName: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
         len: [2,40]
       },
       lastName: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
         len: [1, 40]
       },
@@ -37,17 +37,14 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
-      birthday: {
-        allowNull: true,
-        type: Sequelize.DATE
-      },
       profilImageUrl: {
         allowNull: true,
         type: Sequelize.STRING
       },
       isAdmin: {
         allowNull: false,
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         type: Sequelize.DATE

@@ -9,6 +9,22 @@ module.exports = {
       lastName: 'sagan',
       isAdmin: true
 
+    }]),
+    await queryInterface.bulkInsert('Users', [{
+      email: 'chris@gogole.com',
+      password: 'aaa',
+      firstName: 'chris',
+      lastName: 'boyr',
+      isAdmin: true
+
+    }]),
+    await queryInterface.bulkInsert('Users', [{
+      email: 'chriss@gogole.com',
+      password: 'aaaaa',
+      firstName: 'chris',
+      lastName: 'boyr',
+      isAdmin: true
+
     }])
     
     /**

@@ -2,7 +2,7 @@
   "development": {
     "username": "newuser",
     "password": "newpassword",
-    "database": "groupomaniadb_dev",
+    "database": "groupomaniadb__dev",
     "host": "localhost",
     "dialect": "mysql"
   },

@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false
         }
       })
+      this.hasMany(models.LikePost)
     }
   };
   Post.init({

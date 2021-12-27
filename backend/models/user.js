@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate (models) {
       this.hasMany(models.Post)
+      this.hasMany(models.LikePost)
     }
   }
   User.init(
@@ -19,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       lastName: DataTypes.STRING,
       nickname: DataTypes.STRING,
       bio: DataTypes.STRING,
-      brithday: DataTypes.DATE,
       profilImageUrl: DataTypes.STRING,
       isAdmin: DataTypes.BOOLEAN
     },

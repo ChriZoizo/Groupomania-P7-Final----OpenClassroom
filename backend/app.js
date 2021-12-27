@@ -35,6 +35,7 @@ sequelize
   .catch(err => {
     console.error('Problémé de conneciton:', err)
   })
+  
 
 /* Configuration de "cors" pour eviter les erreurs de cross-origin */
 var corsOptions = {

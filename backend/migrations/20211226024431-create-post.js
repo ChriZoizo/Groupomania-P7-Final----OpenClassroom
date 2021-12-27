@@ -17,19 +17,29 @@ module.exports = {
         }
       },
       content: {
-        type: Sequelize.STRING
+        allowNull: false,
+        type: Sequelize.STRING,
+        len: [2, 500]
       },
       postImageUrl: {
-        type: Sequelize.STRING
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: ""
       },
       likeCounter: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       dislikeCounter: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       voteCounter: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,

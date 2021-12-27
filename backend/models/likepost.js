@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class UserPostLike extends Model {
+  class LikePost extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -21,14 +21,14 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
-    
   };
-  UserPostLike.init({
+  LikePost.init({
     userId: DataTypes.INTEGER,
-    postId: DataTypes.INTEGER
+    postId: DataTypes.INTEGER,
+    value: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'UserPostLike',
+    modelName: 'LikePost',
   });
-  return UserPostLike;
+  return LikePost;
 };
