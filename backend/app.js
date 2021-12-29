@@ -12,6 +12,7 @@ const dbConfig = require('./config/config.json') /* Constante objet JSON contena
 
 const userRoutes = require('./routes/userRoutes')
 const postRoutes = require('./routes/postRoutes')
+const commentRoutes = require('./routes/commentRoutes')
 
 dotenv.config() /* configuration de "dotenv" pour utiliser des variables d'environnement */
 
@@ -35,7 +36,6 @@ sequelize
   .catch(err => {
     console.error('Problémé de conneciton:', err)
   })
-  
 
 /* Configuration de "cors" pour eviter les erreurs de cross-origin */
 var corsOptions = {
@@ -46,7 +46,6 @@ app.use(cors(corsOptions))
 /* Body-parser */
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
- 
 
 /*------------*/
 /* Fonction TESTING */
@@ -74,8 +73,8 @@ app.use(bodyParser.json())
   )  */
 /*------------*/
 
-
-  app.use('/api/user', userRoutes)
-    app.use('/api/post', postRoutes)  
+app.use('/api/user', userRoutes)
+app.use('/api/post', postRoutes)
+app.use('/api/comment', commentRoutes)
 
 module.exports = app
