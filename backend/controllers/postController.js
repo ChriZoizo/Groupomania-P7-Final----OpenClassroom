@@ -11,21 +11,21 @@ const reactionTable = models.LikePost
 /* --------------------------------- Fonctions C R U  ------------------------------------*/
 
 /* GET ALL POSTS (GET)
-*/
+ */
 exports.getAllPosts = (req, res) => {
   Post.findAll()
-  .then(posts => {
-    res.status(200).json({ posts })
-  })
-  .catch(err => {
-    res.status(500).json({
-      error: 'Problem with post getAll function or GET query' + err
+    .then(posts => {
+      res.status(200).json({ posts })
     })
-  })
+    .catch(err => {
+      res.status(500).json({
+        error: 'Problem with post getAll function or GET query' + err
+      })
+    })
 }
 
 /* GET ONE POSTS (GET)
-*/
+ */
 exports.getOnePost = (req, res) => {
   Post.findByPk(req.params.id)
     .then(user => {
@@ -63,7 +63,10 @@ exports.createPost = (req, res) => {
 Fonction de modification de 'Post' (publication) */
 exports.updatePost = (req, res) => {
   Post.update(
-    { postImageUrl: req.body.imageUrl },
+    {
+      postImageUrl: req.body.imageUrl,
+      content: req.body.content
+    },
     { where: { id: req.params.id } }
   )
     .then(post => res.status(200).json({ post }))
@@ -73,7 +76,7 @@ exports.updatePost = (req, res) => {
 }
 
 /* DELETE POST (DELETE)
-*/
+ */
 exports.deletePost = (req, res) => {
   Post.destroy({ where: { id: req.params.id } })
     .then(result => res.status(200).json({ result }))
@@ -105,7 +108,7 @@ exports.likeOrDislikePost = (req, res) => {
       .then(() => {
         Post.findByPk(req.body.postId)
           .then(post => {
-            post.decrement('likeCounter')
+            post.decrement('likeCounter') /* add dislike increment */
           })
           .then(() =>
             res.status(200).json({ message: 'Deleting like success !' })
@@ -182,8 +185,8 @@ exports.likeOrDislikePost = (req, res) => {
   }
 }
 
-/* UPVOTE POST 
-*/
+/* UPVOTE POST
+ */
 exports.upvotePost = (req, res) => {
   const voteValue = req.body.voteValue
 

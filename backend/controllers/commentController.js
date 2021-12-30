@@ -49,10 +49,9 @@ exports.createComment = (req, res) => {
 }
 
 exports.updateComment = (req, res) => {
-  Comment.update(
-    { content: req.body.content },
-
-    { where: { id: req.params.id } }
+  Comment.update({ 
+    content: req.body.content },
+      { where: { id: req.params.id } },
   )
     .then(comment => res.status(200).json({ comment }))
     .catch(err =>
