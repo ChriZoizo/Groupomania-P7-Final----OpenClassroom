@@ -1,52 +1,67 @@
-/* Importation des modules */
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
-const auth = require('../middlewares/auth')
+/* A - Importation des modules */
+const bcrypt = require('bcrypt') /* Module "Bcrypt" pour le hashage (securité) */
+const jwt = require('jsonwebtoken') /* Module "JsonWebToken" pour l'authentification (securité) */
+const dotenv = require('dotenv') /* NON UTILISé ! */
+const auth = require('../middlewares/auth') /* NON UTILISé ! */
 const models = require('../models')
 
-/* Importation de la table 'User' de la BDD */
-const User = models.User
+/* Importation BDD */
+const User =
+  models.User /* Table 'User' contenant les utilisateurs (voir migration et/ou models pour plus de details) */
 
 /* ---------------------------------- Fonctions C R U D --------------------------------------*/
-/* GET ALL USERS (GET)
-Fonction retournant tout les "Users" inscrit dans la BDD "User" */
+/* B - 1 - GET ALL USERS (GET)
+Fonction retournant tout les "Users" inscrit dans la BDD "User" en utilisant la methode "Sequelize" 'findAll' (Promise) */
 exports.getAllUsers = (req, res) => {
   User.findAll()
     .then(users => {
       res.status(200).json({ users })
     })
-    .catch(err => res.status(500).json({ err }))
+    .catch(err =>
+      /* Retourne un message + le message d'erreur en cas de propbléme */
+      res.status(500).json({
+        error: "Error in 'getAllUser' function in User controller : " + err
+      })
+    )
 }
 
-/*GET ONE USER (GET)
+/*B - 2 - GET ONE USER (GET)
+Fonction retournant UN 'User' selon son ID en utilisant la methode "Sequelize" 'findByPk' (Promise) 
+L'ID est recuperer dans le params de l'URL de la requête en utilisant la key 'id' 
  */
 exports.getOneUser = (req, res, next) => {
   User.findByPk(req.params.id)
     .then(user => {
       res.json({ user })
     })
-    .catch(err => {
-      res.json({ error: 'Request getOneUser have an issue ' + err })
-    })
+    .catch(err =>
+      /* Retourne un message + le message d'erreur en cas de propbléme */
+      {
+        res.json({ error: 'Request getOneUser have an issue ' + err })
+      }
+    )
 }
 
-
-/* SIGNUP (POST) */
+/* B - 3 - a - SIGNUP (= createUser) (POST) 
+Fonction permettant d'inscrire unnouveau 'user' dans la table 'User' de la base de données.Le mots de passe recuperé dans la 
+requête (key 'password') est hashé via "bcrypt" (Promise).PUIS utilise la methode "Sequelize" 'create' pour creé le 'user' dans la table. 
+*/
 exports.signup = (req, res, next) => {
-  console.log(req.body)
-  bcrypt /* hashage du mots de passe - Promise */
+  bcrypt /* hashage du mots de passe (recuperer dans le body de la requête (key 'password' )- Promise */
     .hash(req.body.password, 10)
     .then(hash => {
       const newUser = User.create({
+        /* l'email est recuperer dans le body de la requête (key 'email) */
         email: req.body.email,
+        /* le mot de passe est le hash resultant de la promise de 'bcrypt' */
         password: hash,
+        /* WORK IN PROGRESS */
         isAdmin: req.body.isAdmin
       })
         .then(user => {
-          res
-            .status(200)
-            .json({ message: /* 'User Signup was successfully created ' + */ user })
+          res.status(200).json({
+            message: 'User Signup was successfully created ' + user
+          })
         })
         .catch(err => {
           res.status(500).json({ error: 'PROBLEME ' + err })
@@ -54,8 +69,8 @@ exports.signup = (req, res, next) => {
     })
 }
 
-/* LOGIN (POST)
-*/
+/* B - 3 - b - LOGIN (POST)
+ */
 exports.login = (req, res, next) => {
   const email = req.body.email
   const password = req.body.password
@@ -85,12 +100,9 @@ exports.login = (req, res, next) => {
           })
         })
         .catch(err =>
-          res
-            .status(500)
-            .json({
-              error:
-                'Problem with bcrypt validation in user Login function' + err
-            })
+          res.status(500).json({
+            error: 'Problem with bcrypt validation in user Login function' + err
+          })
         )
     })
     .catch(err =>
@@ -99,7 +111,7 @@ exports.login = (req, res, next) => {
 }
 
 /* UPDATE PROFIL (PUT)
-*/
+ */
 exports.updateUserProfil = (req, res, next) => {
   User.findByPk(req.params.id)
     .then(user => {
@@ -149,7 +161,7 @@ exports.updateUserProfil = (req, res, next) => {
 }
 
 /* DELETE USER (DELETE)
-*/
+ */
 exports.deleteUser = (req, res, next) => {
   User.findByPk(req.params.id)
     .then(user => {
@@ -175,7 +187,6 @@ exports.findByName = (req, res) => {
       })
   })
 }
-
 
 /* ADMIN FUNCTION ??? */
 
