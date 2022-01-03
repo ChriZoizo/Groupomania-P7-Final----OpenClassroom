@@ -1,146 +1,146 @@
-
 <template>
-  <div class="login">
-    <div class="login_container">
-      <img
-        alt="Groupomania logo"
-        src="../assets/icon-left-font-monochrome-white.svg"
-      />
-      <form>
-        <div>
-          <input
-            v-model="email"
-            id="email"
-            type="email"
-            placeholder="  Adresse mail"
-            required
-          />
-        </div>
-        <div>
-          <input
-            v-model="name"
-            id="name"
-            placeholder="  Prénom"
-            required
-            v-if="mode == 'create'"
-          />
-        </div>
+  <div class="form-signup">
+    <h2>Formulaire d'inscription</h2>
+    <form v-on:submit.prevent="signup" id="form-signup">
+      <div class="form-group">
+        <label for="email">E-mail :</label>
         <input
-          v-model="lastname"
-          id="lastname"
-          placeholder="  Nom"
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="exemple@gogole.com"
+          v-model="inputForm.email"
           required
-          v-if="mode == 'create'"
         />
-        <div>
-          <input
-            v-model="password"
-            id="password"
-            type="password"
-            placeholder="  Mot de passe"
-            required
-          />
-        </div>
+      </div>
+      <div class="form-group">
+        <label for="password"> Mot de passe :</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="pasazertysvp"
+          v-model="inputForm.password"
+          required
+        />
+      </div>
+      <button>Inscription</button>
+    </form>
 
-        <div
-          class="invalid-login-info"
-          v-if="mode == 'login' && status == 'error_login'"
-        >
-          Adresse mail et/ou mot de passe invalide
-        </div>
-        <div
-          class="invalid-login-info"
-          v-if="mode == 'create' && status == 'error_create'"
-        >
-          Adresse mail déjà utilisé
-        </div>
-
-        <button
-          v-if="mode == 'login'"
-          :class="{ disabled__btn: !validated }"
-          @click.prevent="loginAccount()"
-        >
-          <span v-if="status == 'loading'">Connexion en cours...</span>
-          <span v-else>Connexion</span>
-        </button>
-        <button
-          v-if="mode == 'create'"
-          :class="{ disabled__btn: !validated }"
-          @click.prevent="createAccount()"
-        >
-          <span v-if="status == 'loading'">Inscription en cours...</span>
-          <span v-else>Inscription</span>
-        </button>
-      </form>
-      <p v-if="mode == 'login'">
-        Pas encore inscrit ?
-        <span class="createAccountBtn" @click="createAccountSwitch()"
-          >Créer un compte</span
-        >
-      </p>
-      <p v-if="mode == 'create'">
-        Déjà inscrit ?
-        <span class="createAccountBtn" @click="loginAccountSwitch()"
-          >Se connecter</span
-        >
-      </p>
-    </div>
   </div>
 </template>
 
+<script>
+export default {
+  name: "Signup",
 
+  data() {
+    return {
+      inputForm: {
+        email: "",
+        password: "",
+      },
+    };
+  },
+  methods: {
+    signup() {
+      let inputDatas = {
+        email: this.inputForm.email,
+        password: this.inputForm.password,
+      };
+      console.log(inputDatas);
+      let url = "http://localhost:3000/api/signup";
+      let options = {
+        method: "POST",
+        body: JSON.stringify(inputDatas),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(options);
+      fetch(url, options)
+        .then((res) => res.json())
+        .then((res) => {
+          /*if (res.userId && res.token){*/
+          localStorage.setItem("userId", res.userId);
+          localStorage.setItem("token", res.token);
+          console.log(localStorage);
+          this.$router.push("/");
+          alert(
+            " 🙋‍♂️ Bienvenue sur Groupomania Connect ! Connectez-vous dès à présent ! 🙋‍♀️"
+          );
 
-    <script>
-    export default {
-        name: 'FormLoginOrSignup',
-        props: {
-            message: String
-        }
-    }
-    </script>
-
+          /*} */
+        })
+        .catch((error) => console.log(error));
+    },
+  },
+};
+</script>
 
 <style lang="scss">
-.login {
-  // background-color: #ccffcc;
-  height: 100vh;
+form {
+  margin-top: 25px;
+}
+button {
+  width: 120px;
+  height: 40px;
+  border-radius: 30px;
+  padding: 10px;
+  margin: 15px 0px 25px 0px;
+  background-color: white;
+  color: #0c2444;
+  &:hover {
+    transform: scale(1.15);
+    opacity: 0.85;
+    -webkit-transition: 0.3s ease-in;
+    transition: 0.3s ease-out;
+  }
+}
+label {
+  display: block;
+  width: 25%;
+  text-align: right;
+  font-size: 1.5em;
+  margin: auto;
+}
+input,
+textarea {
+  width: 50%;
+  height: 3em;
+  box-sizing: border-box;
+  outline: none;
+  padding: 10px;
+  margin: auto;
+  &:focus {
+    border-color: white;
+    box-shadow: 0px 0px 20px #0c2444;
+  }
+}
+.form-group {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-bottom: 15px;
+  margin: auto;
+}
+
+.border-box {
+}
+
+.form-signup {
+  margin: auto;
+  width: 60%;
+  opacity: 0.95;
+  padding-top: 20px;
+  border-radius: 30px;
+  text-align: center;
+  margin-top: 20px;
   align-items: center;
-  .login_container {
-    width: 25rem;
-    background-color: #161b22;
-    border-radius: 1rem;
-    padding: 2rem;
-    img {
-      width: 10rem;
-      margin-bottom: 2rem;
-    }
-    .invalid-login-info {
-      margin: 1rem 0;
-    }
-    input,
-    button {
-      margin-bottom: 0.5rem;
-      width: 95%;
-      height: 2rem;
-      border-radius: 0.5rem;
-      border: none;
-      background-color: #3a3b3c;
-      color: #acb8c8;
-    }
-    button {
-      border: 2px #00b300 solid;
-      cursor: pointer;
-    }
-    .createAccountBtn {
-      color: blue;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    .disabled__btn {
-      border: 1px #9e9a9a solid;
-    }
+  & p,
+  h2 {
+    padding: 0 15px 0 15px;
   }
 }
 </style>
