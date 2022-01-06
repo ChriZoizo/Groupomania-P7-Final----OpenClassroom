@@ -1,13 +1,10 @@
 <template>
-              <div class="login">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <Formular message='VOILA TON MESSAGE'/>
-  </div>
+    <Formular />
 </template>
 
 
 <script>
-import Formular from '@/components/FormLoginOrSignup.vue'
+import Formular from '@/components/formSignup.vue'
 
 export default {
 name: 'Login',

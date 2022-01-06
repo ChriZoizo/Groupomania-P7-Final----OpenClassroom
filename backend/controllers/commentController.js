@@ -8,7 +8,7 @@ const Post = models.Post
 const reactionTable = models.LikePost
 const Comment = models.Comment
 
-/* --------------------------------- Fonctions C R U  ------------------------------------*/
+/* --------------------------------- Fonctions C R U D ------------------------------------*/
 
 exports.getAllComments = (req, res) => {
   Comment.findAll()
@@ -49,9 +49,11 @@ exports.createComment = (req, res) => {
 }
 
 exports.updateComment = (req, res) => {
-  Comment.update({ 
-    content: req.body.content },
-      { where: { id: req.params.id } },
+  Comment.update(
+    {
+      content: req.body.content
+    },
+    { where: { id: req.params.id } }
   )
     .then(comment => res.status(200).json({ comment }))
     .catch(err =>

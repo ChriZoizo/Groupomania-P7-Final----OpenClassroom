@@ -1,7 +1,7 @@
 <template>
   <div class="form-signup">
     <h2>Formulaire d'inscription</h2>
-    <form v-on:submit.prevent="signup" id="form-signup">
+    <form v-on:submit.prevent="signup" id="form-signup" method="post">
       <div class="form-group">
         <label for="email">E-mail :</label>
         <input
@@ -28,7 +28,6 @@
       </div>
       <button>Inscription</button>
     </form>
-
   </div>
 </template>
 
@@ -50,7 +49,12 @@ export default {
         email: this.inputForm.email,
         password: this.inputForm.password,
       };
-      console.log(inputDatas);
+      this.$axios
+        .post("http://localhost:3000/api/user/signup", inputDatas)
+        .then((res) => console.log("EXIOS POST OK", res))
+        .catch((err) => console.log(err));
+      /*       console.log(inputDatas);
+      console.log(test)
       let url = "http://localhost:3000/api/signup";
       let options = {
         method: "POST",
@@ -62,19 +66,8 @@ export default {
       console.log(options);
       fetch(url, options)
         .then((res) => res.json())
-        .then((res) => {
-          /*if (res.userId && res.token){*/
-          localStorage.setItem("userId", res.userId);
-          localStorage.setItem("token", res.token);
-          console.log(localStorage);
-          this.$router.push("/");
-          alert(
-            " 🙋‍♂️ Bienvenue sur Groupomania Connect ! Connectez-vous dès à présent ! 🙋‍♀️"
-          );
 
-          /*} */
-        })
-        .catch((error) => console.log(error));
+        .catch((err) => console.log(err)); */
     },
   },
 };
@@ -92,12 +85,12 @@ button {
   margin: 15px 0px 25px 0px;
   background-color: white;
   color: #0c2444;
-  &:hover {
+  /*   &:hover {
     transform: scale(1.15);
     opacity: 0.85;
     -webkit-transition: 0.3s ease-in;
     transition: 0.3s ease-out;
-  }
+  } */
 }
 label {
   display: block;
@@ -114,10 +107,10 @@ textarea {
   outline: none;
   padding: 10px;
   margin: auto;
-  &:focus {
+  /*   &:focus {
     border-color: white;
     box-shadow: 0px 0px 20px #0c2444;
-  }
+  } */
 }
 .form-group {
   display: flex;

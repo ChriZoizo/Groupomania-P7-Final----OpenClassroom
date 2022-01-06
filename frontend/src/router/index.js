@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 import Home from '../views/Home.vue'
-import FormLoginOrSignup from '../views/Login.vue'
+import formSignup from '../views/Login.vue'
 
 const routes = [
   {
@@ -18,9 +18,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/formular',
-    name: 'FormLoginOrSignup',
-    component: FormLoginOrSignup
+    path: '/signup',
+    name: 'formSignup',
+    component: formSignup
   }
 ]
 
