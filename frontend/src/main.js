@@ -1,9 +1,9 @@
-import { createApp } from 'vue' 
+/* import { createApp } from 'vue' */
 import App from './App.vue'
-import Vue from 'vue'
 import router from './router'
 import store from './store'
 import 'es6-promise/auto'
+import Vue from 'vue'
 /* import Vuex from 'vuex' */
 
 /* -- FONT AWESOME -- */
@@ -12,16 +12,16 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome' */
 
 /* -- CREATION APP VUE -- */
-createApp(App)
+/* createApp(App)
   .use(store)
   .use(router)
-  .mount('#app') 
-/* new Vue({
+  .mount('#app') */
+new Vue({
   router,
   store,
   mode: 'history',
   render: h => h(App)
-}).$mount('#app') */
+}).$mount('#app')
 
 Vue.config.productionTip = false
 
