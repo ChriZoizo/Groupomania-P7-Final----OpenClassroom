@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 import Home from '../views/Home.vue'
-import formSignup from '../views/Login.vue'
+import formSignup from '../views/Signup.vue'
+import formLogin from '../views/Login.vue'
 
 const routes = [
   {
@@ -19,8 +20,13 @@ const routes = [
   },
   {
     path: '/signup',
-    name: 'formSignup',
+    name: 'Signup',
     component: formSignup
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: formLogin
   }
 ]
 

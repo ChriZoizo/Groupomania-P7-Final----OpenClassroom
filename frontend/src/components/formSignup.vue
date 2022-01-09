@@ -21,7 +21,7 @@
           id="password"
           name="password"
           class="form-control"
-          placeholder="pasazertysvp"
+          placeholder="exemple: pasazertysvp"
           v-model="inputForm.password"
           required
         />
@@ -49,25 +49,10 @@ export default {
         email: this.inputForm.email,
         password: this.inputForm.password,
       };
-      this.$axios
+      this.axios
         .post("http://localhost:3000/api/user/signup", inputDatas)
-        .then((res) => console.log("EXIOS POST OK", res))
+        .then((res) => console.log("Utilisateur enregistré dans la BDD ! ", res))
         .catch((err) => console.log(err));
-      /*       console.log(inputDatas);
-      console.log(test)
-      let url = "http://localhost:3000/api/signup";
-      let options = {
-        method: "POST",
-        body: JSON.stringify(inputDatas),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      console.log(options);
-      fetch(url, options)
-        .then((res) => res.json())
-
-        .catch((err) => console.log(err)); */
     },
   },
 };
@@ -85,12 +70,12 @@ button {
   margin: 15px 0px 25px 0px;
   background-color: white;
   color: #0c2444;
-  /*   &:hover {
+     &:hover {
     transform: scale(1.15);
     opacity: 0.85;
     -webkit-transition: 0.3s ease-in;
     transition: 0.3s ease-out;
-  } */
+  } 
 }
 label {
   display: block;
@@ -107,10 +92,10 @@ textarea {
   outline: none;
   padding: 10px;
   margin: auto;
-  /*   &:focus {
+     &:focus {
     border-color: white;
     box-shadow: 0px 0px 20px #0c2444;
-  } */
+  } 
 }
 .form-group {
   display: flex;

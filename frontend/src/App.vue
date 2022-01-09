@@ -1,11 +1,18 @@
 <template>
   <div id="nav">
-    <router-link to="/signup">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/formular">FORM</router-link>
+    <Navbar />
   <router-view/>
   </div>
 </template>
+
+<script>
+import Navbar from '@/components/navbar.vue'
+
+export default {
+  components: { Navbar}
+}
+</script>
+
 
 <style lang="scss">
 #app {
@@ -14,7 +21,6 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background-color: aqua;
 }
 
 #nav {

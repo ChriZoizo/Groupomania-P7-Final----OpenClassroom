@@ -1,10 +1,10 @@
-/* import { createApp } from 'vue' */
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+/* import store from './store' !!! VUEX*/
 import 'es6-promise/auto'
-import Vue from 'vue'
-/* import Vuex from 'vuex' */
+import axios from 'axios'
+/* const axios = require('axios').default  */
 
 /* -- FONT AWESOME -- */
 /* import { library } from '@fortawesome/fontawesome-svg-core'
@@ -12,20 +12,13 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome' */
 
 /* -- CREATION APP VUE -- */
-/* createApp(App)
-  .use(store)
+const app = createApp(App)
   .use(router)
-  .mount('#app') */
-new Vue({
-  router,
-  store,
-  mode: 'history',
-  render: h => h(App)
-}).$mount('#app')
+/*   .use(store)  !!! VUEX */
 
-Vue.config.productionTip = false
+app.config.globalProperties.axios = axios
+/* Vue.config.productionTip = false */
+app.mount('#app')
 
-const axios = require('axios').default
-
-Vue.prototype.$axios = axios
+/* Vue.prototype.$axios = axios */
 /* Vue.component('font-awesome-icon', FontAwesomeIcon) */
