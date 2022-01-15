@@ -66,8 +66,14 @@ app.use(bodyParser.json())
   }) 
  */
 
+
+  /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */ 
+    /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */ 
+      /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */ 
+
+
 /* POUR TESTER MULTER PLUS TARD: creer un fichier html avec un formuilaire pour up des images */
-const multer = require('multer')
+/*  const multer = require('multer')
 
 const MIME_TYPES = {
     'images/jpg': 'jpg',
@@ -75,14 +81,14 @@ const MIME_TYPES = {
     'images/png': 'png',
     'images/gif': 'gif'
 }
-
+  */
 /* Fonction permettant de definir le lieux de stockage et le nom des images uploader dans la BDD 
 Le nom des images est composé du nom d'origine (les ' ' remplacés par des '_') + de la date
 via 'Date.now()'*/
-const storage = multer.diskStorage({
+/*  const storage = multer.diskStorage({
 
     destination: (req, file, callback) => {
-        callback(null, 'user_upload/profil_images')
+        callback(null, 'user_upload/posts_images')
     },
     filename: (req, file, callback) => {
         const name = file.originalname.split(' ').join('_')
@@ -91,22 +97,25 @@ const storage = multer.diskStorage({
 })
 
 var upload = multer({ storage: storage }) 
-
+  */
 app.use(
     '/images',
     express.static(path.join(__dirname, 'images'))
   )  
 
-  app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
+/*    app.post('/api/post', upload.single('fileAttachment'), (req, res, next) => {
     const file = req.file
     if (!file) {
-      const error = new Error('Please upload a file')
+      const error = new Error('Please upload a file 2')
       error.httpStatusCode = 400
       return next(error)
     }
       res.send(file)
    
-  })
+  })  */
+    /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */ 
+      /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */ 
+        /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */   /* MULTER */ 
 /*------------*/
 
 app.use('/api/user', userRoutes)

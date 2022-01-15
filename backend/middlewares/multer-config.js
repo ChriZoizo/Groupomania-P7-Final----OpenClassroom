@@ -18,11 +18,11 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, callback) => {
         const name = file.originalname.split(' ').join('_')
-        callback(null, name + Date.now() + '.')
+        callback(null, Date.now() + '.' + name )
     }
 })
 
 
 /* exportation des fonctions 
 Contenant aussi la fonction pour enregistrer l'image dans le dossier images*/
-module.exports = multer({storage: storage}).single('image')
+module.exports = multer({storage: storage}).single('fileAttachment')

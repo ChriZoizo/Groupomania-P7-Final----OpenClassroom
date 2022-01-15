@@ -17,12 +17,15 @@
     <label for="postImg">Ajouter une image/GIF</label> :
     <input
       type="file"
-      name="postImageUrl" class="form-control" accept=".jpeg, .png, .jpg .gif"
-      id="postImageUrl"
-      v-on:change="loadAttachment"
+      name="fileAttachment" class="form-control" accept=".jpeg, .png, .jpg .gif"
+      v-on:change="loadAttachment($event)"
     /></div>
          <input type="submit" value="Upload le fichier" />
 <!--     <button>Publier !</button> -->
+  </form>
+
+  <form>
+    <input v-on:change="test" type="text" value="test" />
   </form>
 </div>
   <!-- MULTIPLE FILES -->
@@ -38,27 +41,36 @@ export default {
     return {
       postCreateInput: {
         content: "",
-        postImageUrl: "",
-        userId: 1,
+/*         postImageUrl: "", */
+        UserId: 1,
+        file: ""
       },
     };
   },
   methods: {
     loadAttachment(event) {
-      console.log(event.target.files[0].name)
+      console.log(event.target.files[0])
 
        this.postCreateInput.postImageUrl= event.target.files[0].name; 
+       this.postCreateInput.file=event.target.files[0]
     },
+
+    test() {console.log(this.postCreateInput)},
 onSubmit() {
-      let inputsDatas = {
+/*       let inputsDatas = {
         content: this.postCreateInput.content,
         postImageUrl: this.postCreateInput.postImageUrl,
         userId: this.postCreateInput.userId,
-      };
-      inputsDatas.append('file', this.postImageUrl)
+        file: this.postCreateInput.file
+      }; */
+      const formData = new FormData();
+      formData.append("content", this.postCreateInput.content)
+      formData.append("fileAttachment", this.postCreateInput.file)
+      formData.append("UserId", this.postCreateInput.UserId)
+
       console.log("blabla")
       this.axios
-        .post("http://localhost:3000/api/post", inputsDatas)
+        .post("http://localhost:3000/api/post", formData)
         .then((res) => console.log("Publication créé !", res));
 }
 /*     createPost() {

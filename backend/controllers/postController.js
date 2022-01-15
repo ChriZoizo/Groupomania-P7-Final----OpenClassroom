@@ -42,30 +42,32 @@ exports.getOnePost = (req, res) => {
 Fonction de creation de 'Post' (publication) */
 exports.createPost = (req, res) => {
   let newPost = {}
-  console.log(req.file)
+/*   console.log(req.body.UserId) */
   if (req.file) {
+    console.log('File attached...')
     newPost = {
-      ...JSON.parse(req.body),
+      ...req.body,
       postImageUrl: `${req.protocol}://${req.get('host')}/images/${
         req.file.filename
       }`
     }
   } else {
-    newPost = { ...req.body}
+    console.log('no file attached to request !')
+    newPost = {
+      ...req.body
+    }
   }
-  console.log(req.body)
-  Post.create({    UserId: newPost.UserId,
-    content: newPost.content,
-       postImageUrl: `${req.protocol}://${req.get('host')}/images/${
-    req.file.filename
-  }`})
-  .then(res => res.status(200).json({ message: 'Publication créé avec succés !'}))
-  .catch(err => {
-    res.status(500).json({ error: 'PROBLEME ' + err })
-  })
+  console.log("request infos OK. Create function begin ..." + newPost)
+  Post.create(newPost)
+    .then(post =>
+      res.status(200).json({ message: 'Publication créé avec succés !' + post })
+    )
+    .catch(err => {
+      res.status(500).json(console.log(`ERREUR !${err}`) /* { error: 'PROBLEME ' + err } */)
+    })
   /* Utiliser le token pour l'id  */
   /*   const postObject = JSON.parse(req.body.sauce)  !!! POSE PROBLéME*/
-/*   const newPost = Post.create({
+  /*   const newPost = Post.create({
     UserId: req.body.userId,
     content: req.body.content,
        postImageUrl: `${req.protocol}://${req.get('host')}/images/${
@@ -83,10 +85,24 @@ exports.createPost = (req, res) => {
 /* UPDATE POST (PUT)
 Fonction de modification de 'Post' (publication) */
 exports.updatePost = (req, res) => {
+  postUpdated = {}
+  if (req.file) {
+    console.log('File attached...')
+    postUpdated = {
+      ...req.body,
+      postImageUrl: `${req.protocol}://${req.get('host')}/images/${
+        req.file.filename
+      }`
+    }
+  } else {
+    postUpdated = {
+      ...req.body
+    }
+  }
   Post.update(
     {
-      postImageUrl: req.body.imageUrl,
-      content: req.body.content
+      postImageUrl: postUpdated.imageUrl,
+      content: postUpdated.content
     },
     { where: { id: req.params.id } }
   )
