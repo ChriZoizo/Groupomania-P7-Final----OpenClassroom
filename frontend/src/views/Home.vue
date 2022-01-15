@@ -1,13 +1,19 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <p>@@@@@@@@@@@@@@</p>
+    <HelloWorld msg=">@@@@@@@@@@@@@@</"/>
+    <PostList/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
+import PostList from '@/components/postsList.vue'
 
+export default {
+  name : "Home",
+  components: {
+    PostList
+  }
+}
 
 </script>

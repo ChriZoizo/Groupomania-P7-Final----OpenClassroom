@@ -94,7 +94,7 @@ export default {
       };
       this.axios
         .post("http://localhost:3000/api/user/login", inputDatas)
-        .then((res) => console.log("Utilisateur enregistré dans la BDD ! ", res))
+        .then((res) => console.log("Utilisateur connecté ! ", res))
         .catch((err) => console.log(err));
     },
   },
@@ -147,8 +147,8 @@ textarea {
   margin: auto;
 }
 
-.border-box {
-}
+/* .border-box {
+} */
 
 .formular {
   margin: auto;

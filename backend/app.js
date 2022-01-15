@@ -67,10 +67,46 @@ app.use(bodyParser.json())
  */
 
 /* POUR TESTER MULTER PLUS TARD: creer un fichier html avec un formuilaire pour up des images */
-/* app.use(
+const multer = require('multer')
+
+const MIME_TYPES = {
+    'images/jpg': 'jpg',
+    'images/jpeg': 'jpeg',
+    'images/png': 'png',
+    'images/gif': 'gif'
+}
+
+/* Fonction permettant de definir le lieux de stockage et le nom des images uploader dans la BDD 
+Le nom des images est composé du nom d'origine (les ' ' remplacés par des '_') + de la date
+via 'Date.now()'*/
+const storage = multer.diskStorage({
+
+    destination: (req, file, callback) => {
+        callback(null, 'user_upload/profil_images')
+    },
+    filename: (req, file, callback) => {
+        const name = file.originalname.split(' ').join('_')
+        callback(null, name + Date.now() + '.')
+    }
+})
+
+var upload = multer({ storage: storage }) 
+
+app.use(
     '/images',
     express.static(path.join(__dirname, 'images'))
-  )  */
+  )  
+
+  app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
+    const file = req.file
+    if (!file) {
+      const error = new Error('Please upload a file')
+      error.httpStatusCode = 400
+      return next(error)
+    }
+      res.send(file)
+   
+  })
 /*------------*/
 
 app.use('/api/user', userRoutes)

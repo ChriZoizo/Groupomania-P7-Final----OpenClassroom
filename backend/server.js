@@ -62,6 +62,8 @@ const normalizePort = val => {
     res.sendFile(__dirname + '/index.html');
    
   });
+
+  
   
   /* app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
     const file = req.file

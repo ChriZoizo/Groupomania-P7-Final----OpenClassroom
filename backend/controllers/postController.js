@@ -41,22 +41,43 @@ exports.getOnePost = (req, res) => {
 /* CREATE POST (POST)
 Fonction de creation de 'Post' (publication) */
 exports.createPost = (req, res) => {
-  /* Utiliser le token pour l'id ? */
+  let newPost = {}
+  console.log(req.file)
+  if (req.file) {
+    newPost = {
+      ...JSON.parse(req.body),
+      postImageUrl: `${req.protocol}://${req.get('host')}/images/${
+        req.file.filename
+      }`
+    }
+  } else {
+    newPost = { ...req.body}
+  }
+  console.log(req.body)
+  Post.create({    UserId: newPost.UserId,
+    content: newPost.content,
+       postImageUrl: `${req.protocol}://${req.get('host')}/images/${
+    req.file.filename
+  }`})
+  .then(res => res.status(200).json({ message: 'Publication créé avec succés !'}))
+  .catch(err => {
+    res.status(500).json({ error: 'PROBLEME ' + err })
+  })
+  /* Utiliser le token pour l'id  */
   /*   const postObject = JSON.parse(req.body.sauce)  !!! POSE PROBLéME*/
-  const newPost = Post.create({
+/*   const newPost = Post.create({
     UserId: req.body.userId,
     content: req.body.content,
-    /*   postImageUrl: `${req.protocol}://${req.get('host')}/images/${
+       postImageUrl: `${req.protocol}://${req.get('host')}/images/${
     req.file.filename
-  }`, */
-    postImageUrl: req.body.postImageUrl
+  }`
   })
     .then(post => {
       res.status(200).json(post)
     })
     .catch(err => {
       res.json({ error: 'Problem with posts POST request' + err })
-    })
+    }) */
 }
 
 /* UPDATE POST (PUT)

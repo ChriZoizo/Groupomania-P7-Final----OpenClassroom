@@ -14,13 +14,14 @@ via 'Date.now()'*/
 const storage = multer.diskStorage({
 
     destination: (req, file, callback) => {
-        callback(null, 'user_upload/profil_images')
+        callback(null, 'user_upload/posts_images')
     },
     filename: (req, file, callback) => {
         const name = file.originalname.split(' ').join('_')
         callback(null, name + Date.now() + '.')
     }
 })
+
 
 /* exportation des fonctions 
 Contenant aussi la fonction pour enregistrer l'image dans le dossier images*/

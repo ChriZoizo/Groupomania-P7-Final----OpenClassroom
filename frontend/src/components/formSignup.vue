@@ -104,8 +104,8 @@ textarea {
   margin: auto;
 }
 
-.border-box {
-}
+/* .border-box {
+} */
 
 .form-signup {
   margin: auto;

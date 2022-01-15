@@ -1,11 +1,12 @@
 /* A - Importation des modules */
 const bcrypt = require('bcrypt') /* Module "Bcrypt" pour le hashage (securité) */
 const jwt = require('jsonwebtoken') /* Module "JsonWebToken" pour l'authentification (securité) */
+
 const dotenv = require('dotenv') /* NON UTILISé ! */
 const auth = require('../middlewares/auth') /* NON UTILISé ! */
-const models = require('../models')
 
 /* Importation BDD */
+const models = require('../models')
 const User =
   models.User /* Table 'User' contenant les utilisateurs (voir migration et/ou models pour plus de details) */
 
@@ -29,24 +30,22 @@ exports.getAllUsers = (req, res) => {
 Fonction retournant UN 'User' selon son ID en utilisant la methode "Sequelize" 'findByPk' (Promise) 
 L'ID est recuperer dans le params de l'URL de la requête en utilisant la key 'id' 
  */
-exports.getOneUser = (req, res, next) => {
+exports.getOneUser = (req, res) => {
   User.findByPk(req.params.id)
     .then(user => {
-      res.json({ user })
+      res.statu(200).json({ user })
     })
-    .catch(err =>
-      /* Retourne un message + le message d'erreur en cas de propbléme */
-      {
-        res.json({ error: 'Request getOneUser have an issue ' + err })
-      }
-    )
+    /* Retourne un message + le message d'erreur en cas de propbléme */
+    .catch(err => {
+      res.status(500).json({ error: 'Request getOneUser have an issue ' + err })
+    })
 }
 
 /* B - 3 - a - SIGNUP (= createUser) (POST) 
 Fonction permettant d'inscrire unnouveau 'user' dans la table 'User' de la base de données.Le mots de passe recuperé dans la 
 requête (key 'password') est hashé via "bcrypt" (Promise).PUIS utilise la methode "Sequelize" 'create' pour creé le 'user' dans la table. 
 */
-exports.signup = (req, res, next) => {
+exports.signup = (req, res) => {
   bcrypt /* hashage du mots de passe (recuperer dans le body de la requête (key 'password' )- Promise */
     .hash(req.body.password, 10)
     .then(hash => {
@@ -60,7 +59,7 @@ exports.signup = (req, res, next) => {
       })
         .then(user => {
           res.status(200).json({
-            message: 'User Signup was successfully created ' + user
+            message: 'User Signup was successfully created ! :'
           })
         })
         .catch(err => {
@@ -71,7 +70,7 @@ exports.signup = (req, res, next) => {
 
 /* B - 3 - b - LOGIN (POST)
  */
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
   const email = req.body.email
   const password = req.body.password
   /* Check la presence de l'email et pass */
@@ -112,57 +111,29 @@ exports.login = (req, res, next) => {
 
 /* UPDATE PROFIL (PUT)
  */
-exports.updateUserProfil = (req, res, next) => {
-  User.findByPk(req.params.id)
+exports.updateUserProfil = (req, res) => {
+  User.update(
+    {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      nickname: req.body.nickname,
+      bio: req.body.bio
+    },
+    { where: { id: req.params.id } }
+  )
     .then(user => {
-      user.update({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        nickname: req.body.nickname,
-        bio: req.body.bio
-      })
+      res.status(200).json({ message: 'Informations utilisateur modifié !' })
     })
-    .then(val =>
-      res.status(200).json({ message: 'User profil has been updated ' + val })
-    )
-    .catch(err =>
-      res.json({ error: 'Problem with user updateProfil (PUT) function' + err })
-    )
-
-  /* -------------------------------- */
-  /*  const user = User.findByPk(req.body.id)  
-    if (req.file) {
-    const imageToDelete = user.profilImageUrl.split('/user_upload/profil_images')[1]
-    fs.unlink('user_upload/profil_images' + imageToDelete, function(){})
-    const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    user.set(
-      { where: req.body.id },
-      { firstName: req.body.firstName },
-      { lastName: req.body.lastName },
-      { nickname: req.body.nickname },
-      { bio: req.body.bio },
-      { profilImageUrl: }
-    )} else {
-      user.set
-    }
-      .then(user => {
-        user.save()
-      })
-      .then(user => {
-        res.status(200).json({ user })
-      })
-      .catch(err => {
-        res.json({ err })
-      })
-   */
-
-  /* -------------------------------- */
-  /* const user = User.findByPk(req.body.id) */
+    .catch(err => {
+      res.json({ error: 'Problem in updateUserProfil' + err })
+    })
 }
+
+/* -------------------------------- */
 
 /* DELETE USER (DELETE)
  */
-exports.deleteUser = (req, res, next) => {
+exports.deleteUser = (req, res) => {
   User.findByPk(req.params.id)
     .then(user => {
       user.destroy()

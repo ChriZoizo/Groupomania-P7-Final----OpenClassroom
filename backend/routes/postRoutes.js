@@ -1,13 +1,17 @@
 /* Importation des modules */
 const express = require('express')
 const router = express.Router()
+
+const auth = require('../middlewares/auth')
+const multer = require('../middlewares/multer-config')
+
 const postController = require('../controllers/postController')
 
 router.get('/', postController.getAllPosts)
 router.get('/:id', postController.getOnePost)
 
-router.post('/', postController.createPost)
-router.put('/:id', postController.updatePost)
+router.post('/', multer, postController.createPost)
+router.put('/:id', multer, postController.updatePost)
 
 router.delete('/:id', postController.deletePost)
 
