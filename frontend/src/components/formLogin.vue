@@ -1,7 +1,7 @@
 <template>
   <div class="formular">
-      <div class="form-login">
-    <h2>Connexion</h2>
+    <button v-on:click="displayLoginForm = !displayLoginForm">Connexion</button>
+      <div v-show="displayLoginForm" class="form-login">
     <form v-on:submit.prevent="login" id="form-login" method="post">
       <div class="form-group">
         <label for="email">E-mail :</label>
@@ -27,11 +27,11 @@
           required
         />
       </div>
-      <button>Inscription</button>
+      <button>Connexion</button>
     </form>
     </div>
-      <div class="form-signup">
-    <h2>Formulaire d'inscription</h2>
+    <button  v-on:click="displaySignupForm = !displaySignupForm">Formulaire d'inscription</button>
+      <div v-show="displaySignupForm" class="form-signup">
     <form v-on:submit.prevent="signup" id="form-signup" method="post">
       <div class="form-group">
         <label for="email">E-mail :</label>
@@ -70,6 +70,10 @@ export default {
 
   data() {
     return {
+      displayLoginForm: false,
+      displaySignupForm: false,
+
+
       inputForm: {
         email: "",
         password: "",
@@ -94,7 +98,9 @@ export default {
       };
       this.axios
         .post("http://localhost:3000/api/user/login", inputDatas)
-        .then((res) => console.log("Utilisateur connecté ! ", res))
+        .then((res) => {
+          this.signed = true;
+          console.log("Utilisateur connecté ! ", res)})
         .catch((err) => console.log(err));
     },
   },

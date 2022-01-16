@@ -1,18 +1,82 @@
 <template>
   <div id="view">
     <Navbar />
-  <router-view/>
+    <div v-if="signed != true">
+    <Login /> blablabla</div>
+    <div>
+    <router-view /></div>
+    <button v-on:click="getUser()"></button>
+    <!-- Bouton de TEST !! -->
+    <button v-on:click="test()"></button>
   </div>
 </template>
 
 <script>
-import Navbar from '@/components/navbar.vue'
+import Navbar from "@/components/navbar.vue";
+import Login from "@/views/Login.vue";
 
 export default {
-  components: { Navbar}
-}
-</script>
+  components: { Navbar, Login },
 
+  data() {
+    return {
+      signed: false,
+
+      user: {
+        userId: {
+          type: Number,
+        },
+        email: {
+          type: String,
+        },
+        fistName: {
+          type: String,
+        },
+        lastName: {
+          type: String,
+        },
+        bio: {
+          type: String,
+        },
+        isAdmin: {
+          type: Boolean,
+        },
+      },
+
+      allPosts: {
+        type: Array,
+      },
+    };
+  },
+
+  mounted() {
+    this.getUser();
+  },
+
+  methods: {
+    getUser() {
+      this.axios.get(`http://localhost:3000/api/user/1`).then((userFind) => {
+        const datas = userFind.data.user;
+        (this.user.userId = datas.id),
+          (this.user.email = datas.email),
+          (this.user.firstName = datas.firstName),
+          (this.user.lastName = datas.lastName),
+          (this.user.bio = datas.bio),
+          (this.user.isAdmin = datas.isAdmin);
+      });
+      /* ADD CATCH !!!!!*/
+    },
+    getAllPosts() {
+      this.axios.get();
+    },
+
+    /* Fonction de TEST !!!!!!!!!! */
+    test() {
+      console.log(this.post);
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 #app {

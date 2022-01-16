@@ -33,7 +33,7 @@ L'ID est recuperer dans le params de l'URL de la requête en utilisant la key 'i
 exports.getOneUser = (req, res) => {
   User.findByPk(req.params.id)
     .then(user => {
-      res.statu(200).json({ user })
+      res.status(200).json({ user })
     })
     /* Retourne un message + le message d'erreur en cas de propbléme */
     .catch(err => {

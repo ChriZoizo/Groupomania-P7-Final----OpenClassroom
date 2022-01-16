@@ -1,8 +1,8 @@
 <template>
-<div class="form-create-post">
+<div class="component__formCreatePost">
   <h2>Formulaire de publication</h2>
   <!--    enctype="multipart/form-data" -->
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="onSubmit" class="formCreatePost">
        <div class="form-group">
     <label for="Content">Contenus de la publication</label> :
     <textarea
