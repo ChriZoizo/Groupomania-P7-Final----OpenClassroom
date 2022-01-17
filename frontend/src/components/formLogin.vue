@@ -1,70 +1,74 @@
 <template>
-  <div class="formular">
+  <div class="formularLog">
     <button v-on:click="displayLoginForm = !displayLoginForm">Connexion</button>
-      <div v-show="displayLoginForm" class="form-login">
-    <form v-on:submit.prevent="login" id="form-login" method="post">
-      <div class="form-group">
-        <label for="email">E-mail :</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          class="form-control"
-          placeholder="exemple@gogole.com"
-          v-model="inputForm.email"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="password"> Mot de passe :</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          class="form-control"
-          placeholder="exemple: pasazertysvp"
-          v-model="inputForm.password"
-          required
-        />
-      </div>
-      <button>Connexion</button>
-    </form>
+    <div v-show="displayLoginForm" class="form-login">
+      <form v-on:submit.prevent="login" id="form-login" method="post">
+        <div class="form-group">
+          <label for="email">E-mail :</label>
+          <input
+            type="email"
+            id="email__login"
+            name="emailLogin"
+            class="form-control__login"
+            placeholder="exemple@gogole.com"
+            v-model="inputForm.email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password"> Mot de passe :</label>
+          <input
+            type="password"
+            id="password__login"
+            name="passwordLogin"
+            class="form-control__login"
+            placeholder="exemple: pasazertysvp"
+            v-model="inputForm.password"
+            required
+          />
+        </div>
+        <button>Connexion</button>
+      </form>
     </div>
-    <button  v-on:click="displaySignupForm = !displaySignupForm">Formulaire d'inscription</button>
-      <div v-show="displaySignupForm" class="form-signup">
-    <form v-on:submit.prevent="signup" id="form-signup" method="post">
-      <div class="form-group">
-        <label for="email">E-mail :</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          class="form-control"
-          placeholder="exemple@gogole.com"
-          v-model="inputForm.email"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="password"> Mot de passe :</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          class="form-control"
-          placeholder="exemple: pasazertysvp"
-          v-model="inputForm.password"
-          required
-        />
-      </div>
-      <button>Inscription</button>
-    </form>
+    <button v-on:click="displaySignupForm = !displaySignupForm">
+      Formulaire d'inscription
+    </button>
+    <div v-show="displaySignupForm" class="form-signup">
+      <form v-on:submit.prevent="signup" id="form-signup" method="post">
+        <div class="form-group">
+          <label for="email">E-mail :</label>
+          <input
+            type="email"
+            id="email__signup"
+            name="emailSignup"
+            class="form-control__signup"
+            placeholder="exemple@gogole.com"
+            v-model="inputForm.email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password"> Mot de passe :</label>
+          <input
+            type="password"
+            id="password__signup"
+            name="passwordSignup"
+            class="form-control__signup"
+            placeholder="exemple: pasazertysvp"
+            v-model="inputForm.password"
+            required
+          />
+        </div>
+        <button>Inscription</button>
+      </form>
+    </div>
+    <button v-on:click="test">TEST formLogin</button>
   </div>
-    </div>
-  
 </template>
 
 <script>
+import Appli from "../App.vue"
+ 
 export default {
   name: "Login",
 
@@ -73,24 +77,51 @@ export default {
       displayLoginForm: false,
       displaySignupForm: false,
 
-
       inputForm: {
         email: "",
         password: "",
       },
+        /* INUTILE ? */
+      user: {
+        userId: {
+          type: Number,
+        },
+        email: {
+          type: String,
+        },
+        fistName: {
+          type: String,
+        },
+        lastName: {
+          type: String,
+        },
+        bio: {
+          type: String,
+        },
+        isAdmin: {
+          type: Boolean,
+        },
+      },
     };
   },
+
+  /* METHODS */
   methods: {
-          signup() {
-      let inputDatas = {
-        email: this.inputForm.email,
-        password: this.inputForm.password,
-      };
+    test() {
+      console.log(Appli.data)
+    },
+    /* SIGNUP  */
+    signup() {
+      
       this.axios
-        .post("http://localhost:3000/api/user/signup", inputDatas)
-        .then((res) => console.log("Utilisateur enregistré dans la BDD ! ", res))
+        .post("http://localhost:3000/api/user/signup", this.inputForm)
+        .then((res) =>
+          console.log("Utilisateur enregistré dans la BDD ! ", res)
+        )
         .catch((err) => console.log(err));
     },
+
+    /* LOGIN */
     login() {
       let inputDatas = {
         email: this.inputForm.email,
@@ -99,8 +130,9 @@ export default {
       this.axios
         .post("http://localhost:3000/api/user/login", inputDatas)
         .then((res) => {
-          this.signed = true;
-          console.log("Utilisateur connecté ! ", res)})
+          console.log("Utilisateur connecté ! ", res);
+          this.$emit("signed");
+        })
         .catch((err) => console.log(err));
     },
   },
@@ -119,12 +151,12 @@ button {
   margin: 15px 0px 25px 0px;
   background-color: white;
   color: #0c2444;
-   &:hover {
+  &:hover {
     transform: scale(1.15);
     opacity: 0.85;
     -webkit-transition: 0.3s ease-in;
     transition: 0.3s ease-out;
-  } 
+  }
 }
 label {
   display: block;
@@ -141,10 +173,10 @@ textarea {
   outline: none;
   padding: 10px;
   margin: auto;
-     &:focus {
+  &:focus {
     border-color: white;
     box-shadow: 0px 0px 20px #0c2444;
-  } 
+  }
 }
 .form-group {
   display: flex;
@@ -156,7 +188,7 @@ textarea {
 /* .border-box {
 } */
 
-.formular {
+.formularLog {
   margin: auto;
   width: 60%;
   opacity: 0.95;

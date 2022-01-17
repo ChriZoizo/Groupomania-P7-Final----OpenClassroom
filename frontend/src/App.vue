@@ -1,26 +1,30 @@
 <template>
   <div id="view">
     <Navbar />
-    <div v-if="signed != true">
-    <Login /> blablabla</div>
-    <div>
+    <div v-if="isSigned == false">
+    <Login v-on:signed="signed"/></div>
+    
+    <div v-if='isSigned == true'>
     <router-view /></div>
-    <button v-on:click="getUser()"></button>
+    <button v-on:click="getUser()">get user</button>
     <!-- Bouton de TEST !! -->
-    <button v-on:click="test()"></button>
+    <button v-on:click="testo()">test</button>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/navbar.vue";
-import Login from "@/views/Login.vue";
+import Login from "@/components/formLogin.vue";
 
 export default {
   components: { Navbar, Login },
 
+    /* DATAS : utile a toutes l'app */
   data() {
     return {
-      signed: false,
+      isSigned: false,
+
+      
 
       user: {
         userId: {
@@ -67,12 +71,16 @@ export default {
       /* ADD CATCH !!!!!*/
     },
     getAllPosts() {
-      this.axios.get();
+      this.axios.get("http://localhost:3000/api/post")
+      .then((posts) => {
+        console.log(posts);
+      });
     },
 
     /* Fonction de TEST !!!!!!!!!! */
-    test() {
-      console.log(this.post);
+    signed() {
+      this.isSigned = true;
+      console.log(this.isSigned)
     },
   },
 };
