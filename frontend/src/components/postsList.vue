@@ -1,6 +1,6 @@
 <!-- * - COMPOSANT : Liste des publications de la BDD -->
 <template>
-  <div class="post-list">
+  <div class="container-post-list">
     <!-- LOADER -->
     <div v-if="loading" class="">Chargement des publications ...</div>
     <!-- A - CARD (Boucle iterant sur le resultat de la methode GETALLPOST du module)  -->
@@ -38,7 +38,13 @@
           }}</a>
         </div>
         <!-- A-1-c - Bouton d'action -->
-        <button class="post-card__header-action" v-on:click="deletePost(post.id)">X ( delete )</button>
+        <button
+          v-if="post.userId == this.userId || this.isAdmin == true"
+          class="post-card__header-action"
+          v-on:click="deletePost(post.id)"
+        >
+          X ( delete )
+        </button>
       </div>
       <!-- A-2 - BODY DE CARD -->
       <!-- A-2-a Contenus -->
@@ -48,10 +54,14 @@
         </div>
       </div>
       <div class="post-card__footer">
-        <p>date du post : {{ post.createdAt }}</p>
+        <p>
+          date du post : {{ new Date(post.createdAt).getDate() }} /
+          {{ new Date(post.createdAt).getMonth() + 1 }} /
+          {{ new Date(post.createdAt).getFullYear() }}
+        </p>
       </div>
     </div>
-    <button v-on:click="getAllPost()">Bouton TEST</button>
+    <button v-on:click="test()">Bouton TEST</button>
   </div>
 </template>
 
@@ -59,21 +69,39 @@
 export default {
   name: "postList",
 
+  /* DATA :  variables */
   data() {
     return {
+      /* loading: boolean definissant si le composantr charge des elements (modifié via les METHODS) */
       loading: true,
+      /* listOfPosts: Contient tout les posts en BDD renvoyé par la methods getAllPost() */
       listOfPosts: "",
+      /* listOfusers: Contient tout les users en BDD renvoyé par la methods getAllUser() */
       listOfUsers: "",
+
+      /* Valeurs recuperés dans le localStorage les infos enregistré lors de la connexion du user ( Script de app.vue) */
+      /* Contient l'ID de l'utilisateur */
+      userId: 0,
+      /* userIsAdmin: Contient le booleen definisant si le user est ADMIN  */
+      isAdmin: new Boolean(false),
     };
   },
+
+  /* HOOK DE CYCLE DE VIE */
+  /* MOUNTED : appel les methods 'getAllPosts' et 'getAllUser' lorsque le composant est rendu 
+  dans le but de remplir les data correspondantes avec les infos necessaire*/
   mounted() {
-    this.getAllPost(), this.getAllUser();
+    this.setLocalStorageValue(), this.getAllPost(), this.getAllUser();
   },
+
+  /* METHODS */
   methods: {
-    /* Methode 'GETALLPOST' permettant de recuperer tout les 'Posts' presents en BDD */
+    /* getAllPost: recupere tout les POSTs en BDD via appel a API, et change le data 'loading' en false */
     getAllPost() {
       this.axios.get("http://localhost:3000/api/post/").then((posts) => {
+        /* enregistrement des posts reçus dans la data 'listOfPosts' */
         this.listOfPosts = posts.data.posts;
+        /* passe la data booleen 'loding' en false */
         this.loading = false;
       });
     },
@@ -86,11 +114,21 @@ export default {
     },
 
     deletePost(id) {
-        this.axios.delete(`http://localhost:3000/api/post/${id}`).then(() => {
-            console.log("POST DELETED");
-            this.$forceUpdate()
-        })
-    }
+      this.axios.delete(`http://localhost:3000/api/post/${id}`).then(() => {
+        console.log("POST DELETED");
+        this.$forceUpdate();
+      });
+    },
+
+    setLocalStorageValue() {
+      this.userId = localStorage.getItem('userId')
+      this.isAdmin = new Boolean(localStorage.getItem("userIsAdmin"))
+    },
+
+    test() {
+      console.log(this.isAdmin);
+      console.log(localStorage.getItem("userIsAdmin"));
+    },
   },
 };
 </script>
@@ -98,9 +136,9 @@ export default {
 <style lang="scss">
 .post {
   &-card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     border: 2px solid black;
     padding: 5px 5px 5px 5px;
     margin: 5px 0;

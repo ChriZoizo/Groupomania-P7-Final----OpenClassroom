@@ -1,15 +1,15 @@
 <template>
-    <Formular />
+    <LoginFormular />
 </template>
 
 
 <script>
-import Formular from '@/components/formLogin.vue'
+import LoginFormular from '@/components/formLogin.vue'
 
 export default {
 name: 'Login',
 components: {
-    Formular
+    LoginFormular
 }
 }
 </script>

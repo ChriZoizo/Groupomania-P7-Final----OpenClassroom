@@ -73,6 +73,7 @@ exports.signup = (req, res) => {
 exports.login = (req, res) => {
   const email = req.body.email
   const password = req.body.password
+  let userFinded = {}
   /* Check la presence de l'email et pass */
   if (!email || !password) {
     res.status(400).json({ error: 'Paramétre(s) manquant(s)' })
@@ -83,6 +84,7 @@ exports.login = (req, res) => {
       if (!user || user == null) {
         res.status(400).json({ error: 'Email non valide' })
       }
+      userFinded = user
       bcrypt
         .compare(password, user.password)
         .then(validation => {
@@ -95,7 +97,9 @@ exports.login = (req, res) => {
             /* Voir avec le FRONT pour savoir qui en faire (envoyer dans le header des req et/ou params) */
             token: jwt.sign({ userId: user._id }, process.env.ILOVESALT, {
               expiresIn: '24h'
-            })
+            }),
+            userInfos: userFinded
+
           })
         })
         .catch(err =>
@@ -117,7 +121,8 @@ exports.updateUserProfil = (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       nickname: req.body.nickname,
-      bio: req.body.bio
+      bio: req.body.bio,
+      isAdmin: req.body.isAdmin
     },
     { where: { id: req.params.id } }
   )

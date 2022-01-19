@@ -1,6 +1,7 @@
 <template>
   <div class="formularLog">
-    <button v-on:click="displayLoginForm = !displayLoginForm">Connexion</button>
+    <button v-on:click="switchForm">Connexion</button>
+    <button v-on:click="switchForm"> Formulaire d'inscription</button>
     <div v-show="displayLoginForm" class="form-login">
       <form v-on:submit.prevent="login" id="form-login" method="post">
         <div class="form-group">
@@ -30,9 +31,6 @@
         <button>Connexion</button>
       </form>
     </div>
-    <button v-on:click="displaySignupForm = !displaySignupForm">
-      Formulaire d'inscription
-    </button>
     <div v-show="displaySignupForm" class="form-signup">
       <form v-on:submit.prevent="signup" id="form-signup" method="post">
         <div class="form-group">
@@ -67,57 +65,39 @@
 </template>
 
 <script>
-import Appli from "../App.vue"
- 
 export default {
   name: "Login",
 
   data() {
     return {
-      displayLoginForm: false,
+      displayLoginForm: true,
       displaySignupForm: false,
 
       inputForm: {
         email: "",
         password: "",
       },
-        /* INUTILE ? */
-      user: {
-        userId: {
-          type: Number,
-        },
-        email: {
-          type: String,
-        },
-        fistName: {
-          type: String,
-        },
-        lastName: {
-          type: String,
-        },
-        bio: {
-          type: String,
-        },
-        isAdmin: {
-          type: Boolean,
-        },
-      },
+      /* INUTILE ? */
     };
   },
 
   /* METHODS */
   methods: {
-    test() {
-      console.log(Appli.data)
+    test() {},
+
+    switchForm() {
+      this.displayLoginForm = !this.displayLoginForm;
+      this.displaySignupForm = !this.displaySignupForm;
     },
     /* SIGNUP  */
+
     signup() {
-      
       this.axios
         .post("http://localhost:3000/api/user/signup", this.inputForm)
-        .then((res) =>
-          console.log("Utilisateur enregistré dans la BDD ! ", res)
-        )
+        .then((res) => {
+          console.log("Utilisateur enregistré dans la BDD ! ", res);
+          this.$router.push("/login");
+        })
         .catch((err) => console.log(err));
     },
 
@@ -131,7 +111,8 @@ export default {
         .post("http://localhost:3000/api/user/login", inputDatas)
         .then((res) => {
           console.log("Utilisateur connecté ! ", res);
-          this.$emit("signed");
+          this.$router.push("/home");
+          this.$emit("signed", res.data);
         })
         .catch((err) => console.log(err));
     },

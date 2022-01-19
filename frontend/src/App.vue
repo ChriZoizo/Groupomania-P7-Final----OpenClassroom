@@ -1,14 +1,16 @@
 <template>
   <div id="view">
-    <Navbar />
+    <Navbar v-on:deconnect='deconnect()' />
     <div v-if="isSigned == false">
-    <Login v-on:signed="signed"/></div>
-    
-    <div v-if='isSigned == true'>
-    <router-view /></div>
-    <button v-on:click="getUser()">get user</button>
+      <Login v-on:signed="signed" />
+    </div>
+
+    <div v-if="isSigned == true">
+      <router-view :key="$route.fullPath" />
+    </div>
     <!-- Bouton de TEST !! -->
-    <button v-on:click="testo()">test</button>
+    <button v-on:click="test()">test</button>
+    <button v-on:click="clear()">CLEAR LOCALSTORAGE</button>
   </div>
 </template>
 
@@ -19,68 +21,99 @@ import Login from "@/components/formLogin.vue";
 export default {
   components: { Navbar, Login },
 
-    /* DATAS : utile a toutes l'app */
+  /* DATAS : utile a toutes l'app */
   data() {
     return {
       isSigned: false,
 
-      
-
       user: {
-        userId: {
-          type: Number,
-        },
-        email: {
-          type: String,
-        },
-        fistName: {
-          type: String,
-        },
-        lastName: {
-          type: String,
-        },
-        bio: {
-          type: String,
-        },
-        isAdmin: {
-          type: Boolean,
-        },
+        userId: 0,
+        email: "",
+        fistName: "",
+        lastName: "",
+        nickname: "",
+        bio: "",
+        isAdmin: false,
       },
 
-      allPosts: {
-        type: Array,
-      },
+      allPosts: [],
     };
   },
 
+  beforeCreate() {
+    /* localStorage.clear(); */
+  },
   mounted() {
-    this.getUser();
+    this.checkPreviousConnection()
+/*     if (localStorage.getItem("userToken") != null) {
+  this.isSigned = true;
+         console.log(localStorage.getItem('userIsAdmin'));
+  this.token = localStorage.getItem("userToken");
+  this.userId = localStorage.getItem("userId");
+          this.isAdmin = localStorage.getItem('userIsAdmin');
+          console.log(this.isAdmin)
+} else {
+  localStorage.clear();
+} */
   },
 
   methods: {
-    getUser() {
-      this.axios.get(`http://localhost:3000/api/user/1`).then((userFind) => {
-        const datas = userFind.data.user;
-        (this.user.userId = datas.id),
-          (this.user.email = datas.email),
-          (this.user.firstName = datas.firstName),
-          (this.user.lastName = datas.lastName),
-          (this.user.bio = datas.bio),
-          (this.user.isAdmin = datas.isAdmin);
-      });
-      /* ADD CATCH !!!!!*/
-    },
     getAllPosts() {
-      this.axios.get("http://localhost:3000/api/post")
-      .then((posts) => {
+      this.axios.get("http://localhost:3000/api/post").then((posts) => {
         console.log(posts);
       });
     },
 
-    /* Fonction de TEST !!!!!!!!!! */
-    signed() {
+    /* SIGNED() : 
+    Lorsque un utilisateur se connecte, un event est $emit du composant 'login' avec les infos du User
+    en parametre. Enregistre ces infos en DATA de l'App.vue */
+    signed(datas) {
+      let userDatas = datas.userInfos;
+      /* Enregistrement dans le localStorage des infos necessaires + change le DATA correspondat*/
+      /* Boolean signifiant si le user est connecté */
+      localStorage.setItem("userIsSigned", true);
       this.isSigned = true;
-      console.log(this.isSigned)
+      /* ID de l'utilisateur */
+      localStorage.setItem("userId", userDatas.id);
+      /* Token de l'utiulisateur */
+      localStorage.setItem("userToken", datas.token);
+      /* Booleen signifiant si le user est Admin */
+      localStorage.setItem("userIsAdmin", userDatas.isAdmin);
+
+      (this.user.userId = userDatas.id),
+        (this.user.email = userDatas.email),
+        (this.user.firstName = userDatas.firstName);
+      (this.user.lastName = userDatas.lastName),
+        (this.user.nickname = userDatas.nickname),
+        (this.user.bio = userDatas.bio),
+        (this.user.isAdmin = userDatas.isAdmin);
+      console.log(localStorage);
+    },
+
+    checkPreviousConnection() {
+      if (localStorage.getItem("userToken") != null) {
+        this.isSigned = true;
+/*         console.log() */
+        this.token = localStorage.getItem("userToken");
+        this.userId = localStorage.getItem("userId");
+        this.isAdmin = localStorage.getItem('userIsAdmin')
+      } else {
+        localStorage.clear();
+        this.isSigned = false;
+      }
+    },
+
+    deconnect() {
+      localStorage.clear()
+      this.$router.push('/login')
+    },
+
+    /* TEST() : FONCTION DE TEST */
+    test() {
+      console.log(localStorage.getItem("userToken"));
+    },
+    clear() {
+      localStorage.clear()
     },
   },
 };

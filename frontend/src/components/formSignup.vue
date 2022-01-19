@@ -1,34 +1,34 @@
 <template>
-  <div class="form-signup">
-    <h2>Formulaire d'inscription</h2>
-    <form v-on:submit.prevent="signup" id="form-signup" method="post">
-      <div class="form-group">
-        <label for="email">E-mail :</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          class="form-control"
-          placeholder="exemple@gogole.com"
-          v-model="inputForm.email"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="password"> Mot de passe :</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          class="form-control"
-          placeholder="exemple: pasazertysvp"
-          v-model="inputForm.password"
-          required
-        />
-      </div>
-      <button>Inscription</button>
-    </form>
-  </div>
+xjzqk
+     <div v-show="displaySignupForm" class="form-signup">
+      <form v-on:submit.prevent="signup" id="form-signup" method="post">
+        <div class="form-group">
+          <label for="email">E-mail :</label>
+          <input
+            type="email"
+            id="email__signup"
+            name="emailSignup"
+            class="form-control__signup"
+            placeholder="exemple@gogole.com"
+            v-model="inputForm.email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password"> Mot de passe :</label>
+          <input
+            type="password"
+            id="password__signup"
+            name="passwordSignup"
+            class="form-control__signup"
+            placeholder="exemple: pasazertysvp"
+            v-model="inputForm.password"
+            required
+          />
+        </div>
+        <button>Inscription</button>
+      </form>
+    </div>
 </template>
 
 <script>
@@ -45,13 +45,12 @@ export default {
   },
   methods: {
     signup() {
-      let inputDatas = {
-        email: this.inputForm.email,
-        password: this.inputForm.password,
-      };
       this.axios
-        .post("http://localhost:3000/api/user/signup", inputDatas)
-        .then((res) => console.log("Utilisateur enregistré dans la BDD ! ", res))
+        .post("http://localhost:3000/api/user/signup", this.inputForm)
+        .then((res) => {
+          console.log("Utilisateur enregistré dans la BDD ! ", res);
+          this.$router.push('/login')
+        })
         .catch((err) => console.log(err));
     },
   },
