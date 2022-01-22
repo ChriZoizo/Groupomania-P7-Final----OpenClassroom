@@ -28,8 +28,8 @@ exports.getAllPosts = (req, res) => {
  */
 exports.getOnePost = (req, res) => {
   Post.findByPk(req.params.id)
-    .then(user => {
-      res.status(200).json({ user })
+    .then(post => {
+      res.status(200).json({ post })
     })
     .catch(err => {
       res.json({

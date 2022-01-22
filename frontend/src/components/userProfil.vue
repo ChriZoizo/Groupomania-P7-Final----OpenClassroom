@@ -68,20 +68,20 @@ export default {
         updateMode: false,
 
       user: {
-        userId: 0,
+        userId: localStorage.getItem('userId'),
         email: "",
         firstName: "",
         lastName: "",
         nickname: "",
         bio: "",
-        isAdmin: false,
+        isAdmin: localStorage.getItem('userIsAdmin'),
         createdAt: ""
       },
     };
   },
 
       created() {
-        this.getUserInfos(1)
+        this.getUserInfos(localStorage.getItem('userId'))
     },  
 
   methods: {
@@ -99,6 +99,14 @@ export default {
             this.user.isAdmin = userInfo.isAdmin;
         });
       },
+
+          setUserInData(data) {
+      this.user.email = data.email
+      this.user.firstName = data.firstName
+      this.user.lastName = data.lastName
+      this.user.nickname = data.firstName
+      this.user.bio = data.firstName
+    },
 
       test() {
           console.log(this.user.firstName)

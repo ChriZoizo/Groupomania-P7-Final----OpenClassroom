@@ -1,7 +1,7 @@
 <template>
   <div id="view">
-    <Navbar v-on:deconnect='deconnect()' />
-    <div v-if="isSigned == false">
+    <Navbar v-on:deconnect="deconnect()" />
+    <div v-if="isSigned != true">
       <Login v-on:signed="signed" />
     </div>
 
@@ -10,7 +10,7 @@
     </div>
     <!-- Bouton de TEST !! -->
     <button v-on:click="test()">test</button>
-    <button v-on:click="clear()">CLEAR LOCALSTORAGE</button>
+    <button v-on:click="signed()">CLEAR LOCALSTORAGE</button>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
       isSigned: false,
 
       user: {
-        userId: 0,
+        userId:  localStorage.getItem('userId'),
         email: "",
         fistName: "",
         lastName: "",
@@ -35,29 +35,24 @@ export default {
         bio: "",
         isAdmin: false,
       },
-
+      userToken: localStorage.getItem("userToken") != null,
       allPosts: [],
     };
   },
 
   beforeCreate() {
-    /* localStorage.clear(); */
   },
   mounted() {
-    this.checkPreviousConnection()
-/*     if (localStorage.getItem("userToken") != null) {
-  this.isSigned = true;
-         console.log(localStorage.getItem('userIsAdmin'));
-  this.token = localStorage.getItem("userToken");
-  this.userId = localStorage.getItem("userId");
-          this.isAdmin = localStorage.getItem('userIsAdmin');
-          console.log(this.isAdmin)
-} else {
-  localStorage.clear();
-} */
+    this.checkPreviousConnection();
   },
 
   methods: {
+    
+        deconnect() {
+          localStorage.clear();
+          this.$router.go("/home");
+        },
+
     getAllPosts() {
       this.axios.get("http://localhost:3000/api/post").then((posts) => {
         console.log(posts);
@@ -80,40 +75,46 @@ export default {
       /* Booleen signifiant si le user est Admin */
       localStorage.setItem("userIsAdmin", userDatas.isAdmin);
 
-      (this.user.userId = userDatas.id),
-        (this.user.email = userDatas.email),
-        (this.user.firstName = userDatas.firstName);
-      (this.user.lastName = userDatas.lastName),
-        (this.user.nickname = userDatas.nickname),
-        (this.user.bio = userDatas.bio),
-        (this.user.isAdmin = userDatas.isAdmin);
-      console.log(localStorage);
+
+      this.user.userId = userDatas.id;
+      this.user.isAdmin = userDatas.isAdmin;
+      this.setUserInData(userDatas)
+
+      this.$router.go('/home')
     },
 
     checkPreviousConnection() {
-      if (localStorage.getItem("userToken") != null) {
+      if (this.userToken != null  && this.user.userId != null ) {
+        this.axios.get(`http://localhost:3000/api/user/${this.user.userId}`)
+        .then((user)=> {
+          this.setUserInData(user.data.user)
+        })
         this.isSigned = true;
-/*         console.log() */
-        this.token = localStorage.getItem("userToken");
-        this.userId = localStorage.getItem("userId");
-        this.isAdmin = localStorage.getItem('userIsAdmin')
+        /*         console.log() */
+        this.isAdmin = localStorage.getItem("userIsAdmin");
+        console.log("quelque chose")
       } else {
+        console.log("rien")
         localStorage.clear();
         this.isSigned = false;
       }
     },
 
-    deconnect() {
-      localStorage.clear()
-      this.$router.push('/login')
+    setUserInData(data) {
+      this.user.email = data.email
+      this.user.firstName = data.firstName
+      this.user.lastName = data.lastName
+      this.user.nickname = data.firstName
+      this.user.bio = data.firstName
     },
 
     /* TEST() : FONCTION DE TEST */
     test() {
       console.log(localStorage.getItem("userToken"));
+      console.log(this.user);
     },
     clear() {
-      localStorage.clear()
+      localStorage.clear();
     },
   },
 };

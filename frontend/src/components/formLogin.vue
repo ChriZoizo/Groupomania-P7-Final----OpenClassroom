@@ -1,7 +1,7 @@
 <template>
   <div class="formularLog">
-    <button v-on:click="switchForm">Connexion</button>
-    <button v-on:click="switchForm"> Formulaire d'inscription</button>
+    <button v-on:click="displayLogin">Connexion</button>
+    <button v-on:click="displaySignup"> Formulaire d'inscription</button>
     <div v-show="displayLoginForm" class="form-login">
       <form v-on:submit.prevent="login" id="form-login" method="post">
         <div class="form-group">
@@ -85,9 +85,13 @@ export default {
   methods: {
     test() {},
 
-    switchForm() {
-      this.displayLoginForm = !this.displayLoginForm;
-      this.displaySignupForm = !this.displaySignupForm;
+    displayLogin() {
+      this.displayLoginForm = true;
+      this.displaySignupForm = false;
+    },
+    displaySignup() {
+      this.displayLoginForm = false;
+      this.displaySignupForm = true;
     },
     /* SIGNUP  */
 
@@ -96,7 +100,8 @@ export default {
         .post("http://localhost:3000/api/user/signup", this.inputForm)
         .then((res) => {
           console.log("Utilisateur enregistré dans la BDD ! ", res);
-          this.$router.push("/login");
+      this.displayLoginForm = true;
+      this.displaySignupForm = false;
         })
         .catch((err) => console.log(err));
     },
@@ -110,6 +115,7 @@ export default {
       this.axios
         .post("http://localhost:3000/api/user/login", inputDatas)
         .then((res) => {
+          
           console.log("Utilisateur connecté ! ", res);
           this.$router.push("/home");
           this.$emit("signed", res.data);

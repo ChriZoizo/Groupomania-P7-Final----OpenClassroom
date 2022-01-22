@@ -9,7 +9,7 @@
       <button v-on:click="isWriting = !isWriting">Fermer le formulaire</button>
   </div>
     <!--    enctype="multipart/form-data" -->
-    <form @submit.prevent="onSubmit" class="formCreatePost">
+    <form @submit.prevent="submitPost" class="formCreatePost">
       <div class="form-group">
         <label for="Content">Contenus de la publication</label> :
         <textarea
@@ -20,6 +20,7 @@
           v-model="postCreateInput.content"
           placeholder="Ecrivez le contenus de votre publication ici ! ( 500 caractéres maximum )"
           maxlength="500"
+          required
         />
       </div>
       <div class="form-group">
@@ -32,18 +33,15 @@
           v-on:change="loadAttachment($event)"
         />
       </div>
-      <input type="submit" value="Upload le fichier" />
-      <!--     <button>Publier !</button> -->
+      <input type="submit" value="Publier !" />
+           <!-- <button>Publier !</button>  -->
     </form>
 
     <form>
-      <input v-on:change="test" type="text" value="test" />
+      <button v-on:click="test" value="test">TEST LISTPOST </button>
     </form>
     </div>
   </div>
-  <!-- MULTIPLE FILES -->
-
-  <!--   PHOTO-->
 </template>
 
 <script>
@@ -54,8 +52,6 @@ export default {
     return {
       postCreateInput: {
         content: "",
-        /*         postImageUrl: "", */
-        UserId: 1,
         file: "",
       },
 
@@ -73,34 +69,16 @@ export default {
     test() {
       console.log(this.postCreateInput);
     },
-    onSubmit() {
-      /*       let inputsDatas = {
-        content: this.postCreateInput.content,
-        postImageUrl: this.postCreateInput.postImageUrl,
-        userId: this.postCreateInput.userId,
-        file: this.postCreateInput.file
-      }; */
+    submitPost() {
       const formData = new FormData();
       formData.append("content", this.postCreateInput.content);
       formData.append("fileAttachment", this.postCreateInput.file);
-      formData.append("UserId", this.postCreateInput.UserId);
+      formData.append("UserId", localStorage.getItem('userId'));
 
-      console.log("blabla");
       this.axios
         .post("http://localhost:3000/api/post", formData)
         .then((res) => console.log("Publication créé !", res));
     },
-    /*     createPost() {
-      let inputsDatas = {
-        content: this.postCreateInput.content,
-        imageUrl: this.postCreateInput.imageUrl,
-        userId: this.postCreateInput.userId,
-      };
-      console.log("blabla")
-      this.axios
-        .post("http://localhost:3000/api/post", inputsDatas)
-        .then((res) => console.log("Publication créé !", res));
-    }, */
   },
 };
 </script>

@@ -10,14 +10,14 @@
       </router-link>
     </div>
     <div id="navbar-right">
-      <router-link to="/signup">signup</router-link> |
+<!--       <router-link to="/signup">signup</router-link> |
       <router-link to="/login">login</router-link> |
-      <router-link to="/signup">signup</router-link> |
+      <router-link to="/signup">signup</router-link> | -->
       <router-link to="/about">About</router-link> |
       <router-link to="/home">Home</router-link> |
       <router-link to="/profil">Profil</router-link>
-      <button v-on:click="deconnect()">deconnexion</button>
-      <button v-on:click='test'>testNavbar</button>
+      <button v-if="this.isSigned == true" v-on:click="deconnect()">deconnexion</button>
+      <button v-on:click='test'>testNavbar1</button>
       <button v-on:click='checkConnection'>testNavbar</button>
     </div>
   </div>
@@ -30,6 +30,7 @@ export default {
 
   data() {
     return {
+      isSigned: new Boolean(localStorage.getItem('userIsSigned'))
 /*     email: Appli.data.email */
   }
   },
@@ -50,11 +51,15 @@ export default {
     test() {
       let lol = Appli.data;
       console.log(lol)
+      console.log(this.isSigned)
     },
 
     checkConnection() {
       if(localStorage.getItem('userIsSigned')) {
-        this.$forceUpdate()
+        this.isSigned == new Boolean(true)
+      }
+      else {
+        this.isSigned == new Boolean(false)
       }
     }
   }

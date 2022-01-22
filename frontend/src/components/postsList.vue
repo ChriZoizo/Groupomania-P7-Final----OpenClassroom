@@ -5,11 +5,12 @@
     <div v-if="loading" class="">Chargement des publications ...</div>
     <!-- A - CARD (Boucle iterant sur le resultat de la methode GETALLPOST du module)  -->
     <div v-for="post in listOfPosts" :key="post" class="post-card">
+      <p style="display:none">{{this.getAuthor(post.UserId)}}</p>
       <!-- A-1 - HEADER DE CARD -->
       <div class="post-card__header">
         <!-- A-1-a - Image de pofil -->
         <!-- si le USER contient une URL d'image de profil affiche l'image en question -->
-        <div
+<!--          <div
           class="post-card__header-profilImg"
           v-if="listOfUsers[post.userId].profilImageUrl != null"
         >
@@ -17,29 +18,26 @@
             class="post-card__header-profilImg container-sm"
             :src="listOfUsers[post.userId].profilImageUrl"
           />
-        </div>
+        </div>  -->
         <!-- sinon affiche une image de profil par defaut -->
-        <div class="post-card__header-profilImg" v-else>
+        <div class="post-card__header-profilImg">
+
           <img
             class="post-card__header-profilImg container-sm"
             src="../assets/default_profil_image.png"
           />
         </div>
         <!-- A-1-b - Nom (ou email) de l'utilisateur -->
-        <div class="post-card__header-userName">
-          <a
-            v-if="listOfUsers[post.userId].firstName != null"
-            :href="'http://localhost:3000/api/user/' + post.userId"
-            >{{ listOfUsers[post.userId].firstName }}
-            {{ listOfUsers[post.userId].lastName }}</a
-          >
-          <a v-else :href="'http://localhost:3000/api/user/' + post.userId">{{
-            listOfUsers[post.userId].email
-          }}</a>
+         <div class="post-card__header-userName">
+           <router-link v-if="this.author.firstName.length > 1" :to="'/profil/'+ post.userId">{{ this.author.firstName }}
+            {{ this.author.lastName }}</router-link>
+           <router-link v-else :to="'/profil/'+ post.userId">{{ this.author.email }}</router-link>
+
+
         </div>
         <!-- A-1-c - Bouton d'action -->
         <button
-          v-if="post.userId == this.userId || this.isAdmin == true"
+          v-if="post.userId == this.userId || this.isAdmin === true"
           class="post-card__header-action"
           v-on:click="deletePost(post.id)"
         >
@@ -52,6 +50,9 @@
         <div class="post-card__body__content">
           <p>contenu du post: {{ post.content }}</p>
         </div>
+<!--         <div class="post-card__body__image">
+          <img :src="setImageUrlSrc(post)" v-bind:alt="'Image contenus dans une publication'" class="post-card__image-container">
+        </div> -->
       </div>
       <div class="post-card__footer">
         <p>
@@ -66,12 +67,16 @@
 </template>
 
 <script>
+import Appli from "../App.vue"
 export default {
+
   name: "postList",
 
   /* DATA :  variables */
   data() {
     return {
+
+      testing: Appli,
       /* loading: boolean definissant si le composantr charge des elements (modifié via les METHODS) */
       loading: true,
       /* listOfPosts: Contient tout les posts en BDD renvoyé par la methods getAllPost() */
@@ -81,10 +86,17 @@ export default {
 
       /* Valeurs recuperés dans le localStorage les infos enregistré lors de la connexion du user ( Script de app.vue) */
       /* Contient l'ID de l'utilisateur */
-      userId: 0,
+      userId: localStorage.getItem('userId'),
       /* userIsAdmin: Contient le booleen definisant si le user est ADMIN  */
-      isAdmin: new Boolean(false),
+      isAdmin: localStorage.getItem('userIsAdmin'),
+      
+      author: ""
     };
+  },
+
+  
+  computed: {
+
   },
 
   /* HOOK DE CYCLE DE VIE */
@@ -103,6 +115,8 @@ export default {
         this.listOfPosts = posts.data.posts;
         /* passe la data booleen 'loding' en false */
         this.loading = false;
+        console.log('@@@@@@@@@@@@@@@@@@')
+        console.log(posts.data.posts)
       });
     },
 
@@ -112,22 +126,40 @@ export default {
         console.log(users);
       });
     },
+    
+        getAuthor(authorId) {
+for (const user of this.listOfUsers) {
+  console.log(user.email)
+  if (user.id == authorId) {
+    this.author = user
+    return user
+  }
+    return "Profil supprimé"
+}
+    },
 
     deletePost(id) {
       this.axios.delete(`http://localhost:3000/api/post/${id}`).then(() => {
         console.log("POST DELETED");
-        this.$forceUpdate();
+        this.$router.go("/home");
       });
     },
 
-    setLocalStorageValue() {
-      this.userId = localStorage.getItem('userId')
-      this.isAdmin = new Boolean(localStorage.getItem("userIsAdmin"))
+    setImageUrlSrc() {
+      return "lol"
     },
 
-    test() {
-      console.log(this.isAdmin);
-      console.log(localStorage.getItem("userIsAdmin"));
+    setLocalStorageValue() {
+      console.log(localStorage.getItem("userIsAdmin"))
+      this.userId = localStorage.getItem("userId");
+      this.isAdmin =localStorage.getItem("userIsAdmin");
+    },
+
+    test(id) {
+
+      console.log(id);
+console.log(localStorage.getItem("userIsAdmin"))
+
     },
   },
 };
