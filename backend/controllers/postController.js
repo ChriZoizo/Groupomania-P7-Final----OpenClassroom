@@ -13,7 +13,9 @@ const reactionTable = models.LikePost
 /* GET ALL POSTS (GET)
  */
 exports.getAllPosts = (req, res) => {
-  Post.findAll()
+  Post.findAll({
+    include: [{ model: User, as: 'User' }]
+  })
     .then(posts => {
       res.status(200).json({ posts })
     })
@@ -27,7 +29,12 @@ exports.getAllPosts = (req, res) => {
 /* GET ONE POSTS (GET)
  */
 exports.getOnePost = (req, res) => {
-  Post.findByPk(req.params.id)
+  Post.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: User
+  })
     .then(post => {
       res.status(200).json({ post })
     })
@@ -42,7 +49,7 @@ exports.getOnePost = (req, res) => {
 Fonction de creation de 'Post' (publication) */
 exports.createPost = (req, res) => {
   let newPost = {}
-/*   console.log(req.body.UserId) */
+  /*   console.log(req.body.UserId) */
   if (req.file) {
     console.log('File attached...')
     newPost = {
@@ -57,13 +64,15 @@ exports.createPost = (req, res) => {
       ...req.body
     }
   }
-  console.log("request infos OK. Create function begin ..." + newPost)
+  console.log('request infos OK. Create function begin ...' + newPost)
   Post.create(newPost)
     .then(post =>
       res.status(200).json({ message: 'Publication créé avec succés !' + post })
     )
     .catch(err => {
-      res.status(500).json(console.log(`ERREUR !${err}`) /* { error: 'PROBLEME ' + err } */)
+      res
+        .status(500)
+        .json(console.log(`ERREUR !${err}`) /* { error: 'PROBLEME ' + err } */)
     })
   /* Utiliser le token pour l'id  */
   /*   const postObject = JSON.parse(req.body.sauce)  !!! POSE PROBLéME*/
@@ -94,6 +103,11 @@ exports.updatePost = (req, res) => {
         req.file.filename
       }`
     }
+    /* Cherche l'objet initial dans la BDD pour effacer l'image 'lié' du dossier statique */
+    const fileName = req.body.imageUrlPrev.split(
+      '/images/'
+    )[1] /* recupere le nom original du fichier image */
+    fs.unlink('images/' + fileName, function () {}) /* Efface le fichier */
   } else {
     postUpdated = {
       ...req.body
@@ -101,7 +115,7 @@ exports.updatePost = (req, res) => {
   }
   Post.update(
     {
-      postImageUrl: postUpdated.imageUrl,
+      postImageUrl: postUpdated.postImageUrl,
       content: postUpdated.content
     },
     { where: { id: req.params.id } }

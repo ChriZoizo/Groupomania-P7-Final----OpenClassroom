@@ -77,7 +77,10 @@ export default {
 
       this.axios
         .post("http://localhost:3000/api/post", formData)
-        .then((res) => console.log("Publication créé !", res));
+        .then((res) => {
+          console.log("Publication créé !", res)
+          this.$router.go('/home/')
+          });
     },
   },
 };
