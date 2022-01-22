@@ -55,7 +55,7 @@
 
      <p>--------------------------------------------</p>  
     <button v-on:click="test">test</button>
-    <button v-on:click="getUserInfos(1)">getUser</button>
+    <button v-on:click="checkUrl">getUser</button>
   </div>
 </template>
 
@@ -67,21 +67,25 @@ export default {
     return {
         updateMode: false,
 
+        currentUserId: localStorage.getItem('userId'),
+        currentUserIsAdmin: localStorage.getItem('userIsAdmin'),
+        currentUserToken: localStorage.getItem('userToken'),
+
       user: {
-        userId: localStorage.getItem('userId'),
+        userId: 0,
         email: "",
         firstName: "",
         lastName: "",
         nickname: "",
         bio: "",
-        isAdmin: localStorage.getItem('userIsAdmin'),
+        isAdmin: false,
         createdAt: ""
       },
     };
   },
 
       created() {
-        this.getUserInfos(localStorage.getItem('userId'))
+         this.getIdInUrl(),this.getUserInfos(this.userIdToDisplay)
     },  
 
   methods: {
@@ -106,6 +110,14 @@ export default {
       this.user.lastName = data.lastName
       this.user.nickname = data.firstName
       this.user.bio = data.firstName
+    },
+  
+    getIdInUrl() {
+      const url = this.$route.path.split('/')
+      const id = parseInt(url[2])
+      this.userIdToDisplay = id
+      return id
+      
     },
 
       test() {

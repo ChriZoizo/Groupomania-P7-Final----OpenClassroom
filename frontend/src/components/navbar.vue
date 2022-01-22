@@ -13,9 +13,11 @@
 <!--       <router-link to="/signup">signup</router-link> |
       <router-link to="/login">login</router-link> |
       <router-link to="/signup">signup</router-link> | -->
+      <div v-if="this.isSigned == true">
       <router-link to="/about">About</router-link> |
       <router-link to="/home">Home</router-link> |
-      <router-link to="/profil">Profil</router-link>
+      <router-link :to="'/profil/'+ this.userId ">Profil</router-link>
+      </div>
       <button v-if="this.isSigned == true" v-on:click="deconnect()">deconnexion</button>
       <button v-on:click='test'>testNavbar1</button>
       <button v-on:click='checkConnection'>testNavbar</button>
@@ -24,14 +26,14 @@
 </template>
 
 <script>
-  import Appli from "../App.vue"
+
 export default {
   name: 'Navbar',
 
   data() {
     return {
-      isSigned: new Boolean(localStorage.getItem('userIsSigned'))
-/*     email: Appli.data.email */
+      isSigned: new Boolean(localStorage.getItem('userIsSigned')),
+            userId: localStorage.getItem('userId')
   }
   },
 
@@ -49,8 +51,6 @@ export default {
     },
 
     test() {
-      let lol = Appli.data;
-      console.log(lol)
       console.log(this.isSigned)
     },
 

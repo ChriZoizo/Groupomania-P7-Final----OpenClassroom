@@ -4,7 +4,7 @@
     <!-- LOADER -->
     <div v-if="loading" class="">Chargement des publications ...</div>
     <!-- A - CARD (Boucle iterant sur le resultat de la methode GETALLPOST du module)  -->
-    <div v-for="post in listOfPosts" :key="post" class="post-card">
+    <div v-for="(post, index) in listOfPosts" :key="index" class="post-card">
       <p style="display:none">{{this.getAuthor(post.UserId)}}</p>
       <!-- A-1 - HEADER DE CARD -->
       <div class="post-card__header">
@@ -50,9 +50,9 @@
         <div class="post-card__body__content">
           <p>contenu du post: {{ post.content }}</p>
         </div>
-<!--         <div class="post-card__body__image">
-          <img :src="setImageUrlSrc(post)" v-bind:alt="'Image contenus dans une publication'" class="post-card__image-container">
-        </div> -->
+        <div class="post-card__body__image">
+          <img :src="post.postImageUrl" v-bind:alt="'Image contenus dans une publication'" class="post-image-container">
+        </div> 
       </div>
       <div class="post-card__footer">
         <p>
@@ -186,6 +186,12 @@ console.log(localStorage.getItem("userIsAdmin"))
         height: 100%;
       }
     }
+  }
+
+  &-image-container {
+    max-width: 100em;
+    max-height: 10em;
+    object-fit: scale-down
   }
 }
 </style>

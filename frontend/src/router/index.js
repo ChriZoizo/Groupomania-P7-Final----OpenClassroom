@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 /* import formSignup from '../views/Signup.vue'
 import formLogin from '../views/Login.vue' */
+import Post from '../views/Post.vue'
 import userProfil from '../views/Profil.vue'
 
 const routes = [
@@ -29,9 +30,21 @@ const routes = [
     name: 'Login',
     component: formLogin
   }, */
-  {
+/*   {
 
     path: '/profil',
+    name: "Profil",
+    component: userProfil
+  }, */
+  {
+    path: '/post/:id',
+    name: "Post",
+    component: Post
+  },
+
+  {
+
+    path: '/profil/:id',
     name: "Profil",
     component: userProfil
   }
