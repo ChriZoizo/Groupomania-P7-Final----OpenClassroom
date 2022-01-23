@@ -12,7 +12,7 @@ const Comment = models.Comment
 
 exports.getAllComments = (req, res) => {
   Comment.findAll({
-    include: [{ all: true}]
+    include: [{ all: true, nested: true }]
   })
     .then(comments => {
       res.status(200).json({ comments })
@@ -29,7 +29,7 @@ exports.getOneComment = (req, res) => {
     where: {
       id: req.params.id
     },
-    include: [{ all: true}]
+    include: [{ all: true, nested: true }]
   })
     .then(comment => {
       res.status(200).json({ comment })

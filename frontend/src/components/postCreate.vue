@@ -36,10 +36,6 @@
       <input type="submit" value="Publier !" />
            <!-- <button>Publier !</button>  -->
     </form>
-
-    <form>
-      <button v-on:click="test" value="test">TEST LISTPOST </button>
-    </form>
     </div>
   </div>
 </template>
@@ -66,9 +62,6 @@ export default {
       this.postCreateInput.file = event.target.files[0];
     },
 
-    test() {
-      console.log(this.postCreateInput);
-    },
     submitPost() {
       const formData = new FormData();
       formData.append("content", this.postCreateInput.content);

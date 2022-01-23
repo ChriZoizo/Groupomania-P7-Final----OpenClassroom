@@ -14,7 +14,7 @@ const reactionTable = models.LikePost
  */
 exports.getAllPosts = (req, res) => {
   Post.findAll({
-    include: [{ all: true}]
+    include: [{ all: true, nested: true }]
   })
     .then(posts => {
       res.status(200).json({ posts })
@@ -33,7 +33,7 @@ exports.getOnePost = (req, res) => {
     where: {
       id: req.params.id
     },
-    include: [{ all: true}]
+    include: [{ all: true, nested: true }]
   })
     .then(post => {
       res.status(200).json({ post })

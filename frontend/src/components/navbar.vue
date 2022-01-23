@@ -19,8 +19,6 @@
       <router-link :to="'/profil/'+ this.userId ">Profil</router-link>
       </div>
       <button v-if="this.isSigned == true" v-on:click="deconnect()">deconnexion</button>
-      <button v-on:click='test'>testNavbar1</button>
-      <button v-on:click='checkConnection'>testNavbar</button>
     </div>
   </div>
 </template>
@@ -48,10 +46,6 @@ export default {
   methods: {
     deconnect() {
       this.$emit('deconnect')
-    },
-
-    test() {
-      console.log(this.isSigned)
     },
 
     checkConnection() {

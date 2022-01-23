@@ -83,7 +83,6 @@
       </router-link>
       <!-- CARD END -->
     </div>
-    <button v-on:click="testera()">Bouton de TEST</button>
   </div>
 </template>
 
@@ -108,12 +107,8 @@ export default {
       userId: localStorage.getItem("userId"),
       /* userIsAdmin: Contient le booleen definisant si le user est ADMIN  */
       isAdmin: localStorage.getItem("userIsAdmin"),
-
-      author: "",
     };
   },
-
-  computed: {},
 
   /* HOOK DE CYCLE DE VIE */
   /* MOUNTED : appel les methods 'getAllPost' et 'getAllUser' lorsque le composant est rendu 
@@ -131,8 +126,6 @@ export default {
         this.listOfPosts = posts.data.posts;
         /* passe la data booleen 'loding' en false */
         this.loading = false;
-        console.log("@@@@@@@@@@@@@@@@@@");
-        console.log(posts.data.posts);
       });
     },
 
@@ -144,13 +137,8 @@ export default {
     },
 
     setLocalStorageValue() {
-      console.log(localStorage.getItem("userIsAdmin"));
       this.userId = localStorage.getItem("userId");
       this.isAdmin = localStorage.getItem("userIsAdmin");
-    },
-
-    testera() {
-      console.log(this.isAdmin)
     },
   },
 };

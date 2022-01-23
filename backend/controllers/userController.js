@@ -15,7 +15,7 @@ const User = models.User
 Fonction retournant tout les "Users" inscrit dans la BDD "User" en utilisant la methode "Sequelize" 'findAll' (Promise) */
 exports.getAllUsers = (req, res) => {
   User.findAll({
-    include: [{ all: true}]
+    include: [{ all: true, nested: true }]
   })
     .then(users => {
       res.status(200).json({ users })
@@ -37,7 +37,7 @@ exports.getOneUser = (req, res) => {
     where: {
       id: req.params.id
     },  
-    include: [{ all: true}]
+    include: [{ all: true, nested: true }]
   })
     .then(user => {
       res.status(200).json({ user })

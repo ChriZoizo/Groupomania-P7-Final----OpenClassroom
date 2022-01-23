@@ -4,13 +4,9 @@
     <div v-if="isSigned != true">
       <Login v-on:signed="signed" />
     </div>
-
     <div v-if="isSigned == true">
       <router-view :key="$route.fullPath" />
     </div>
-    <!-- Bouton de TEST !! -->
-    <button v-on:click="test()">test</button>
-    <button v-on:click="signed()">CLEAR LOCALSTORAGE</button>
   </div>
 </template>
 
@@ -36,7 +32,7 @@ export default {
         isAdmin: false,
       },
       userToken: localStorage.getItem("userToken"),
-      allPosts: [],
+
     };
   },
 
@@ -53,11 +49,6 @@ export default {
           this.$router.go("/home");
         },
 
-    getAllPosts() {
-      this.axios.get("http://localhost:3000/api/post").then((posts) => {
-        console.log(posts);
-      });
-    },
 
     /* SIGNED() : 
     Lorsque un utilisateur se connecte, un event est $emit du composant 'login' avec les infos du User
@@ -74,12 +65,9 @@ export default {
       localStorage.setItem("userToken", datas.token);
       /* Booleen signifiant si le user est Admin */
       localStorage.setItem("userIsAdmin", userDatas.isAdmin);
-
-
       this.user.userId = userDatas.id;
       this.user.isAdmin = userDatas.isAdmin;
-      this.setUserInData(userDatas)
-
+      this.setUserInfosData(userDatas)
       this.$router.go('/home')
     },
 
@@ -87,34 +75,22 @@ export default {
       if (this.userToken != null  && this.user.userId != null ) {
         this.axios.get(`http://localhost:3000/api/user/${this.user.userId}`)
         .then((user)=> {
-          this.setUserInData(user.data.user)
+          this.setUserInfosData(user.data.user)
         })
         this.isSigned = true;
-        /*         console.log() */
-        this.isAdmin = localStorage.getItem("userIsAdmin");
-        console.log(this.userToken)
+        this.isAdmin = localStorage.getItem("userIsAdmin")
       } else {
-        console.log("rien")
         localStorage.clear();
         this.isSigned = false;
       }
     },
 
-    setUserInData(data) {
+    setUserInfosData(data) {
       this.user.email = data.email
       this.user.firstName = data.firstName
       this.user.lastName = data.lastName
       this.user.nickname = data.nickname
       this.user.bio = data.bio
-    },
-
-    /* TEST() : FONCTION DE TEST */
-    test() {
-      console.log(localStorage.getItem("userToken"));
-      console.log(this.user);
-    },
-    clear() {
-      localStorage.clear();
     },
   },
 };

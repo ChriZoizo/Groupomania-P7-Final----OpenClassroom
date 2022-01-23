@@ -87,15 +87,13 @@ export default {
     getAllUsers() {
       this.axios.get("http://localhost:3000/api/user").then((users) => {
         this.allUsers = users.data.users;
-        console.log(this.allUsers);
       });
     },
 
     deleteUser(id) {
-      this.axios.delete(`http://localhost:3000/api/user/${id}`).then((res) => {
-        console.log(res);
-        this.$router.go("/admin-dashboard");
-      });
+      this.axios.delete(`http://localhost:3000/api/user/${id}`).then(() => 
+        this.$router.go("/admin-dashboard")
+      );
     },
   },
 };
