@@ -35,7 +35,7 @@ export default {
         bio: "",
         isAdmin: false,
       },
-      userToken: localStorage.getItem("userToken") != null,
+      userToken: localStorage.getItem("userToken"),
       allPosts: [],
     };
   },
@@ -92,7 +92,7 @@ export default {
         this.isSigned = true;
         /*         console.log() */
         this.isAdmin = localStorage.getItem("userIsAdmin");
-        console.log("quelque chose")
+        console.log(this.userToken)
       } else {
         console.log("rien")
         localStorage.clear();
@@ -104,8 +104,8 @@ export default {
       this.user.email = data.email
       this.user.firstName = data.firstName
       this.user.lastName = data.lastName
-      this.user.nickname = data.firstName
-      this.user.bio = data.firstName
+      this.user.nickname = data.nickname
+      this.user.bio = data.bio
     },
 
     /* TEST() : FONCTION DE TEST */

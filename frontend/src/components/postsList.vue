@@ -3,13 +3,13 @@
   <div class="container-post-list">
     <!-- LOADER -->
     <div v-if="loading" class="">Chargement des publications ...</div>
-    <!-- LOOP (Boucle iterant sur le resultat de la methode GETALLPOST du module)  -->
+    <!-- LOOP (Boucle iterant sur le resultat de la methode GETALLPOST du module (Array))  -->
     <div v-for="(post, index) in listOfPosts" :key="index" class="post">
-      <!-- A - CARD -->
+      <!-- CARD BEGIN-->
       <router-link class="post-card" :to="'/post/'+ post.id">
-        <!-- A-1 - HEADER DE CARD -->
+        <!-- CARD-header -->
         <div class="post-card__header">
-          <!-- A-1-a - Image de pofil -->
+          <!-- Image de pofil -->
           <!-- si le USER contient une URL d'image de profil affiche l'image en question -->
           <!--          <div
           class="post-card__header-profilImg"
@@ -27,7 +27,7 @@
               src="../assets/default_profil_image.png"
             />
           </div>
-          <!-- A-1-b - Nom (ou email) de l'utilisateur -->
+          <!-- Nom (ou email) de l'utilisateur -->
           <div class="post-card__header-userName">
             <router-link
               v-if="post.User.firstName != undefined"
@@ -39,7 +39,7 @@
               post.User.email
             }}</router-link>
           </div>
-          <!-- A-1-c - Bouton d'action -->
+          <!-- Bouton d'action -->
           <button
             v-if="post.userId == this.userId || this.isAdmin == 'true'"
             class="post-card__header-action"
@@ -48,14 +48,15 @@
             X ( delete )
           </button>
         </div>
-        <!-- A-2 - BODY DE CARD -->
-        <!-- A-2-a Contenus -->
+        <!-- BODY DE CARD -->
+        <!-- Contenus -->
         <div class="post-card__body">
           <div class="post-card__body__content">
             <p>contenu du post: {{ post.content }}</p>
           </div>
+          <!-- Image de la publication -->
           <div class="post-card__body__image">
-            <img
+            <img v-if="post.postImageUrl.length !=0"
               :src="post.postImageUrl"
               v-bind:alt="'Image contenus dans une publication de '+ post.User.email"
               class="post-image-container"
@@ -70,6 +71,7 @@
           </p>
         </div>
       </router-link>
+      <!-- CARD END -->
     </div>
     <button v-on:click="testera()">Bouton de TEST</button>
   </div>

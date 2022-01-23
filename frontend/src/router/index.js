@@ -5,6 +5,7 @@ import Home from '../views/Home.vue'
 import formLogin from '../views/Login.vue' */
 import Post from '../views/Post.vue'
 import userProfil from '../views/Profil.vue'
+import AdminDashboard from '../views/AdminDashboard.vue'
 
 const routes = [
   {
@@ -47,6 +48,12 @@ const routes = [
     path: '/profil/:id',
     name: "Profil",
     component: userProfil
+  },
+
+  {
+    path:'/admin-dashboard',
+    name: "AdminDashboard",
+    component: AdminDashboard
   }
 
 ]
