@@ -78,16 +78,16 @@
         </div>
         <!-- Bouton de like -->
         <div class="post-card__footer__reaction">
-          <div v-if="post.LikePosts" class="post-card__footer__reaction__like">
+          <div v-on:click="reactToPost(1)" class="post-card__footer__reaction__like">
             <i
-              v-bind:class="{ grey: notLiked }"
+            v-bind:class="{ grey: liked, green: !liked }"
               class="fas fa-thumbs-up green"
             ></i>
           </div>
           <!-- Bouton de dislike -->
-          <div class="post-card__footer__reaction__dislike">
+          <div v-on:click="reactToPost(-1)" class="post-card__footer__reaction__dislike">
             <i
-              v-bind:class="{ active: notDisliked }"
+              v-bind:class="{ grey: disliked, red: !disliked }"
               class="fas fa-thumbs-down red"
             ></i>
           </div>
@@ -183,10 +183,11 @@ export default {
   data() {
     return {
       update: false,
-      currentUserId: localStorage.getItem("userId"),
+      currentUserId: Number.parseInt(localStorage.getItem("userId")),
+      isAdmin: localStorage.getItem('userIsAdmin'),
 
-      notLiked: true,
-      notDisliked: false,
+      liked: false,
+      disliked: false,
 
       postUpdateData: {
         content: "",
@@ -198,14 +199,18 @@ export default {
   },
 
   created() {
-    this.setPostFromUrlId();
+    this.setPostDataFromUrlId();
+  },
+
+  mounted() {
+        this.likedDisliked() 
   },
 
   methods: {
     /* Methods qui appelle deux autres methods afin de recuperer les infos du post grace a l'id contenus dans l'URL
     La premiere methode recupere l'ID et nous l'enregistrons dans une variable
     Puis la methode 'getPostInfos' est appeler en passant la variable 'id' en parametre */
-    setPostFromUrlId() {
+    setPostDataFromUrlId() {
       const id = this.getUrlId();
       this.getPostInfos(id);
     },
@@ -229,6 +234,38 @@ export default {
         l'utilisateur fait une modification de la publication, elle est alors utilisé en tant que 'value' du "textarea" */
         this.postUpdateData.content = res.data.post.content;
       });
+    },
+
+    likedDisliked() {
+      this.post.LikePosts.find(obj => {
+        if (obj.UserId == this.currentUserId){
+          if (obj.value == 1){
+            this.liked = !this.liked
+          }
+          else if (obj.value == -1){
+            this.disliked = !this.disliked
+          }
+        }
+
+      })
+          console.log(this.liked)
+        console.log(this.disliked)
+    },
+
+    reactToPost(val) {
+      let value = val
+      if (this.liked == true || this.disliked == true ) {
+        value = 0
+      }
+      const likeDatas = {
+        postId: this.post.id,
+        userId: this.currentUserId,
+        value
+      }
+      this.axios.post('http://localhost:3000/api/post/like', likeDatas )
+      .then(() => {
+        })
+          this.$router.go(`/post/${this.post.id}`) 
     },
 
     /* Methode qui supprime le post dont l'id correspond a la valeur passée en paramétre */

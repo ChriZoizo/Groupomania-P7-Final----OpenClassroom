@@ -2,6 +2,7 @@
 const models = require('../models')
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
+const { nextTick } = require('process')
 
 /* Importation des Tables de la BDD */
 const User = models.User
@@ -141,12 +142,49 @@ exports.deletePost = (req, res) => {
 /* LIKE OF DISLIKE POST
  Fonction qui gére les 'Like' et 'Dislike' */
 exports.likeOrDislikePost = (req, res) => {
+  console.log(req.body)
   const likeValue = req.body.value
   let alreadyReact = false
   /* Si la valeur de like 'value' est de 0 */
   if (likeValue == 0) {
-    /* Cherche dans la table 'LikePosts' pour le detruire */
+    /* Cherche dans la table 'LikePosts' pour detruire le like ou dislike */
     reactionTable
+      .findOne({
+        where: { postId: req.body.postId },
+        include: [
+          {
+            model: Post,
+            where: { id: req.body.userId }
+          }
+        ]
+      })
+      .then(result => {
+        if (result.value == 1) {
+          console.log(result)
+          result.Post.decrement('likeCounter')
+        }
+        else if (result.value == -1) {
+          result.Post.decrement('dislikeCounter')
+        }
+        else {
+          console.log('Value of object invalid (like or dislike')
+        }
+        reactionTable
+      .destroy({
+        where: { PostId: result.Post.id },
+        include: [
+          {
+            model: User,
+            where: { id: req.body.userId }
+          }
+        ]
+      })
+      .then(()=> res.status(200).json("Like or dislike deleted success ! ") )
+      .catch(err => console.log(err))
+      })
+      .catch(err => console.log(err))
+
+    /*     reactionTable
       .destroy({
         where: { postId: req.body.postId },
         include: [
@@ -156,10 +194,12 @@ exports.likeOrDislikePost = (req, res) => {
           }
         ]
       })
-      .then(() => {
+      .then((res) => {
+        console.log("LIKE FUNCTION RESULT")
+        console.log(res)
         Post.findByPk(req.body.postId)
           .then(post => {
-            post.decrement('likeCounter') /* add dislike increment */
+            post.decrement('likeCounter') 
           })
           .then(() =>
             res.status(200).json({ message: 'Deleting like success !' })
@@ -170,7 +210,7 @@ exports.likeOrDislikePost = (req, res) => {
       })
       .catch(err =>
         res.json({ error: 'Problem while deleting the like' + err })
-      )
+      ) */
   } else {
     /* Dans les autres cas ( '1' ou '-1'), cherche dans la table 'LikePosts' une occurence */
     reactionTable
