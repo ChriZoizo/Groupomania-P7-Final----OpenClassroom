@@ -70,7 +70,7 @@
       <div class="post-card__footer">
         <!-- Date de creation de la publication -->
         <div class="post-card__footer__date">
-          <p>
+          <p class="date">
             date du post : {{ new Date(this.post.createdAt).getDate() }} /
             {{ new Date(this.post.createdAt).getMonth() + 1 }} /
             {{ new Date(this.post.createdAt).getFullYear() }}
@@ -78,14 +78,20 @@
         </div>
         <!-- Bouton de like -->
         <div class="post-card__footer__reaction">
-          <div v-on:click="reactToPost(1)" class="post-card__footer__reaction__like">
+          <div
+            v-on:click="reactToPost(1)"
+            class="post-card__footer__reaction__like"
+          >
             <i
-            v-bind:class="{ grey: liked, green: !liked }"
+              v-bind:class="{ grey: liked, green: !liked }"
               class="fas fa-thumbs-up green"
             ></i>
           </div>
           <!-- Bouton de dislike -->
-          <div v-on:click="reactToPost(-1)" class="post-card__footer__reaction__dislike">
+          <div
+            v-on:click="reactToPost(-1)"
+            class="post-card__footer__reaction__dislike"
+          >
             <i
               v-bind:class="{ grey: disliked, red: !disliked }"
               class="fas fa-thumbs-down red"
@@ -93,9 +99,28 @@
           </div>
         </div>
       </div>
-      <!-- CARD COMMENTS SECTION -->
+      <!-- COMMENTS SECTION -->
       <div class="post-card__comments-section">
-        <!--  LOOP (boucle iterant sur l'Array de commentaires associés a la publication) -->
+        <button v-on:click="commenting = !commenting" class="button">
+          Commenter
+        </button>
+        <form
+          v-show="commenting"
+          @submit.prevent="addComment"
+          class="post-card__comments-section__write-form"
+        >
+          <textarea
+            name="comment"
+            id="comment"
+            v-model="newComment.content"
+            placeholder="Ecrivez votre commentaire ici..."
+            maxlength="200"
+            required
+          ></textarea>
+          <input type="submit" value="Publier votre commentaire" />
+        </form>
+
+        <!--  COMMENT LOOP (boucle iterant sur l'Array de commentaires associés a la publication) -->
         <div
           v-for="(comment, index) in post.Comments"
           :key="index"
@@ -118,20 +143,26 @@
             {{ comment.content }}
           </div>
           <!-- Date du commentaire -->
-          <div class="post-card__comments-section__comment-card__date">
-            <div class="post-card__footer">
-              <p>
-                {{ new Date(this.post.createdAt).getDate() }} /
-                {{ new Date(this.post.createdAt).getMonth() + 1 }} /
-                {{ new Date(this.post.createdAt).getFullYear() }}
-              </p>
+          <div class="post-card__comments-section__comment-card__footer">
+            <p class="date">
+              {{ new Date(this.post.createdAt).getDate() }} /
+              {{ new Date(this.post.createdAt).getMonth() + 1 }} /
+              {{ new Date(this.post.createdAt).getFullYear() }}
+            </p>
+            <div
+            v-if="comment.User.id == currentUserId || userIsAdmin == 'true'"
+            v-on:click="deleteComment(comment.id)"
+            onclick="return confirm('Etes-vous sûr d'effacer ce commentaire ?)"
+              class="post-card__comments-section__comment-card__footer-delete"
+            >
+              <i class="fas fa-trash"></i>
             </div>
           </div>
         </div>
       </div>
     </div>
     <!-- !!! UPDATE SECTION !!! ne s'affiche que lorsque la data 'update' passe a true, faisant disparaitre la section CARD-POST -->
-    <div class="postUpdate-card" v-if="update == true">
+    <div class="postUpdate-card" v-show="update">
       <div class="postUpdate-card__body">
         <!--  FORM BEGIN -->
         <form
@@ -168,7 +199,6 @@
       <div class="postUpdate-action">
         <button
           class="postUpdate-action__button"
-          v-if="this.post.userId == this.currentUserId || this.isAdmin === true"
           v-on:click="switchUpdateMode()"
         >
           Annuler
@@ -182,9 +212,11 @@
 export default {
   data() {
     return {
+      currentUserId: parseInt(localStorage.getItem("userId")),
+      isAdmin: localStorage.getItem("userIsAdmin"),
+
+      commenting: false,
       update: false,
-      currentUserId: Number.parseInt(localStorage.getItem("userId")),
-      isAdmin: localStorage.getItem('userIsAdmin'),
 
       liked: false,
       disliked: false,
@@ -192,6 +224,12 @@ export default {
       postUpdateData: {
         content: "",
         file: "",
+      },
+
+      newComment: {
+        userId: parseInt(localStorage.getItem("userId")),
+        postId: 0,
+        content: "",
       },
 
       post: "",
@@ -203,25 +241,21 @@ export default {
   },
 
   mounted() {
-        this.likedDisliked() 
+    this.likedDisliked();
   },
 
   methods: {
-    /* Methods qui appelle deux autres methods afin de recuperer les infos du post grace a l'id contenus dans l'URL
-    La premiere methode recupere l'ID et nous l'enregistrons dans une variable
+    /* Methods qui recupere l'id du post dans l'URL, le transforme en Number pui l'enregistre dans la varible 'postId'
     Puis la methode 'getPostInfos' est appeler en passant la variable 'id' en parametre */
     setPostDataFromUrlId() {
-      const id = this.getUrlId();
-      this.getPostInfos(id);
-    },
-
-    /* Methods qui renvoie l'id contenus a la fin de l'URL */
-    getUrlId() {
-      /* decoupe l'url */
+      /* decoupe l'url et recupere uniquement la derniere partie contenant l'ID */
       const url = this.$route.path.split("/");
       /* convertis en Number le String contenant l'ID */
       const postId = parseInt(url[2]);
-      return postId;
+      /* Enregistrement de l'id dans les data qui seront eventuellement utilisé pour commenter la publication*/
+      this.newComment.postId = postId;
+      /* Appel de la methode getPostInfos */
+      this.getPostInfos(postId);
     },
 
     /* Methode qui recupere grace a un appel a la BDD via l'API les informations du post */
@@ -236,36 +270,45 @@ export default {
       });
     },
 
+    addComment() {
+      console.log(this.newComment);
+      this.axios
+        .post("http://localhost:3000/api/comment", this.newComment)
+        .then(() => history.go(0));
+    },
+
+    deleteComment(id) {
+      this.axios.delete(`http://localhost:3000/api/comment/${id}`).then(()=> history.go(0))
+    },
+
     likedDisliked() {
-      this.post.LikePosts.find(obj => {
-        if (obj.UserId == this.currentUserId){
-          if (obj.value == 1){
-            this.liked = !this.liked
-          }
-          else if (obj.value == -1){
-            this.disliked = !this.disliked
+      this.post.LikePosts.find((obj) => {
+        if (obj.UserId == this.currentUserId) {
+          if (obj.value == 1) {
+            this.liked = !this.liked;
+          } else if (obj.value == -1) {
+            this.disliked = !this.disliked;
           }
         }
-
-      })
-          console.log(this.liked)
-        console.log(this.disliked)
+      });
+      console.log(this.liked);
+      console.log(this.disliked);
     },
 
     reactToPost(val) {
-      let value = val
-      if (this.liked == true || this.disliked == true ) {
-        value = 0
+      let value = val;
+      if (this.liked == true || this.disliked == true) {
+        value = 0;
       }
       const likeDatas = {
         postId: this.post.id,
         userId: this.currentUserId,
-        value
-      }
-      this.axios.post('http://localhost:3000/api/post/like', likeDatas )
-      .then(() => {
-        })
-          this.$router.go(`/post/${this.post.id}`) 
+        value,
+      };
+      this.axios
+        .post("http://localhost:3000/api/post/like", likeDatas)
+        .then(() => {});
+      history.go(0);
     },
 
     /* Methode qui supprime le post dont l'id correspond a la valeur passée en paramétre */
@@ -273,10 +316,12 @@ export default {
       /* fait un appel a l'API en integrant l''id' du parametre de la fonction a l'URI */
       this.axios
         .delete(`http://localhost:3000/api/post/${id}`)
-        .then(() => this.$router.go("/home")); /* redirect pour rafraichir la page (j'ai pas trouvé mieux :/) */
+        .then(() =>
+          this.$router.go("/home")
+        ); /* redirect pour rafraichir la page (j'ai pas trouvé mieux :/) */
     },
 
-  /* Methode pour modifier la publication */
+    /* Methode pour modifier la publication */
     updatePost(id) {
       const formData = new FormData();
       formData.append("content", this.postUpdateData.content);
@@ -311,6 +356,6 @@ export default {
 }
 
 .grey {
-  color: grey !important
+  color: grey !important;
 }
 </style>

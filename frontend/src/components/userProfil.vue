@@ -49,7 +49,7 @@
       </div>
       <div class="profil__footer">
         <div class="profil__footer__left">
-          <p v-if="this.user.isAdmin == true">Membre Administrateur !</p>
+          <p v-if="this.user.isAdmin == 'true'">Membre Administrateur !</p>
         </div>
         <div class="profil__footer__right">
           <p class="informations">
@@ -60,11 +60,12 @@
         </div>
       </div>
     </div>
+    <div class="profil__action-buttons" v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'">
     <button v-on:click="updateMode = !updateMode">modifier profil</button>
-    <div v-if="updateMode"><p>kjklsdjhlfkdshf</p></div>
+    <div v-show="updateMode"><p>FUTUR UPDATE SECTION</p></div>
 
     <p>--------------------------------------------</p>
-    <button v-on:click="test">test</button>
+    <button v-on:click="deleteProfil">Supprimer le compte ?</button></div>
   </div>
 </template>
 
@@ -76,7 +77,7 @@ export default {
     return {
       updateMode: false,
 
-      currentUserId: localStorage.getItem("userId"),
+      currentUserId: parseInt(localStorage.getItem("userId")),
       currentUserIsAdmin: localStorage.getItem("userIsAdmin"),
       currentUserToken: localStorage.getItem("userToken"),
 
@@ -128,9 +129,14 @@ export default {
       return id;
     },
 
-    test() {
-      console.log(this.user.firstName);
-    },
+deleteProfil() {
+  this.axios.delete(`http://localhost:3000/api/user/${this.user.userId}`)
+  .then(() => {
+    localStorage.clear()
+    this.$router.go('/home')
+  })
+}
+
   },
 };
 </script>

@@ -92,7 +92,7 @@ export default {
 
     deleteUser(id) {
       this.axios.delete(`http://localhost:3000/api/user/${id}`).then(() => 
-        this.$router.go("/admin-dashboard")
+        history.go(0)
       );
     },
   },
