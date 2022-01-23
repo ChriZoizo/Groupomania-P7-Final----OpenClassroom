@@ -64,11 +64,21 @@
           </div>
         </div>
         <div class="post-card__footer">
+          <div class="post-card__footer__date">
           <p>
             date du post : {{ new Date(post.createdAt).getDate() }} /
             {{ new Date(post.createdAt).getMonth() + 1 }} /
             {{ new Date(post.createdAt).getFullYear() }}
           </p>
+        </div>
+        <div class="post-card__footer__reaction">
+          <div class="post-card__footer__reaction__like">
+          <i class="fas fa-thumbs-up green"></i>
+          </div>
+          <div class="post-card__footer__reaction__dislike">
+          <i class="fas fa-thumbs-down red"></i>
+          </div>
+        </div>
         </div>
       </router-link>
       <!-- CARD END -->

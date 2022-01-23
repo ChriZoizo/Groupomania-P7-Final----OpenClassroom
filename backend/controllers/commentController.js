@@ -11,7 +11,9 @@ const Comment = models.Comment
 /* --------------------------------- Fonctions C R U D ------------------------------------*/
 
 exports.getAllComments = (req, res) => {
-  Comment.findAll()
+  Comment.findAll({
+    include: [{ all: true}]
+  })
     .then(comments => {
       res.status(200).json({ comments })
     })
@@ -23,7 +25,12 @@ exports.getAllComments = (req, res) => {
 }
 
 exports.getOneComment = (req, res) => {
-  Comment.findByPk(req.params.id)
+  Comment.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: [{ all: true}]
+  })
     .then(comment => {
       res.status(200).json({ comment })
     })

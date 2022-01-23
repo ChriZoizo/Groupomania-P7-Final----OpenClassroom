@@ -7,14 +7,16 @@ const auth = require('../middlewares/auth') /* NON UTILISé ! */
 
 /* Importation BDD */
 const models = require('../models')
-const User =
-  models.User /* Table 'User' contenant les utilisateurs (voir migration et/ou models pour plus de details) */
+/* Table 'User' contenant les utilisateurs (voir migration et/ou models pour plus de details) */
+const User = models.User
 
 /* ---------------------------------- Fonctions C R U D --------------------------------------*/
 /* B - 1 - GET ALL USERS (GET)
 Fonction retournant tout les "Users" inscrit dans la BDD "User" en utilisant la methode "Sequelize" 'findAll' (Promise) */
 exports.getAllUsers = (req, res) => {
-  User.findAll()
+  User.findAll({
+    include: [{ all: true}]
+  })
     .then(users => {
       res.status(200).json({ users })
     })
@@ -31,7 +33,12 @@ Fonction retournant UN 'User' selon son ID en utilisant la methode "Sequelize" '
 L'ID est recuperer dans le params de l'URL de la requête en utilisant la key 'id' 
  */
 exports.getOneUser = (req, res) => {
-  User.findByPk(req.params.id)
+  User.findOne({
+    where: {
+      id: req.params.id
+    },  
+    include: [{ all: true}]
+  })
     .then(user => {
       res.status(200).json({ user })
     })
@@ -92,14 +99,12 @@ exports.login = (req, res) => {
           if (validation != true) {
             return res.status(401).json({ error: 'Mot de passe incorrect' })
           }
-
           res.status(200).json({
             /* Voir avec le FRONT pour savoir qui en faire (envoyer dans le header des req et/ou params) */
             token: jwt.sign({ userId: user._id }, process.env.ILOVESALT, {
               expiresIn: '24h'
             }),
             userInfos: userFinded
-
           })
         })
         .catch(err =>
@@ -154,7 +159,7 @@ exports.deleteUser = (req, res) => {
 /* --------------------------------- Fonctions Supplémentaires ------------------------------------*/
 /* FIND BY NAME */
 exports.findByName = (req, res) => {
-  User.findOne({ where: { firstName: req.params.firstName } }).then(user => {
+  User.findOne({ where: { firstName: req.params.firstName }, include: models.Post }).then(user => {
     res
       .status(200)
       .json({ user })
