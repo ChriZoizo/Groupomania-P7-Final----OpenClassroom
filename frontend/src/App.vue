@@ -7,15 +7,18 @@
     <div v-if="isSigned == true">
       <router-view :key="$route.fullPath" />
     </div>
+    <Footer />
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/navbar.vue";
 import Login from "@/components/formLogin.vue";
+import Footer from "@/components/footer.vue";
 
 export default {
-  components: { Navbar, Login },
+  name: "app",
+  components: { Navbar, Login, Footer },
 
   /* DATAS : utile a toutes l'app */
   data() {
@@ -23,7 +26,7 @@ export default {
       isSigned: false,
 
       user: {
-        userId:  localStorage.getItem('userId'),
+        userId: localStorage.getItem("userId"),
         email: "",
         fistName: "",
         lastName: "",
@@ -32,23 +35,19 @@ export default {
         isAdmin: false,
       },
       userToken: localStorage.getItem("userToken"),
-
     };
   },
 
-  beforeCreate() {
-  },
+  beforeCreate() {},
   mounted() {
     this.checkPreviousConnection();
   },
 
   methods: {
-    
-        deconnect() {
-          localStorage.clear();
-          this.$router.go("/home");
-        },
-
+    deconnect() {
+      localStorage.clear();
+      this.$router.go("/home");
+    },
 
     /* SIGNED() : 
     Lorsque un utilisateur se connecte, un event est $emit du composant 'login' avec les infos du User
@@ -67,18 +66,19 @@ export default {
       localStorage.setItem("userIsAdmin", userDatas.isAdmin);
       this.user.userId = userDatas.id;
       this.user.isAdmin = userDatas.isAdmin;
-      this.setUserInfosData(userDatas)
-      this.$router.go('/home')
+      this.setUserInfosData(userDatas);
+      this.$router.go("/home");
     },
 
     checkPreviousConnection() {
-      if (this.userToken != null  && this.user.userId != null ) {
-        this.axios.get(`http://localhost:3000/api/user/${this.user.userId}`)
-        .then((user)=> {
-          this.setUserInfosData(user.data.user)
-        })
+      if (this.userToken != null && this.user.userId != null) {
+        this.axios
+          .get(`http://localhost:3000/api/user/${this.user.userId}`)
+          .then((user) => {
+            this.setUserInfosData(user.data.user);
+          });
         this.isSigned = true;
-        this.isAdmin = localStorage.getItem("userIsAdmin")
+        this.isAdmin = localStorage.getItem("userIsAdmin");
       } else {
         localStorage.clear();
         this.isSigned = false;
@@ -86,34 +86,170 @@ export default {
     },
 
     setUserInfosData(data) {
-      this.user.email = data.email
-      this.user.firstName = data.firstName
-      this.user.lastName = data.lastName
-      this.user.nickname = data.nickname
-      this.user.bio = data.bio
+      this.user.email = data.email;
+      this.user.firstName = data.firstName;
+      this.user.lastName = data.lastName;
+      this.user.nickname = data.nickname;
+      this.user.bio = data.bio;
     },
   },
 };
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+/* SETTINGS (partie contenant les mixins, variables et importations) */
+/* Fonts ( 'Montserra' ) */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
+
+/* VARIABLES */
+/* Couleurs  */
+$primary-color: #222831;
+$secondary-color: #393e46;
+$tertiary-color: #00adb5;
+
+$grey-light-color: #eeeeee;
+$grey-color: #7e7e7e;
+
+$text-clear: #eeeeee;
+
+/* MIXINS */
+/* colorations */
+
+@mixin set-color($color) {
+  color: $color;
 }
 
-#nav {
-  padding: 30px;
+@mixin set-background-color($color) {
+  background-color: $color;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+/* SETTINGS END */
 
-    &.router-link-exact-active {
-      color: #42b983;
+/* CSS BEGIN */
+/* global */
+
+section {
+  width: 80%;
+  margin: 0 auto;
+}
+
+#view {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+span,
+button {
+  font-family: "Montserrat", sans-serif;
+}
+
+p,
+span {
+  font-size: 16px;
+}
+/* classes utilitaires */
+.remove-decoration {
+  text-decoration: none;
+}
+
+.clear-text {
+  @include set-color($text-clear);
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.contained {
+  object-fit: contain;
+}
+
+/* ID */
+
+#app {
+  text-align: center;
+}
+
+/* NAVBAR */
+
+#navbar {
+  padding: 0 50px;
+  max-height: 200px;
+  display: flex;
+  justify-content: space-between;
+  @include set-background-color($primary-color);
+
+  &__left {
+    width: 200px;
+
+    & .main-logo {
+      max-height: 100%;
+    }
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: 60%;
+
+    & span {
+      margin: 0 8px;
+
+      &:hover {
+        transition: 500ms;
+        @include set-color($tertiary-color);
+      }
+    }
+  }
+}
+
+/* FOOTER */
+footer {
+  @include set-background-color($primary-color);
+  padding: 30px 0 0 0;
+
+  & a, p {
+    text-decoration: none;
+        display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    @include set-color($text-clear);
+
+    & .fas {
+      @include set-color($tertiary-color);
+    }
+  }
+
+  & .footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 100px;
+    & img {
+      height: 40px;
+      object-fit: contain;
+    }
+    &__top {
+      height: 40px;
+    }
+
+    &__middle {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    &__image {
+      object-fit: contain;
     }
   }
 }

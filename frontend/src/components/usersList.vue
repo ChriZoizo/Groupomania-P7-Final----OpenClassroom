@@ -5,7 +5,7 @@
     <!-- LOOP (boucle iterant sur le resultat de la methode GETALLUSERS du module (Array))-->
     <div v-for="(user, index) in allUsers" :key="index" class="user">
       <!-- CARD begin -->
-      <router-link class="user-card card-link" :to="'/profil/' + user.id">
+      <router-link class="user-card card-link remove-decoration" :to="'/profil/' + user.id">
         <!-- CARD-header -->
         <div class="user-card__header">
           <!-- status Administrateur, ou non-Admin, de l'utilisateur affiché (condition)-->

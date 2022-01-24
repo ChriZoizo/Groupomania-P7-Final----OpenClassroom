@@ -1,5 +1,7 @@
 <template>
+<section id="user-profil">
     <UserProfil />
+    </section>
 </template>
 
 <script>

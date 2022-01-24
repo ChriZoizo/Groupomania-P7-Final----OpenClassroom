@@ -15,13 +15,14 @@
         <div class="post-view-card__header__userName">
           <!-- Nom : Si l'auteur a rensigné un nom et/ou prenom, celui-ci s'affiche -->
           <router-link
+           class="remove-decoration"
             v-if="this.post.User.firstName != null"
             :to="'/profil/' + this.post.userId"
             >{{ this.post.User.firstName }}
             {{ this.post.User.lastName }}</router-link
           >
           <!-- SINON affiche l'email -->
-          <router-link v-else :to="'/profil/' + this.post.userId">{{
+          <router-link class="remove-decoration" v-else :to="'/profil/' + this.post.userId">{{
             this.post.User.email
           }}</router-link>
         </div>
@@ -128,7 +129,7 @@
         >
           <div class="post-card__comments-section__comment-card__author">
             <!-- Prenom OU nom OU email de l'auteur du commentaire -->
-            <router-link :to="'/profil/' + comment.User.id"
+            <router-link class="remove-decoration" :to="'/profil/' + comment.User.id"
               ><p>
                 {{
                   comment.User.firstName ||

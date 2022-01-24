@@ -1,27 +1,23 @@
 <template>
-  <div id="navbar">
+  <nav id="navbar">
     <div id="navbar__left">
-      <router-link to="/home">
+      <router-link to="/home" class="contained">
         <img
+          class="main-logo"
           alt="Logo de l'entreprise Groupomania"
-          src="../assets/icon-left-font.png"
-          id="navbar__left__logo"
+          src="../assets/icon-left-font-monochrome-white.png"
         />
       </router-link>
     </div>
-    <div id="navbar-right">
-<!--       <router-link to="/signup">signup</router-link> |
-      <router-link to="/login">login</router-link> |
-      <router-link to="/signup">signup</router-link> | -->
+    <div id="navbar__right">
       <div v-if="isSigned == true">
-      <router-link to="/home">Home</router-link> |
-      <router-link :to="'/profil/'+ this.userId ">Profil</router-link> | 
-      <router-link v-if="this.isAdmin == 'true'" to="/admin-dashboard/">Dashboard Administrateur</router-link>> | 
-      <router-link to="/about">About</router-link> | 
+      <router-link class="remove-decoration clear-text bold" to="/home"><span>Home</span></router-link>
+      <router-link class="remove-decoration clear-text bold" :to="'/profil/'+ this.userId "><span>Profil</span></router-link> 
+      <router-link class="remove-decoration clear-text bold" v-if="this.isAdmin == 'true'" to="/admin-dashboard/"><span>Dashboard Administrateur</span></router-link>
       <button class="button-deconnect" v-on:click="deconnect()">deconnexion</button>
       </div>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script>
@@ -61,25 +57,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-#navbar {
-  max-height: 200px;
-  display: flex;
-  justify-content: space-between;
-  background-color: grey;
-
-  &__left {
-    max-width: 40%;
-
-    &__logo {
-      max-width: 150px;
-      max-height: 150px;
-    }
-  }
-
-  &__right {
-    max-width: 40%;
-  }
-}
-</style>

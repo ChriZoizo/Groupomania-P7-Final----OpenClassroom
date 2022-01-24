@@ -6,7 +6,7 @@
     <!-- LOOP (Boucle iterant sur le resultat de la methode GETALLPOST du module (Array))  -->
     <div v-for="(post, index) in listOfPosts" :key="index" class="post">
       <!-- CARD BEGIN-->
-      <router-link class="post-card" :to="'/post/'+ post.id">
+      <router-link class="post-card remove-decoration" :to="'/post/' + post.id">
         <!-- CARD-header -->
         <div class="post-card__header">
           <!-- Image de pofil -->
@@ -30,14 +30,17 @@
           <!-- Nom (ou email) de l'utilisateur -->
           <div class="post-card__header-userName">
             <router-link
+              class="remove-decoration"
               v-if="post.User.firstName != undefined"
               :to="'/profil/' + post.userId"
-              >{{ post.User.firstName }}
-              {{ post.User.lastName }}</router-link
+              >{{ post.User.firstName }} {{ post.User.lastName }}</router-link
             >
-            <router-link v-else :to="'/profil/' + post.userId">{{
-              post.User.email
-            }}</router-link>
+            <router-link
+              class="remove-decoration"
+              v-else
+              :to="'/profil/' + post.userId"
+              >{{ post.User.email }}</router-link
+            >
           </div>
           <!-- Bouton d'action -->
           <button
@@ -56,29 +59,33 @@
           </div>
           <!-- Image de la publication -->
           <div class="post-card__body__image">
-            <img v-if="post.postImageUrl.length !=0"
+            <img
+              v-if="post.postImageUrl.length != 0"
               :src="post.postImageUrl"
-              v-bind:alt="'Image contenus dans une publication de '+ post.User.email"
+              v-bind:alt="
+                'Image contenus dans une publication de ' + post.User.email
+              "
               class="post-image-container"
             />
           </div>
         </div>
         <div class="post-card__footer">
           <div class="post-card__footer__date">
-          <p>
-            date du post : {{ new Date(post.createdAt).getDate() }} /
-            {{ new Date(post.createdAt).getMonth() + 1 }} /
-            {{ new Date(post.createdAt).getFullYear() }}
-          </p>
-        </div>
-        <div class="post-card__footer__reaction">
-          <div class="post-card__footer__reaction__like">
-          <i class="fas fa-thumbs-up green"></i>
+            <p>
+              date du post : {{ new Date(post.createdAt).getDate() }} /
+              {{ new Date(post.createdAt).getMonth() + 1 }} /
+              {{ new Date(post.createdAt).getFullYear() }}
+            </p>
           </div>
-          <div class="post-card__footer__reaction__dislike">
-          <i class="fas fa-thumbs-down red"></i>
-          </div>
-        </div>
+          <!-- Bouton de like et dislike -->
+<!--           <div class="post-card__footer__reaction">
+            <div class="post-card__footer__reaction__like">
+              <i class="fas fa-thumbs-up green"></i>
+            </div>
+            <div class="post-card__footer__reaction__dislike">
+              <i class="fas fa-thumbs-down red"></i>
+            </div>
+          </div> -->
         </div>
       </router-link>
       <!-- CARD END -->
@@ -114,7 +121,7 @@ export default {
   /* MOUNTED : appel les methods 'getAllPost' et 'getAllUser' lorsque le composant est rendu 
   dans le but de remplir les data correspondantes avec les infos necessaire*/
   created() {
-    this.setLocalStorageValue(), this.getAllPost()
+    this.setLocalStorageValue(), this.getAllPost();
   },
 
   /* METHODS */

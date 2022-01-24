@@ -1,11 +1,11 @@
 <template>
     <div class="admin-dashboard">
-        <div class="admin-dashboard__user-section">
+        <section class="admin-dashboard__user-section">
         <UserList/>
-        </div>
-        <div class="admin-dashboard__post-section">
+        </section>
+        <aside class="admin-dashboard__post-section">
         <PostList/>
-        </div>
+        </aside>
     </div>
 </template>
 <script>
