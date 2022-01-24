@@ -1,18 +1,18 @@
 <!-- * - COMPOSANT : View d'une publication -->
 <template>
-  <section class="container-postView">
+  <section class="container-post-view">
     <!-- CARD BEGIN -->
-    <div class="postView-card" v-if="update == false">
+    <div class="post-view-card" v-if="update == false">
       <!-- CARD-header -->
-      <div class="postView-card__header">
+      <div class="post-view-card__header">
         <!-- Image de pofil -->
-        <div class="postView-card__header__profilImg">
+        <div class="post-view-card__header__profilImg">
           <img
             class="post-card__header-profilImg container-sm"
             src="../assets/default_profil_image.png"
           />
         </div>
-        <div class="postView-card__header__userName">
+        <div class="post-view-card__header__userName">
           <!-- Nom : Si l'auteur a rensigné un nom et/ou prenom, celui-ci s'affiche -->
           <router-link
             v-if="this.post.User.firstName != null"
@@ -29,11 +29,11 @@
         <!-- UNIQUEMENT Si l'utilisateur actuel est Administrateur, ou est l'auteur dela publication -->
         <div
           v-if="this.post.userId == this.currentUserId || this.isAdmin === true"
-          class="postView-action"
+          class="post-view-action"
         >
           <!-- Bouton suprrimer -->
           <button
-            class="postView-action__button"
+            class="post-view-action__button"
             v-if="
               this.post.userId == this.currentUserId || this.isAdmin === true
             "
@@ -44,7 +44,7 @@
           </button>
           <!-- Bouton modifier (Passe la data 'update' a true, faisant disparaitre cette section au profit de la section UPDATE) -->
           <button
-            class="postView-action__button"
+            class="post-view-action__button"
             v-on:click="switchUpdateMode()"
           >
             Modifier
@@ -52,13 +52,13 @@
         </div>
       </div>
       <!-- CARD-body -->
-      <div class="postView-card__body">
+      <div class="post-view-card__body">
         <!-- contenus de la publication -->
-        <div class="postView-card__body__content">
+        <div class="post-view-card__body__content">
           <p>{{ this.post.content }}</p>
         </div>
         <!-- Image de la publication si il y en as une -->
-        <div class="postView-card__body__image">
+        <div class="post-view-card__body__image">
           <img
             :src="this.post.postImageUrl"
             v-bind:alt="'Image contenus dans une publication'"
@@ -162,15 +162,15 @@
       </div>
     </div>
     <!-- !!! UPDATE SECTION !!! ne s'affiche que lorsque la data 'update' passe a true, faisant disparaitre la section CARD-POST -->
-    <div class="postUpdate-card" v-show="update">
-      <div class="postUpdate-card__body">
+    <div class="post-update-card" v-show="update">
+      <div class="post-update-card__body">
         <!--  FORM BEGIN -->
         <form
           @submit.prevent="updatePost(post.id)"
-          class="postUpdate-form__content"
+          class="post-update-form__content"
         >
           <!-- inputs pour modifier le CONTENUS de la publication -->
-          <div class="formGroup">
+          <div class="form-group">
             <label for="content">Contenus</label>
             <textarea
               type="text"
@@ -196,9 +196,9 @@
           <input type="submit" value="Enregistrer les modifications" />
         </form>
       </div>
-      <div class="postUpdate-action">
+      <div class="post-update-action">
         <button
-          class="postUpdate-action__button"
+          class="post-update-action__button"
           v-on:click="switchUpdateMode()"
         >
           Annuler

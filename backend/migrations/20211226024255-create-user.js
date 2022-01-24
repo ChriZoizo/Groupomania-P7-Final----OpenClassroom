@@ -37,7 +37,8 @@ module.exports = {
       },
       bio: {
         allowNull: true,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        len: [2, 300]
       },
       isAdmin: {
         allowNull: false,

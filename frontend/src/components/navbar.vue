@@ -13,12 +13,13 @@
 <!--       <router-link to="/signup">signup</router-link> |
       <router-link to="/login">login</router-link> |
       <router-link to="/signup">signup</router-link> | -->
-      <div v-if="this.isSigned == true">
-      <router-link to="/about">About</router-link> |
+      <div v-if="isSigned == true">
       <router-link to="/home">Home</router-link> |
-      <router-link :to="'/profil/'+ this.userId ">Profil</router-link>
+      <router-link :to="'/profil/'+ this.userId ">Profil</router-link> | 
+      <router-link v-if="this.isAdmin == 'true'" to="/admin-dashboard/">Dashboard Administrateur</router-link>> | 
+      <router-link to="/about">About</router-link> | 
+      <button class="button-deconnect" v-on:click="deconnect()">deconnexion</button>
       </div>
-      <button v-if="this.isSigned == true" v-on:click="deconnect()">deconnexion</button>
     </div>
   </div>
 </template>
@@ -31,7 +32,8 @@ export default {
   data() {
     return {
       isSigned: new Boolean(localStorage.getItem('userIsSigned')),
-            userId: localStorage.getItem('userId')
+            userId: localStorage.getItem('userId'),
+            isAdmin: localStorage.getItem('userIsAdmin')
   }
   },
 

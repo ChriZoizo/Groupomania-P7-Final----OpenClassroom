@@ -1,7 +1,6 @@
 <template>
   <div class="container-profil">
-    --------------------------------------------
-    <div class="profil">
+    <div v-show="!updateMode" class="profil">
       <div class="profil__header">
         <div class="profil__header__names">
           <p v-if="this.user.nickname != null">
@@ -59,13 +58,64 @@
           </p>
         </div>
       </div>
+      <div
+        class="profil__action-buttons"
+        v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
+      >
+        <button v-on:click="updateMode = !updateMode">modifier profil</button>
+      </div>
     </div>
-    <div class="profil__action-buttons" v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'">
-    <button v-on:click="updateMode = !updateMode">modifier profil</button>
-    <div v-show="updateMode"><p>FUTUR UPDATE SECTION</p></div>
-
+    <form
+      @submit.prevent="updateProfil(user.userId)"
+      v-show="updateMode"
+      class="profil__update-form"
+    >
+      <div class="profil__update-form names">
+        <div class="profil__update-form__element form-group">
+          <label for="new-firstName">Prénom : </label>
+          <input
+            type="text"
+            id="new-firstName"
+            class="form-control"
+            v-model="user.firstName"
+            maxlength="40"
+          />
+        </div>
+        <div class="profil__update-form__element form-group">
+          <label for="new-lastName">Nom : </label>
+          <input
+            type="text"
+            id="new-lastName"
+            class="form-control"
+            v-model="user.lastName"
+            maxlength="40"
+          />
+        </div>
+      </div>
+      <div class="profil__update-form__element nickname form-group">
+                  <label for="new-nickname">Surnom : </label>
+          <input
+            type="text"
+            id="new-nickname"
+            class="form-control"
+            v-model="user.nickname"
+            maxlength="40"
+          />
+      </div>
+      <div class="profil__update-form__element bio form-group">
+                  <label for="new-bio">bio : </label>
+          <textarea
+            type="text"
+            id="new-bio"
+            class="form-control"
+            v-model="user.bio"
+            maxlength="300"
+          ></textarea>
+      </div>
+      <input type="submit" value="Enregistrer les modifications ?" onclick="return confirm('Etes-vous sûr des modifications apportés ?')">
+    </form>
     <p>--------------------------------------------</p>
-    <button v-on:click="deleteProfil">Supprimer le compte ?</button></div>
+    <button v-on:click="deleteProfil">Supprimer le compte ?</button>
   </div>
 </template>
 
@@ -99,10 +149,24 @@ export default {
   },
 
   methods: {
+    getIdInUrl() {
+      const url = this.$route.path.split("/");
+      const id = parseInt(url[2]);
+      this.userIdToDisplay = id;
+      return id;
+    },
+
+      setUserInData(data) {
+        this.user.email = data.email;
+        this.user.firstName = data.firstName;
+        this.user.lastName = data.lastName;
+        this.user.nickname = data.firstName;
+        this.user.bio = data.firstName;
+      },
+
     getUserInfos(id) {
       this.axios.get(`http://localhost:3000/api/user/${id}`).then((user) => {
-
-        let userInfo = user.data.user;
+        let userInfo = user.data.user;    
         (this.user.userId = userInfo.id),
           (this.user.email = userInfo.email),
           (this.user.firstName = userInfo.firstName),
@@ -114,29 +178,21 @@ export default {
       });
     },
 
-    setUserInData(data) {
-      this.user.email = data.email;
-      this.user.firstName = data.firstName;
-      this.user.lastName = data.lastName;
-      this.user.nickname = data.firstName;
-      this.user.bio = data.firstName;
+updateProfil(id) {
+  this.axios.put(`http://localhost:3000/api/user/${id}`, this.user).then((profil)=> {
+    console.log(profil)
+    history.go(0)
+    })
+},
+
+    deleteProfil() {
+      this.axios
+        .delete(`http://localhost:3000/api/user/${this.user.userId}`)
+        .then(() => {
+          localStorage.clear();
+          this.$router.go("/home");
+        });
     },
-
-    getIdInUrl() {
-      const url = this.$route.path.split("/");
-      const id = parseInt(url[2]);
-      this.userIdToDisplay = id;
-      return id;
-    },
-
-deleteProfil() {
-  this.axios.delete(`http://localhost:3000/api/user/${this.user.userId}`)
-  .then(() => {
-    localStorage.clear()
-    this.$router.go('/home')
-  })
-}
-
   },
 };
 </script>
