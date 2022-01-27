@@ -19,13 +19,13 @@
           <!-- Nom (ou email) de l'utilisateur -->
           <div class="post-card__header-userName">
             <router-link
-              class="remove-decoration"
+              class="remove-decoration bold"
               v-if="post.User.nickname != undefined"
               :to="'/profil/' + post.userId"
               >{{ post.User.nickname}}</router-link
             >
             <router-link
-              class="remove-decoration"
+              class="remove-decoration bold"
               v-else
               :to="'/profil/' + post.userId"
               >{{ post.User.email }}</router-link
@@ -37,7 +37,7 @@
             class="post-card__header-action"
             v-on:click="deletePost(post.id)"
           >
-            X ( delete )
+            <i class="fas fa-trash-alt"></i>
           </button>
         </div>
         <!-- BODY DE CARD -->
@@ -47,9 +47,9 @@
             <p>{{ post.content }}</p>
           </div>
           <!-- Image de la publication -->
-          <div class="post-card__body__image">
+          <div  v-if="post.postImageUrl.length != 0" class="post-card__body__image">
             <img
-              v-if="post.postImageUrl.length != 0"
+             
               :src="post.postImageUrl"
               v-bind:alt="
                 'Image contenus dans une publication de ' + post.User.email
@@ -68,10 +68,10 @@
           </div>
           <!-- Bouton de like et dislike -->
         <!-- like -->
-        <div class="post-card__footer reaction">
+        <div class="post-card__footer__reaction flex-row">
           <div
             v-on:click="reactToPost(1, post.id)"
-            class="post-card__footer reaction__like"
+            class="reaction__button"
           >
             <i
  
@@ -81,7 +81,7 @@
           <!-- dislike -->
           <div
             v-on:click="reactToPost(-1, post.id)"
-            class="post-card__footer reaction__dislike"
+            class="reaction__button"
           >
             <i
               class="fas fa-thumbs-down red"
@@ -98,6 +98,7 @@
         <form
           @submit.prevent="addComment(post.id)"
           class="post-card__comments-section__write-form"
+          id="form-comment-postList"
         >
           <textarea
             name="comment"
@@ -109,14 +110,14 @@
           ></textarea>
           <input type="submit" value="Publier votre commentaire" />
         </form>
-        </div>
         <!-- Liste des commentaires de la publications -->
-        <div v-if="post.Comments.length != 0" class="post-card__append-comments">
-          <div class="post-card__append-comments__comment"
+        <div v-if="post.Comments.length != 0" class="post-card__comments-section">
+          <div class="post-card__comments-section__comments flex-row"
           v-for="(comment, index) in post.Comments.slice(-3)" :key="index">
-          <div class="post-card__append-comments__comment__left-author">{{comment.User.nickname || comment.User.email}}</div>
-          <div class="post-card__append-comments__comment__right-content">{{comment.content}}</div>
+          <div class="post-card__comments-section__comments__left-author"><router-link class="remove-decoration" :to="'/post/' + comment.UserId">{{comment.User.nickname || comment.User.email}} à dit</router-link></div>
+          <div class="post-card__comments-section__comments__right-content">{{comment.content}}</div>
           </div>
+        </div>
         </div>
       <!-- CARD APPEND END -->
     </div>
@@ -173,7 +174,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       this.axios.get("http://localhost:3000/api/post/").then((posts) => {
         /* Puis, enregistrement des posts reçus dans la data 'listOfPosts' */
         this.listOfPosts = posts.data.posts;
-        /* Loop "for...in" sur le resultat de la promise (Array contenant TOUT les Posts) 
+        /* Loop "for...in" sur la Data Array contenant TOUT les Posts) 
         Et nous allons créer, pour chaque post, une entrée dans notre Data 'comments', qui serviras de point d'ancrage pour
         les formulaire de commentaires. En effet, chaque Post auras sa propre entrée dans la Data 'comments' ayant l'ID du post comme Key 
         (PS: desolé pour le mal de tête)*/

@@ -13,7 +13,7 @@
       <div v-if="isSigned == true">
       <router-link class="remove-decoration clear-text bold" to="/home"><span>Home</span></router-link>
       <router-link class="remove-decoration clear-text bold" :to="'/profil/'+ this.userId "><span>Profil</span></router-link> 
-      <router-link class="remove-decoration clear-text bold" v-if="this.isAdmin == 'true'" to="/admin-dashboard/"><span>Dashboard Administrateur</span></router-link>
+      <router-link class="remove-decoration clear-text bold" v-if="this.isAdmin == 'true'" to="/admin-dashboard/"><span>( Dashboard Administrateur) </span></router-link>
       <button class="button-deconnect" v-on:click="deconnect()">deconnexion</button>
       </div>
     </div>

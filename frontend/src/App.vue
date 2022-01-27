@@ -158,6 +158,7 @@ span {
 /* classes utilitaires */
 .remove-decoration {
   text-decoration: none;
+  color: $primary-color
 }
 
 .clear-text {
@@ -170,6 +171,15 @@ span {
 
 .contained {
   object-fit: contain;
+}
+
+.primary-colored {
+  color: $primary-color
+}
+
+.flex-row {
+      display: flex;
+      flex-direction: row;
 }
 
 /* ID */
