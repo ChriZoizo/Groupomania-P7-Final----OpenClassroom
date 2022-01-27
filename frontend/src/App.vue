@@ -2,10 +2,10 @@
   <div id="view">
     <Navbar v-on:deconnect="deconnect()" />
     <div v-if="isSigned != true">
-      <Login v-on:signed="signed" />
+      <Login v-on:signed="signed"/>
     </div>
     <div v-if="isSigned == true">
-      <router-view :key="$route.fullPath" />
+      <router-view :key="$route.fullPath"/>
     </div>
     <Footer />
   </div>
@@ -28,19 +28,15 @@ export default {
       user: {
         userId: localStorage.getItem("userId"),
         email: "",
-        fistName: "",
-        lastName: "",
-        nickname: "",
-        bio: "",
         isAdmin: false,
       },
       userToken: localStorage.getItem("userToken"),
     };
   },
-
-  beforeCreate() {},
-  mounted() {
+  beforeMount() {
     this.checkPreviousConnection();
+  },
+  mounted() {
   },
 
   methods: {
@@ -65,18 +61,18 @@ export default {
       /* Booleen signifiant si le user est Admin */
       localStorage.setItem("userIsAdmin", userDatas.isAdmin);
       this.user.userId = userDatas.id;
+      this.user.email = userDatas.email;
       this.user.isAdmin = userDatas.isAdmin;
-      this.setUserInfosData(userDatas);
       this.$router.go("/home");
     },
 
     checkPreviousConnection() {
       if (this.userToken != null && this.user.userId != null) {
-        this.axios
+/*         this.axios
           .get(`http://localhost:3000/api/user/${this.user.userId}`)
-          .then((user) => {
-            this.setUserInfosData(user.data.user);
-          });
+          .then(() => {
+          })
+          .catch(err => console.log(err)); */
         this.isSigned = true;
         this.isAdmin = localStorage.getItem("userIsAdmin");
       } else {
@@ -84,20 +80,12 @@ export default {
         this.isSigned = false;
       }
     },
-
-    setUserInfosData(data) {
-      this.user.email = data.email;
-      this.user.firstName = data.firstName;
-      this.user.lastName = data.lastName;
-      this.user.nickname = data.nickname;
-      this.user.bio = data.bio;
-    },
   },
 };
 </script>
 
 <style lang="scss">
-/* SETTINGS (partie contenant les mixins, variables et importations) */
+/* SCSS SETTINGS (partie contenant les mixins, variables et importations) */
 /* Fonts ( 'Montserra' ) */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
 
@@ -175,6 +163,10 @@ span {
 
 .primary-colored {
   color: $primary-color
+}
+
+.tertiary-colored {
+  color: $tertiary-color
 }
 
 .flex-row {

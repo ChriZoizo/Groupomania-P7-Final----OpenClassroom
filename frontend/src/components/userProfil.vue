@@ -4,7 +4,7 @@
       <div class="profil__header">
         <div class="profil__header__names">
           <p v-if="this.user.nickname != null">
-            Bienvenue 
+            Bienvenue
             <span class="informations">"{{ this.user.nickname }}"</span>
           </p>
           <p v-if="this.user.nickname == null">Votre profil</p>
@@ -33,7 +33,9 @@
         class="profil__action-buttons"
         v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
       >
-        <button v-on:click="updateMode = !updateMode">modifier votre nom</button>
+        <button v-on:click="updateMode = !updateMode">
+          modifier votre nom
+        </button>
       </div>
     </div>
     <form
@@ -106,17 +108,20 @@ export default {
     },
 
     getUserInfos(id) {
-      this.axios.get(`http://localhost:3000/api/user/${id}`).then((user) => {
-        let userInfo = user.data.user;
-        (this.user.userId = userInfo.id),
-          (this.user.email = userInfo.email),
-          (this.user.firstName = userInfo.firstName),
-          (this.user.lastName = userInfo.lastName),
-          (this.user.nickname = userInfo.nickname),
-          (this.user.bio = userInfo.bio),
-          (this.user.createdAt = userInfo.createdAt),
-          (this.user.isAdmin = userInfo.isAdmin);
-      });
+      this.axios
+        .get(`http://localhost:3000/api/user/${id}`)
+        .then((user) => {
+          let userInfo = user.data.user;
+          (this.user.userId = userInfo.id),
+            (this.user.email = userInfo.email),
+            (this.user.firstName = userInfo.firstName),
+            (this.user.lastName = userInfo.lastName),
+            (this.user.nickname = userInfo.nickname),
+            (this.user.bio = userInfo.bio),
+            (this.user.createdAt = userInfo.createdAt),
+            (this.user.isAdmin = userInfo.isAdmin);
+        })
+        .catch((err) => console.log(err));
     },
 
     updateProfil(id) {
@@ -125,7 +130,8 @@ export default {
         .then((profil) => {
           console.log(profil);
           history.go(0);
-        });
+        })
+        .catch((err) => console.log(err));
     },
 
     deleteProfil() {
@@ -134,7 +140,8 @@ export default {
         .then(() => {
           localStorage.clear();
           this.$router.go("/home");
-        });
+        })
+        .catch((err) => console.log(err));
     },
   },
 };

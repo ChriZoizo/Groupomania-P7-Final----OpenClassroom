@@ -9,7 +9,7 @@
       </div> -->
       <div class="footer__middle">
         <div class="footer__middle__aside">
-            <a href="#navbar"><i class="fas fa-angle-double-up fa-2x"></i></a>
+            <div v-on:click="scrollToTop"><i class="fas fa-angle-double-up fa-2x tertiary-colored"></i></div>
             <p>Haut de page</p>
         </div>
             <a href="mailto:groupomania-support@yopmail.com">Contactez nous</a>
@@ -28,5 +28,11 @@
 
 export default {
     name: "footer",
+
+    methods: {
+      scrollToTop() {
+        window.scrollTo(0, top)
+      }
+    }
 }
 </script>

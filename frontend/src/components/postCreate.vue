@@ -73,7 +73,8 @@ export default {
         .then((res) => {
           console.log("Publication créé !", res)
           this.$router.go('/home/')
-          });
+          })
+          .catch(err=> console.log(err));
     },
   },
 };

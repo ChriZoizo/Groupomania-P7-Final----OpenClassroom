@@ -4,6 +4,7 @@
     <img alt="Vue logo" src="../assets/logo.png" />
     <section>
       <PostCreateFormular />
+      {{informations}}
       <PostList />
     </section>
   </div>
@@ -15,6 +16,8 @@ import PostCreateFormular from "@/components/postCreate.vue";
 
 export default {
   name: "Home",
+
+  props: ['informations'],
   components: {
     PostList,
     PostCreateFormular,

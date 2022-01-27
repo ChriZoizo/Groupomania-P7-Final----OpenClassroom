@@ -22,7 +22,7 @@
               class="remove-decoration bold"
               v-if="post.User.nickname != undefined"
               :to="'/profil/' + post.userId"
-              >{{ post.User.nickname}}</router-link
+              >{{ post.User.nickname }}</router-link
             >
             <router-link
               class="remove-decoration bold"
@@ -47,9 +47,11 @@
             <p>{{ post.content }}</p>
           </div>
           <!-- Image de la publication -->
-          <div  v-if="post.postImageUrl.length != 0" class="post-card__body__image">
+          <div
+            v-if="post.postImageUrl.length != 0"
+            class="post-card__body__image"
+          >
             <img
-             
               :src="post.postImageUrl"
               v-bind:alt="
                 'Image contenus dans une publication de ' + post.User.email
@@ -67,34 +69,29 @@
             </p>
           </div>
           <!-- Bouton de like et dislike -->
-        <!-- like -->
-        <div class="post-card__footer__reaction flex-row">
-          <div
-            v-on:click="reactToPost(1, post.id)"
-            class="reaction__button"
-          >
-            <i
- 
-              class="fas fa-thumbs-up green"
-            ></i><span class="reaction__like--counter">{{post.likeCounter}}</span> 
+          <!-- like -->
+          <div class="post-card__footer__reaction flex-row">
+            <div v-on:click="reactToPost(1, post.id)" class="reaction__button">
+              <i class="fas fa-thumbs-up green"></i
+              ><span class="reaction__like--counter">{{
+                post.likeCounter
+              }}</span>
+            </div>
+            <!-- dislike -->
+            <div v-on:click="reactToPost(-1, post.id)" class="reaction__button">
+              <i class="fas fa-thumbs-down red"></i
+              ><span class="reaction__dislike--counter">{{
+                post.dislikeCounter
+              }}</span>
+            </div>
           </div>
-          <!-- dislike -->
-          <div
-            v-on:click="reactToPost(-1, post.id)"
-            class="reaction__button"
-          >
-            <i
-              class="fas fa-thumbs-down red"
-            ></i><span class="reaction__dislike--counter">{{post.dislikeCounter}}</span>
-          </div>
-        </div>
         </div>
       </router-link>
       <!-- CARD END -->
 
       <!-- CARD APPEND Comments -->
-        <!-- Ecrire un commentaire -->
-              <div class="post-card__comments-section">
+      <!-- Ecrire un commentaire -->
+      <div class="post-card__comments-section">
         <form
           @submit.prevent="addComment(post.id)"
           class="post-card__comments-section__write-form"
@@ -111,14 +108,29 @@
           <input type="submit" value="Publier votre commentaire" />
         </form>
         <!-- Liste des commentaires de la publications -->
-        <div v-if="post.Comments.length != 0" class="post-card__comments-section">
-          <div class="post-card__comments-section__comments flex-row"
-          v-for="(comment, index) in post.Comments.slice(-3)" :key="index">
-          <div class="post-card__comments-section__comments__left-author"><router-link class="remove-decoration" :to="'/post/' + comment.UserId">{{comment.User.nickname || comment.User.email}} à dit</router-link></div>
-          <div class="post-card__comments-section__comments__right-content">{{comment.content}}</div>
+        <div
+          v-if="post.Comments.length != 0"
+          class="post-card__comments-section"
+        >
+          <div
+            class="post-card__comments-section__comments flex-row"
+            v-for="(comment, index) in post.Comments.slice(-3)"
+            :key="index"
+          >
+            <div class="post-card__comments-section__comments__left-author">
+              <router-link
+                class="remove-decoration"
+                :to="'/post/' + comment.UserId"
+                >{{ comment.User.nickname || comment.User.email }} à
+                dit</router-link
+              >
+            </div>
+            <div class="post-card__comments-section__comments__right-content">
+              {{ comment.content }}
+            </div>
           </div>
         </div>
-        </div>
+      </div>
       <!-- CARD APPEND END -->
     </div>
     <button v-on:click="test">cdlkfpfpref</button>
@@ -144,9 +156,7 @@ export default {
       isAdmin: localStorage.getItem("userIsAdmin"),
 
       /* Objet vide qui contiendras les "slots" pour les commentaires des Posts (sans cela, tout les forms ont le même contenus) */
-            comments: {
-              },
-            
+      comments: {},
     };
   },
 
@@ -154,19 +164,18 @@ export default {
   /* CREATED : appel la method 'setLocalStorageValue' lorsque le composant est rendu pour declarer en Datas
   des informations sur l'utilisateur connecté*/
   created() {
-    this.setLocalStorageValue()
+    this.setLocalStorageValue();
   },
 
-/* BEFOREMONT : Appel la methode 'getAllPostAndSetDatas' qui recupere tout les Posts via un apperl a l'API,
+  /* BEFOREMONT : Appel la methode 'getAllPostAndSetDatas' qui recupere tout les Posts via un apperl a l'API,
 les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
   beforeMount() {
-     this.getAllPostAndSetData()
+    this.getAllPostAndSetData();
   },
-
 
   /* METHODS */
   methods: {
-       /* getAllPostAndSetData: recupere tout les POSTs en BDD via appel a API. 
+    /* getAllPostAndSetData: recupere tout les POSTs en BDD via appel a API. 
     Puis créer les datas qui serviront aux formulaires de commentaires. Sans cela, ils seraient tous liés
     Enfin, change le data 'loading' en false */
     getAllPostAndSetData() {
@@ -178,33 +187,40 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
         Et nous allons créer, pour chaque post, une entrée dans notre Data 'comments', qui serviras de point d'ancrage pour
         les formulaire de commentaires. En effet, chaque Post auras sa propre entrée dans la Data 'comments' ayant l'ID du post comme Key 
         (PS: desolé pour le mal de tête)*/
-        for (const post of this.listOfPosts ) {
-          console.log(post)
+        for (const post of this.listOfPosts) {
+          console.log(post);
           /* recuperation de l'ID du post qui servira de "key" */
-          let index = post.Id
+          let index = post.Id;
           /* Ajout de l'Objet Vide dans 'initialiBoard'*/
-         this.comments [index]
+          this.comments[index];
         }
-      });
-        /* passe la Data Booleen 'loading' en false */
-        this.loading = false;
+      })
+      .catch(err=> console.log(err));
+      /* passe la Data Booleen 'loading' en false */
+      this.loading = false;
     },
 
     deletePost(id) {
       this.axios.delete(`http://localhost:3000/api/post/${id}`).then(() => {
         console.log("POST DELETED");
         this.$router.go("/home");
-      });
+      })
+      .catch(err=> console.log(err));
     },
 
     addComment(id) {
-      let newComment = {userId: this.currentUserId, content: this.comments[id], postId: id}
+      let newComment = {
+        userId: this.currentUserId,
+        content: this.comments[id],
+        postId: id,
+      };
 
-      console.log(this.comments)
+      console.log(this.comments);
       console.log(this.comments[id]);
       this.axios
         .post("http://localhost:3000/api/comment", newComment)
-       .then(() => history.go(0)); 
+        .then(() => history.go(0))
+        .catch(err=> console.log(err));
     },
 
     reactToPost(val, postId) {
@@ -220,31 +236,33 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       console.log(likeDatas);
       this.axios
         .post("http://localhost:3000/api/post/like", likeDatas)
-        .then(() => {});
-      history.go(0);
+        .then(() => {
+          history.go(0);
+        })
+        .catch((err) => console.log(err));
     },
 
     checkReact(post) {
       post.LikePosts.find((react) => {
         if (react.UserId == this.currentUserId) {
           switch (react.value) {
-          case 1:
-            return {like: true, dislike : false} 
+            case 1:
+              return { like: true, dislike: false };
 
-          case -1:
-            return {like: false, dislike: true}
+            case -1:
+              return { like: false, dislike: true };
 
-          default:
-            return {like: false, dislike: false}
+            default:
+              return { like: false, dislike: false };
+          }
         }
-        }
-      })
+      });
     },
 
     setLocalStorageValue() {
       this.currentUserId = localStorage.getItem("userId");
       this.isAdmin = localStorage.getItem("userIsAdmin");
-    }
+    },
   },
 };
 </script>

@@ -2,6 +2,7 @@
   <nav id="navbar">
     <div id="navbar__left">
       <router-link to="/home" class="contained">
+      {{}}
         <img
           class="main-logo"
           alt="Logo de l'entreprise Groupomania"

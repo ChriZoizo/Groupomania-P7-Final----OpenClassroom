@@ -93,7 +93,9 @@
               v-bind:class="{ grey: liked, green: !liked }"
               class="fas fa-thumbs-up green"
             ></i
-            ><span class="reaction__like--counter">{{ post.likeCounter }}</span>
+            ><span class="reaction__like--counter">{{
+              countLike.numberOfLike
+            }}</span>
           </div>
           <!-- dislike -->
           <div
@@ -105,7 +107,7 @@
               class="fas fa-thumbs-down red"
             ></i
             ><span class="reaction__dislike--counter">{{
-              post.dislikeCounter
+              countLike.numberOfDislike
             }}</span>
           </div>
         </div>
@@ -175,7 +177,7 @@
       <div class="post-update-card__body">
         <!--  FORM BEGIN -->
         <form
-          @submit.prevent="updatePost(post.id)"
+          @submit="updatePost(post.id)"
           class="post-update-form__content"
         >
           <!-- inputs pour modifier le CONTENUS de la publication -->
@@ -241,8 +243,17 @@ export default {
         content: "",
       },
 
-      post: "",
+      post: {},
     };
+  },
+
+  computed: {
+    countLike() {
+      return {
+        numberOfLike: this.post.likeCounter,
+        numberOfDislike: this.post.dislikeCounter,
+      };
+    },
   },
 
   created() {
@@ -270,37 +281,48 @@ export default {
     /* Methode qui recupere grace a un appel a la BDD via l'API les informations du post */
     getPostInfos(id) {
       /* fait un appel a l'API en integrant l''id' du parametre de la fonction a l'URI */
-      this.axios.get(`http://localHost:3000/api/post/${id}`).then((res) => {
-        /* enregistre TOUT le resultat dans la data 'post' */
-        this.post = res.data.post;
-        /* enregistre juste le contenus du post dans la data 'postUpdateData.content' qui utilisé lorsque
+      this.axios
+        .get(`http://localHost:3000/api/post/${id}`)
+        .then((res) => {
+          /* enregistre TOUT le resultat dans la data 'post' */
+          this.post = res.data.post;
+          /* enregistre juste le contenus du post dans la data 'postUpdateData.content' qui utilisé lorsque
         l'utilisateur fait une modification de la publication, elle est alors utilisé en tant que 'value' du "textarea" */
-        this.postUpdateData.content = res.data.post.content;
-      });
+          this.postUpdateData.content = res.data.post.content;
+          this.likedDisliked()
+        })
+        .catch((err) => console.log(err));
     },
 
     addComment() {
       console.log(this.newComment);
       this.axios
         .post("http://localhost:3000/api/comment", this.newComment)
-        .then(() => history.go(0));
+        .then(() => history.go(0))
+        .catch((err) => console.log(err));
     },
 
     deleteComment(id) {
       this.axios
         .delete(`http://localhost:3000/api/comment/${id}`)
-        .then(() => history.go(0));
+        .then(() => history.go(0))
+        .catch((err) => console.log(err));
     },
 
     likedDisliked() {
       this.post.LikePosts.find((react) => {
+        console.log(react)
         switch (react.value) {
           case 1:
-            this.liked = !this.liked;
+            this.liked = true;
             break;
           case -1:
-            this.disliked = !this.disliked;
+            this.disliked = true;
             break;
+            case 0:
+              this.disliked = false
+              this.liked = false;
+              break;
           default:
             break;
         }
@@ -322,8 +344,10 @@ export default {
       console.log(likeDatas);
       this.axios
         .post("http://localhost:3000/api/post/like", likeDatas)
-        .then(() => {});
-      history.go(0);
+        .then(() => {
+          this.getPostInfos(this.post.id);
+        })
+        .catch((err) => console.log(err));
     },
 
     /* Methode qui supprime le post dont l'id correspond a la valeur passée en paramétre */
@@ -333,7 +357,8 @@ export default {
         .delete(`http://localhost:3000/api/post/${id}`)
         .then(() =>
           this.$router.go("/home")
-        ); /* redirect pour rafraichir la page (j'ai pas trouvé mieux :/) */
+        ) /* redirect pour rafraichir la page (j'ai pas trouvé mieux :/) */
+        .catch((err) => console.log(err));
     },
 
     /* Methode pour modifier la publication */
@@ -349,8 +374,9 @@ export default {
         .put(`http://localhost:3000/api/post/${id}`, formData)
         .then((res) => {
           console.log(res);
-          this.$router.go(`/home/${id}`);
-        });
+           this.getPostInfos(this.post.id);
+        })
+        .catch((err) => console.log(err));
     },
 
     loadAttachment(event) {
