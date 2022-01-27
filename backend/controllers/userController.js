@@ -123,10 +123,7 @@ exports.login = (req, res) => {
 exports.updateUserProfil = (req, res) => {
   User.update(
     {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
       nickname: req.body.nickname,
-      bio: req.body.bio,
       isAdmin: req.body.isAdmin
     },
     { where: { id: req.params.id } }
@@ -159,7 +156,7 @@ exports.deleteUser = (req, res) => {
 /* --------------------------------- Fonctions Supplémentaires ------------------------------------*/
 /* FIND BY NAME */
 exports.findByName = (req, res) => {
-  User.findOne({ where: { firstName: req.params.firstName }, include: models.Post }).then(user => {
+  User.findOne({ where: { nickname: req.body.nickname }, include: models.Post }).then(user => {
     res
       .status(200)
       .json({ user })
@@ -168,7 +165,6 @@ exports.findByName = (req, res) => {
       })
   })
 }
-
 /* ADMIN FUNCTION ??? */
 
 exports.transformIntoAdmin = (req, res) => {

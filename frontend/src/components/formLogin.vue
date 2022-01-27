@@ -52,8 +52,20 @@
             id="password__signup"
             name="passwordSignup"
             class="form-control__signup"
-            placeholder="exemple: pasazertysvp"
+            placeholder="Ex: pasazertysvp"
             v-model="inputForm.password"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="nickname"> Nom complet :</label>
+          <input
+            type="nickname"
+            id="nickname__signup"
+            name="nicknameSignup"
+            class="form-control__signup"
+            placeholder="Ex: Jean Desmoulin"
+            v-model="inputForm.nickname"
             required
           />
         </div>
@@ -76,6 +88,7 @@ export default {
       inputForm: {
         email: "",
         password: "",
+        nickname: "",
       },
       /* INUTILE ? */
     };

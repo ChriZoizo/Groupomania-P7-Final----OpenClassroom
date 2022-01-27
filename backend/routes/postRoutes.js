@@ -16,6 +16,5 @@ router.put('/:id', multer, postController.updatePost)
 router.delete('/:id', postController.deletePost)
 
 router.post('/like', postController.likeOrDislikePost)
-router.post('/vote', postController.upvotePost)
 
 module.exports = router

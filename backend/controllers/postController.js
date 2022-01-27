@@ -139,6 +139,14 @@ exports.deletePost = (req, res) => {
 
 /* --------------------------------- Fonctions Supplémentaires ------------------------------------*/
 
+exports.getting = (req, res) => {
+  console.log(req.body)
+  reactionTable.findAll({
+    include: [{ all: true, nested: true }]
+  }).then(ress => res.json({ress}))
+  .catch(err => res.json({}))
+}
+
 /* LIKE OF DISLIKE POST
  Fonction qui gére les 'Like' et 'Dislike' */
 exports.likeOrDislikePost = (req, res) => {
@@ -150,15 +158,16 @@ exports.likeOrDislikePost = (req, res) => {
     /* Cherche dans la table 'LikePosts' pour detruire le like ou dislike */
     reactionTable
       .findOne({
-        where: { postId: req.body.postId },
+        where: { UserId: req.body.userId },
         include: [
           {
             model: Post,
-            where: { id: req.body.userId }
+            where: { id: req.body.postId }
           }
         ]
       })
       .then(result => {
+        console.log(result.Post)
         if (result.value == 1) {
           console.log(result)
           result.Post.decrement('likeCounter')
@@ -239,7 +248,7 @@ exports.likeOrDislikePost = (req, res) => {
                 post.increment('likeCounter')
               }
               if (likeValue < 0) {
-                post.increment('likeCounter')
+                post.increment('dislikeCounter')
               }
             })
             .then(() => {

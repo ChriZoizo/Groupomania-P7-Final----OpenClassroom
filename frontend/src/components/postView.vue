@@ -15,16 +15,18 @@
         <div class="post-view-card__header__userName">
           <!-- Nom : Si l'auteur a rensigné un nom et/ou prenom, celui-ci s'affiche -->
           <router-link
-           class="remove-decoration"
-            v-if="this.post.User.firstName != null"
+            class="remove-decoration"
+            v-if="this.post.User.nickname != null"
             :to="'/profil/' + this.post.userId"
-            >{{ this.post.User.firstName }}
-            {{ this.post.User.lastName }}</router-link
+            >{{ this.post.User.nickname }}</router-link
           >
           <!-- SINON affiche l'email -->
-          <router-link class="remove-decoration" v-else :to="'/profil/' + this.post.userId">{{
-            this.post.User.email
-          }}</router-link>
+          <router-link
+            class="remove-decoration"
+            v-else
+            :to="'/profil/' + this.post.userId"
+            >{{ this.post.User.email }}</router-link
+          >
         </div>
         <!-- Boutons d'action  -->
         <!-- UNIQUEMENT Si l'utilisateur actuel est Administrateur, ou est l'auteur dela publication -->
@@ -59,12 +61,16 @@
           <p>{{ this.post.content }}</p>
         </div>
         <!-- Image de la publication si il y en as une -->
-        <div class="post-view-card__body__image">
-          <img
-            :src="this.post.postImageUrl"
-            v-bind:alt="'Image contenus dans une publication'"
-            class="post-image-container"
-          />
+        <div
+          v-if="post.postImageUrl.length > 0"
+          class="post-view-card__body__image"
+        >
+          <a :href="post.postImageUrl"
+            ><img
+              :src="this.post.postImageUrl"
+              v-bind:alt="'Image contenus dans une publication'"
+              class="post-image-container"
+          /></a>
         </div>
       </div>
       <!-- CARD-footer -->
@@ -77,26 +83,30 @@
             {{ new Date(this.post.createdAt).getFullYear() }}
           </p>
         </div>
-        <!-- Bouton de like -->
-        <div class="post-card__footer__reaction">
+        <!-- like -->
+        <div class="post-card__footer reaction">
           <div
             v-on:click="reactToPost(1)"
-            class="post-card__footer__reaction__like"
+            class="post-card__footer reaction__like"
           >
             <i
               v-bind:class="{ grey: liked, green: !liked }"
               class="fas fa-thumbs-up green"
-            ></i>
+            ></i
+            ><span class="reaction__like--counter">{{ post.likeCounter }}</span>
           </div>
-          <!-- Bouton de dislike -->
+          <!-- dislike -->
           <div
             v-on:click="reactToPost(-1)"
-            class="post-card__footer__reaction__dislike"
+            class="post-card__footer reaction__dislike"
           >
             <i
               v-bind:class="{ grey: disliked, red: !disliked }"
               class="fas fa-thumbs-down red"
-            ></i>
+            ></i
+            ><span class="reaction__dislike--counter">{{
+              post.dislikeCounter
+            }}</span>
           </div>
         </div>
       </div>
@@ -129,13 +139,11 @@
         >
           <div class="post-card__comments-section__comment-card__author">
             <!-- Prenom OU nom OU email de l'auteur du commentaire -->
-            <router-link class="remove-decoration" :to="'/profil/' + comment.User.id"
+            <router-link
+              class="remove-decoration"
+              :to="'/profil/' + comment.User.id"
               ><p>
-                {{
-                  comment.User.firstName ||
-                  comment.User.lastName ||
-                  comment.User.email
-                }}
+                {{ comment.User.nickname || comment.User.email }}
               </p></router-link
             >
           </div>
@@ -151,9 +159,9 @@
               {{ new Date(this.post.createdAt).getFullYear() }}
             </p>
             <div
-            v-if="comment.User.id == currentUserId || userIsAdmin == 'true'"
-            v-on:click="deleteComment(comment.id)"
-            onclick="return confirm('Etes-vous sûr d'effacer ce commentaire ?)"
+              v-if="comment.User.id == currentUserId || userIsAdmin == 'true'"
+              v-on:click="deleteComment(comment.id)"
+              onclick="return confirm('Etes-vous sûr d'effacer ce commentaire ?)"
               class="post-card__comments-section__comment-card__footer-delete"
             >
               <i class="fas fa-trash"></i>
@@ -279,17 +287,22 @@ export default {
     },
 
     deleteComment(id) {
-      this.axios.delete(`http://localhost:3000/api/comment/${id}`).then(()=> history.go(0))
+      this.axios
+        .delete(`http://localhost:3000/api/comment/${id}`)
+        .then(() => history.go(0));
     },
 
     likedDisliked() {
-      this.post.LikePosts.find((obj) => {
-        if (obj.UserId == this.currentUserId) {
-          if (obj.value == 1) {
+      this.post.LikePosts.find((react) => {
+        switch (react.value) {
+          case 1:
             this.liked = !this.liked;
-          } else if (obj.value == -1) {
+            break;
+          case -1:
             this.disliked = !this.disliked;
-          }
+            break;
+          default:
+            break;
         }
       });
       console.log(this.liked);
@@ -306,6 +319,7 @@ export default {
         userId: this.currentUserId,
         value,
       };
+      console.log(likeDatas);
       this.axios
         .post("http://localhost:3000/api/post/like", likeDatas)
         .then(() => {});

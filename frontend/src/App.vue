@@ -132,7 +132,7 @@ section {
   width: 80%;
   margin: 0 auto;
 }
-
+/* ?? */
 #view {
   display: flex;
   flex-direction: column;

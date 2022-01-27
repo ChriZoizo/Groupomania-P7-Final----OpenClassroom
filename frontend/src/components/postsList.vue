@@ -10,17 +10,6 @@
         <!-- CARD-header -->
         <div class="post-card__header">
           <!-- Image de pofil -->
-          <!-- si le USER contient une URL d'image de profil affiche l'image en question -->
-          <!--          <div
-          class="post-card__header-profilImg"
-          v-if="listOfUsers[post.userId].profilImageUrl != null"
-        >
-          <img
-            class="post-card__header-profilImg container-sm"
-            :src="listOfUsers[post.userId].profilImageUrl"
-          />
-        </div>  -->
-          <!-- sinon affiche une image de profil par defaut -->
           <div class="post-card__header-profilImg">
             <img
               class="post-card__header-profilImg container-sm"
@@ -31,9 +20,9 @@
           <div class="post-card__header-userName">
             <router-link
               class="remove-decoration"
-              v-if="post.User.firstName != undefined"
+              v-if="post.User.nickname != undefined"
               :to="'/profil/' + post.userId"
-              >{{ post.User.firstName }} {{ post.User.lastName }}</router-link
+              >{{ post.User.nickname}}</router-link
             >
             <router-link
               class="remove-decoration"
@@ -42,9 +31,9 @@
               >{{ post.User.email }}</router-link
             >
           </div>
-          <!-- Bouton d'action -->
+          <!-- Bouton DELETE -->
           <button
-            v-if="post.userId == this.userId || this.isAdmin == 'true'"
+            v-if="post.userId == this.currentUserId || this.isAdmin == 'true'"
             class="post-card__header-action"
             v-on:click="deletePost(post.id)"
           >
@@ -55,7 +44,7 @@
         <!-- Contenus -->
         <div class="post-card__body">
           <div class="post-card__body__content">
-            <p>contenu du post: {{ post.content }}</p>
+            <p>{{ post.content }}</p>
           </div>
           <!-- Image de la publication -->
           <div class="post-card__body__image">
@@ -72,68 +61,132 @@
         <div class="post-card__footer">
           <div class="post-card__footer__date">
             <p>
-              date du post : {{ new Date(post.createdAt).getDate() }} /
+              Publié le : {{ new Date(post.createdAt).getDate() }} /
               {{ new Date(post.createdAt).getMonth() + 1 }} /
               {{ new Date(post.createdAt).getFullYear() }}
             </p>
           </div>
           <!-- Bouton de like et dislike -->
-<!--           <div class="post-card__footer__reaction">
-            <div class="post-card__footer__reaction__like">
-              <i class="fas fa-thumbs-up green"></i>
-            </div>
-            <div class="post-card__footer__reaction__dislike">
-              <i class="fas fa-thumbs-down red"></i>
-            </div>
-          </div> -->
+        <!-- like -->
+        <div class="post-card__footer reaction">
+          <div
+            v-on:click="reactToPost(1, post.id)"
+            class="post-card__footer reaction__like"
+          >
+            <i
+ 
+              class="fas fa-thumbs-up green"
+            ></i><span class="reaction__like--counter">{{post.likeCounter}}</span> 
+          </div>
+          <!-- dislike -->
+          <div
+            v-on:click="reactToPost(-1, post.id)"
+            class="post-card__footer reaction__dislike"
+          >
+            <i
+              class="fas fa-thumbs-down red"
+            ></i><span class="reaction__dislike--counter">{{post.dislikeCounter}}</span>
+          </div>
+        </div>
         </div>
       </router-link>
       <!-- CARD END -->
+
+      <!-- CARD APPEND Comments -->
+        <!-- Ecrire un commentaire -->
+              <div class="post-card__comments-section">
+        <form
+          @submit.prevent="addComment(post.id)"
+          class="post-card__comments-section__write-form"
+        >
+          <textarea
+            name="comment"
+            id="comment"
+            v-model="comments[post.id]"
+            placeholder="Commentez cette publication"
+            maxlength="200"
+            required
+          ></textarea>
+          <input type="submit" value="Publier votre commentaire" />
+        </form>
+        </div>
+        <!-- Liste des commentaires de la publications -->
+        <div v-if="post.Comments.length != 0" class="post-card__append-comments">
+          <div class="post-card__append-comments__comment"
+          v-for="(comment, index) in post.Comments.slice(-3)" :key="index">
+          <div class="post-card__append-comments__comment__left-author">{{comment.User.nickname || comment.User.email}}</div>
+          <div class="post-card__append-comments__comment__right-content">{{comment.content}}</div>
+          </div>
+        </div>
+      <!-- CARD APPEND END -->
     </div>
+    <button v-on:click="test">cdlkfpfpref</button>
   </div>
 </template>
 
 <script>
-import Appli from "../App.vue";
 export default {
   name: "postList",
 
   /* DATA :  variables */
   data() {
     return {
-      testing: Appli,
       /* loading: boolean definissant si le composantr charge des elements (modifié via les METHODS) */
       loading: true,
-      /* listOfPosts: Contient tout les posts en BDD renvoyé par la methods getAllPost() */
-      listOfPosts: "",
-      /* listOfusers: Contient tout les users en BDD renvoyé par la methods getAllUser() */
-      listOfUsers: "",
+      /* listOfPosts: Objet qui Contiendras tous les posts en BDD renvoyé par la methods getAllPost() */
+      listOfPosts: {},
 
       /* Valeurs recuperés dans le localStorage les infos enregistré lors de la connexion du user ( Script de app.vue) */
       /* Contient l'ID de l'utilisateur */
-      userId: localStorage.getItem("userId"),
+      currentUserId: parseInt(localStorage.getItem("userId")),
       /* userIsAdmin: Contient le booleen definisant si le user est ADMIN  */
       isAdmin: localStorage.getItem("userIsAdmin"),
+
+      /* Objet vide qui contiendras les "slots" pour les commentaires des Posts (sans cela, tout les forms ont le même contenus) */
+            comments: {
+              },
+            
     };
   },
 
   /* HOOK DE CYCLE DE VIE */
-  /* MOUNTED : appel les methods 'getAllPost' et 'getAllUser' lorsque le composant est rendu 
-  dans le but de remplir les data correspondantes avec les infos necessaire*/
+  /* CREATED : appel la method 'setLocalStorageValue' lorsque le composant est rendu pour declarer en Datas
+  des informations sur l'utilisateur connecté*/
   created() {
-    this.setLocalStorageValue(), this.getAllPost();
+    this.setLocalStorageValue()
   },
+
+/* BEFOREMONT : Appel la methode 'getAllPostAndSetDatas' qui recupere tout les Posts via un apperl a l'API,
+les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
+  beforeMount() {
+     this.getAllPostAndSetData()
+  },
+
 
   /* METHODS */
   methods: {
-    /* getAllPost: recupere tout les POSTs en BDD via appel a API, et change le data 'loading' en false */
-    getAllPost() {
+       /* getAllPostAndSetData: recupere tout les POSTs en BDD via appel a API. 
+    Puis créer les datas qui serviront aux formulaires de commentaires. Sans cela, ils seraient tous liés
+    Enfin, change le data 'loading' en false */
+    getAllPostAndSetData() {
+      /*  Appel a l'API */
       this.axios.get("http://localhost:3000/api/post/").then((posts) => {
-        /* enregistrement des posts reçus dans la data 'listOfPosts' */
+        /* Puis, enregistrement des posts reçus dans la data 'listOfPosts' */
         this.listOfPosts = posts.data.posts;
-        /* passe la data booleen 'loding' en false */
-        this.loading = false;
+        /* Loop "for...in" sur le resultat de la promise (Array contenant TOUT les Posts) 
+        Et nous allons créer, pour chaque post, une entrée dans notre Data 'comments', qui serviras de point d'ancrage pour
+        les formulaire de commentaires. En effet, chaque Post auras sa propre entrée dans la Data 'comments' ayant l'ID du post comme Key 
+        (PS: desolé pour le mal de tête)*/
+        for (const post of this.listOfPosts ) {
+          console.log(post)
+          /* recuperation de l'ID du post qui servira de "key" */
+          let index = post.Id
+          /* Ajout de l'Objet Vide dans 'initialiBoard'*/
+         this.comments [index]
+        }
       });
+        /* passe la Data Booleen 'loading' en false */
+        this.loading = false;
     },
 
     deletePost(id) {
@@ -143,16 +196,60 @@ export default {
       });
     },
 
-    setLocalStorageValue() {
-      this.userId = localStorage.getItem("userId");
-      this.isAdmin = localStorage.getItem("userIsAdmin");
+    addComment(id) {
+      let newComment = {userId: this.currentUserId, content: this.comments[id], postId: id}
+
+      console.log(this.comments)
+      console.log(this.comments[id]);
+      this.axios
+        .post("http://localhost:3000/api/comment", newComment)
+       .then(() => history.go(0)); 
     },
+
+    reactToPost(val, postId) {
+      let value = val;
+      if (this.liked == true || this.disliked == true) {
+        value = 0;
+      }
+      const likeDatas = {
+        postId: postId,
+        userId: this.currentUserId,
+        value,
+      };
+      console.log(likeDatas);
+      this.axios
+        .post("http://localhost:3000/api/post/like", likeDatas)
+        .then(() => {});
+      history.go(0);
+    },
+
+    checkReact(post) {
+      post.LikePosts.find((react) => {
+        if (react.UserId == this.currentUserId) {
+          switch (react.value) {
+          case 1:
+            return {like: true, dislike : false} 
+
+          case -1:
+            return {like: false, dislike: true}
+
+          default:
+            return {like: false, dislike: false}
+        }
+        }
+      })
+    },
+
+    setLocalStorageValue() {
+      this.currentUserId = localStorage.getItem("userId");
+      this.isAdmin = localStorage.getItem("userIsAdmin");
+    }
   },
 };
 </script>
 
 <style lang="scss">
-.post {
+/* .post {
   &-card {
     display: flex;
     flex-direction: column;
@@ -162,7 +259,6 @@ export default {
     margin: 5px 0;
     max-height: 350px;
     min-height: 200px;
-
     &__header {
       display: flex;
       justify-content: space-between;
@@ -180,4 +276,5 @@ export default {
     object-fit: scale-down;
   }
 }
+ */
 </style>

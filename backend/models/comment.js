@@ -18,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Post, {
         foreignKey: {
           allowNull: false, 
-          onDelete: 'CASCADE'
         }
       })
     }

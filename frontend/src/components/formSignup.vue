@@ -1,5 +1,4 @@
 <template>
-xjzqk
      <div v-show="displaySignupForm" class="form-signup">
       <form v-on:submit.prevent="signup" id="form-signup" method="post">
         <div class="form-group">

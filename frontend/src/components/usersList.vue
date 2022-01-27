@@ -28,9 +28,7 @@
           <div class="user-card__body__user-infos">
             <div class="user-card__body__email">{{ user.email }}</div>
             <div class="user-card__body__names">
-              {{ user.firstName || "Prénom inconnu" }}
-              {{ user.lastName || "Nom inconnu" }}
-              {{ user.nickname || "Pas de surnom" }}
+              {{ user.nickname || "Nom complet indisponible" }}
             </div>
           </div>
           <!-- bouton de suppression de l'utilisateur via la methode 'DELETEUSER()' (demande confirmation) -->
