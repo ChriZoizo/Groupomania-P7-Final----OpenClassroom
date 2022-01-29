@@ -1,56 +1,45 @@
 <!-- * - COMPOSANT : View d'une publication -->
 <template>
   <section class="container-post-view">
+    <!-- TITRE -->
+    <h1 class="post-view__title">Publication</h1>
+    <!-- Subtitle + auteur de la publication (router-link) -->
+    <h3 class="post-view__subtitle">
+      <router-link
+        class="remove-decoration primary-font"
+        :to="'/profil/' + post.userId"
+        ><span class="bold">de </span>{{ post.User.nickname || post.User.email }}</router-link
+      >
+    </h3>
     <!-- CARD BEGIN -->
     <div class="post-view-card" v-if="update == false">
       <!-- CARD-header -->
       <div class="post-view-card__header">
-        <!-- Image de pofil -->
-        <div class="post-view-card__header__profilImg">
-          <img
-            class="post-card__header-profilImg container-sm"
-            src="../assets/default_profil_image.png"
-          />
-        </div>
-        <div class="post-view-card__header__userName">
-          <!-- Nom : Si l'auteur a rensigné un nom et/ou prenom, celui-ci s'affiche -->
-          <router-link
-            class="remove-decoration"
-            v-if="this.post.User.nickname != null"
-            :to="'/profil/' + this.post.userId"
-            >{{ this.post.User.nickname }}</router-link
-          >
-          <!-- SINON affiche l'email -->
-          <router-link
-            class="remove-decoration"
-            v-else
-            :to="'/profil/' + this.post.userId"
-            >{{ this.post.User.email }}</router-link
-          >
-        </div>
         <!-- Boutons d'action  -->
         <!-- UNIQUEMENT Si l'utilisateur actuel est Administrateur, ou est l'auteur dela publication -->
         <div
-          v-if="this.post.userId == this.currentUserId || this.isAdmin === true"
-          class="post-view-action"
+          v-if="
+            post.userId == currentUserId || isAdmin == 'true'
+          "
+          class="post-view__action"
         >
-          <!-- Bouton suprrimer -->
-          <button
-            class="post-view-action__button"
-            v-if="
-              this.post.userId == this.currentUserId || this.isAdmin === true
-            "
-            onclick="return confirm('Etes-vous sûr de vouloir supprimer cette publication ?')"
-            v-on:click="deletePost(this.post.id)"
-          >
-            Supprimer le post
-          </button>
           <!-- Bouton modifier (Passe la data 'update' a true, faisant disparaitre cette section au profit de la section UPDATE) -->
           <button
-            class="post-view-action__button"
+            class="post-view__action__button"
             v-on:click="switchUpdateMode()"
           >
-            Modifier
+            <i class="fas fa-pencil-alt fa-lg"></i>
+          </button>
+          <!-- Bouton suprrimer -->
+          <button
+            class="post-view__action__button"
+            v-if="
+              post.userId == currentUserId || isAdmin == 'true'
+            "
+            onclick="return confirm('Etes-vous sûr de vouloir supprimer cette publication ?')"
+            v-on:click="deletePost(post.id)"
+          >
+            <i class="fas fa-trash-alt fa-lg"></i>
           </button>
         </div>
       </div>
@@ -58,7 +47,7 @@
       <div class="post-view-card__body">
         <!-- contenus de la publication -->
         <div class="post-view-card__body__content">
-          <p>{{ this.post.content }}</p>
+          <p>{{ post.content }}</p>
         </div>
         <!-- Image de la publication si il y en as une -->
         <div
@@ -67,27 +56,27 @@
         >
           <a :href="post.postImageUrl"
             ><img
-              :src="this.post.postImageUrl"
-              v-bind:alt="'Image contenus dans une publication'"
-              class="post-image-container"
+              :src="post.postImageUrl"
+              alt="'Image contenus dans une publication'"
+              class="post-view-image-container"
           /></a>
         </div>
       </div>
       <!-- CARD-footer -->
-      <div class="post-card__footer">
+      <div class="post-view-card__footer">
         <!-- Date de creation de la publication -->
-        <div class="post-card__footer__date">
+        <div class="post-view-card__footer__date">
           <p class="date">
-            date du post : {{ new Date(this.post.createdAt).getDate() }} /
-            {{ new Date(this.post.createdAt).getMonth() + 1 }} /
-            {{ new Date(this.post.createdAt).getFullYear() }}
+            <span>date de publication : </span> {{ new Date(post.createdAt).getDate() }} /
+            {{ new Date(post.createdAt).getMonth() + 1 }} /
+            {{ new Date(post.createdAt).getFullYear() }}
           </p>
         </div>
         <!-- like -->
-        <div class="post-card__footer reaction">
+        <div class="post-view-card__footer reaction">
           <div
             v-on:click="reactToPost(1)"
-            class="post-card__footer reaction__like"
+            class="post-view-card__footer reaction__like"
           >
             <i
               v-bind:class="{ grey: liked, green: !liked }"
@@ -100,7 +89,7 @@
           <!-- dislike -->
           <div
             v-on:click="reactToPost(-1)"
-            class="post-card__footer reaction__dislike"
+            class="post-view-card__footer reaction__dislike"
           >
             <i
               v-bind:class="{ grey: disliked, red: !disliked }"
@@ -113,14 +102,14 @@
         </div>
       </div>
       <!-- COMMENTS SECTION -->
-      <div class="post-card__comments-section">
+      <div class="post-view-card__comments-section">
         <button v-on:click="commenting = !commenting" class="button">
-          Commenter
+          <i class="far fa-comment-alt fa-lg"></i> Commenter
         </button>
         <form
           v-show="commenting"
           @submit.prevent="addComment"
-          class="post-card__comments-section__write-form"
+          class="post-view-card__comments-section__write-form"
         >
           <textarea
             name="comment"
@@ -137,9 +126,9 @@
         <div
           v-for="(comment, index) in post.Comments"
           :key="index"
-          class="post-card__comments-section__post-card"
+          class="post-view-card__comments-section__post-card"
         >
-          <div class="post-card__comments-section__comment-card__author">
+          <div class="post-view-card__comments-section__comment-card__author">
             <!-- Prenom OU nom OU email de l'auteur du commentaire -->
             <router-link
               class="remove-decoration"
@@ -150,21 +139,21 @@
             >
           </div>
           <!-- Contenus du commentaire -->
-          <div class="post-card__comments-section__comment-card__content">
+          <div class="post-view-card__comments-section__comment-card__content">
             {{ comment.content }}
           </div>
           <!-- Date du commentaire -->
-          <div class="post-card__comments-section__comment-card__footer">
+          <div class="post-view-card__comments-section__comment-card__footer">
             <p class="date">
-              {{ new Date(this.post.createdAt).getDate() }} /
-              {{ new Date(this.post.createdAt).getMonth() + 1 }} /
-              {{ new Date(this.post.createdAt).getFullYear() }}
+              {{ new Date(post.createdAt).getDate() }} /
+              {{ new Date(post.createdAt).getMonth() + 1 }} /
+              {{ new Date(post.createdAt).getFullYear() }}
             </p>
             <div
               v-if="comment.User.id == currentUserId || userIsAdmin == 'true'"
               v-on:click="deleteComment(comment.id)"
               onclick="return confirm('Etes-vous sûr d'effacer ce commentaire ?)"
-              class="post-card__comments-section__comment-card__footer-delete"
+              class="post-view-card__comments-section__comment-card__footer-delete"
             >
               <i class="fas fa-trash"></i>
             </div>
@@ -176,10 +165,7 @@
     <div class="post-update-card" v-show="update">
       <div class="post-update-card__body">
         <!--  FORM BEGIN -->
-        <form
-          @submit="updatePost(post.id)"
-          class="post-update-form__content"
-        >
+        <form @submit="updatePost(post.id)" class="post-update-form__content">
           <!-- inputs pour modifier le CONTENUS de la publication -->
           <div class="form-group">
             <label for="content">Contenus</label>
@@ -207,9 +193,9 @@
           <input type="submit" value="Enregistrer les modifications" />
         </form>
       </div>
-      <div class="post-update-action">
+      <div class="post-update__action">
         <button
-          class="post-update-action__button"
+          class="post-update__action__button"
           v-on:click="switchUpdateMode()"
         >
           Annuler
@@ -289,7 +275,7 @@ export default {
           /* enregistre juste le contenus du post dans la data 'postUpdateData.content' qui utilisé lorsque
         l'utilisateur fait une modification de la publication, elle est alors utilisé en tant que 'value' du "textarea" */
           this.postUpdateData.content = res.data.post.content;
-          this.likedDisliked()
+          this.likedDisliked();
         })
         .catch((err) => console.log(err));
     },
@@ -311,7 +297,7 @@ export default {
 
     likedDisliked() {
       this.post.LikePosts.find((react) => {
-        console.log(react)
+        console.log(react);
         switch (react.value) {
           case 1:
             this.liked = true;
@@ -319,10 +305,10 @@ export default {
           case -1:
             this.disliked = true;
             break;
-            case 0:
-              this.disliked = false
-              this.liked = false;
-              break;
+          case 0:
+            this.disliked = false;
+            this.liked = false;
+            break;
           default:
             break;
         }
@@ -374,7 +360,7 @@ export default {
         .put(`http://localhost:3000/api/post/${id}`, formData)
         .then((res) => {
           console.log(res);
-           this.getPostInfos(this.post.id);
+          this.getPostInfos(this.post.id);
         })
         .catch((err) => console.log(err));
     },
@@ -392,11 +378,82 @@ export default {
 </script>
 
 <style lang="scss">
-.green {
-  color: green;
+@import "../../public/style.scss";
+
+.container-post-view {
+  padding-top: 20px;
+  max-width: 80%;
+  background-image: url("../assets/icon.png");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.grey {
-  color: grey !important;
+.post-view {
+  &__title {
+    margin-bottom: 5px;
+    margin-top: 0px;
+    padding-top: 10px;
+  }
+  &__subtitle {
+    margin-top: 5px;
+  }
+
+  &__action{
+    &__button {
+      width: 70px;
+      border: none
+    }
+  }
+
+  &-image-container {
+    object-fit: contain;
+    max-width: 100%;
+    min-width: 25%;
+    min-height: 50%;
+    max-height: 100%;
+  }
+}
+
+.post-view-card{
+  &__header{
+   display: flex;
+   flex-direction: row-reverse;
+  }
+
+  &__body{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+    &__content {
+      & p {
+      font-size: 30px;
+      }
+    }
+
+    &__image {
+      max-width: 50%;
+      min-height: 300px;
+      max-height: 400px;
+    }
+  }
+
+    & .button {
+      border: none;
+      padding: 5px 7px;
+      width: 80%;
+      height: 50px; /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+      font-size: 22px;
+      color: $grey-light-color;
+      background-color: $primary-color;
+      &:hover {
+              background: rgba(0, 0, 0, 0.3);
+              color: $primary-color;
+              transition-duration: 500ms;
+              width: 85%;
+              transform: scale(0.96);
+      }
+  }
 }
 </style>

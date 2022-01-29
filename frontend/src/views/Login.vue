@@ -13,3 +13,7 @@ components: {
 }
 }
 </script>
+
+<style lang="scss">
+
+</style>

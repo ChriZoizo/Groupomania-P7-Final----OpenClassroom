@@ -3,29 +3,32 @@
     <div v-show="!updateMode" class="profil">
       <div class="profil__header">
         <div class="profil__header__names">
-          <p v-if="this.user.nickname != null">
+          <p v-if="user.nickname != null && user.id == currentUserId">
             Bienvenue
-            <span class="informations">"{{ this.user.nickname }}"</span>
+            <span class="informations">"{{ user.nickname }}"</span>
           </p>
-          <p v-if="this.user.nickname == null">Votre profil</p>
+          <p v-if="user.nickname == null && user.id == currentUserId">Votre profil</p>
         </div>
       </div>
       <div class="profil__body">
-        <div class="userInfos">
-          <p class="profil__infoName">
-            Email : <span class="informations">{{ this.user.email }}</span>
+          <p class="profil__body__info">
+            Email : <span class="informations">{{ user.email }}</span>
+          </p>
+          <p class="profil__body__info">
+            Nom complet : <span class="informations">{{ user.nickname }}</span>
           </p>
         </div>
-      </div>
+
+
       <div class="profil__footer">
         <div class="profil__footer__left">
-          <p v-if="this.user.isAdmin == 'true'">Membre Administrateur !</p>
+          <p v-if="user.isAdmin == 'true'">Membre Administrateur !</p>
         </div>
         <div class="profil__footer__right">
           <p class="informations">
-            Membre depuis : {{ new Date(this.user.createdAt).getDate() }} /
-            {{ new Date(this.user.createdAt).getMonth() + 1 }} /
-            {{ new Date(this.user.createdAt).getFullYear() }}
+            Membre depuis : {{ new Date(user.createdAt).getDate() }} /
+            {{ new Date(user.createdAt).getMonth() + 1 }} /
+            {{ new Date(user.createdAt).getFullYear() }}
           </p>
         </div>
       </div>
@@ -33,8 +36,8 @@
         class="profil__action-buttons"
         v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
       >
-        <button v-on:click="updateMode = !updateMode">
-          modifier votre nom
+        <button v-on:click="updateMode = !updateMode" class="privilege">
+          <i class="fas fa-pencil-alt"></i> votre nom
         </button>
       </div>
     </div>
@@ -59,8 +62,7 @@
         onclick="return confirm('Etes-vous sûr des modifications apportés ?')"
       />
     </form>
-    <p>--------------------------------------------</p>
-    <button v-on:click="deleteProfil">Supprimer le compte ?</button>
+    <button v-on:click="deleteProfil" class='danger'>Supprimer le compte ?</button>
   </div>
 </template>
 

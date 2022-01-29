@@ -1,0 +1,116 @@
+/* Fonts ( 'Montserrat' ) */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
+
+/* VARIABLES */
+/* Couleurs  */
+$primary-color: #222831;
+$secondary-color: #393e46;
+$tertiary-color: #00adb5;
+
+$tertiary-color-lighter: lighten($tertiary-color, 70%);
+
+$grey-light-color: #eeeeee;
+$grey-color: #7e7e7e;
+
+$text-clear: #eeeeee;
+
+$primary-font: Montserrat;
+$secondary-font: Lobster;
+
+/* MIXINS */
+/* colorations */
+@mixin set-color($color) {
+  color: $color;
+}
+
+@mixin set-background-color($color) {
+  background-color: $color;
+}
+
+/* FlexBox */
+@mixin flexCol-spacearound {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+@mixin flexCol-spacebetween {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+@mixin flexRow {
+  display: flex;
+  flex-direction: row;
+}
+
+/* MAPS */
+
+$breakPoints: (mobile: 600px, tablet: 900px, notebook: 1024px, intermediate: 1600px, fullHd: 1920px);
+
+/* CLASSE GLOBALE */
+
+section {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  #view {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+  }
+  
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  span,
+  button {
+    font-family: "Montserrat", sans-serif;
+  }
+  
+  p,
+  span {
+    font-size: 16px;
+  }
+
+  /* classes utilitaires */
+  .remove-decoration {
+    text-decoration: none;
+    color: $primary-color
+  }
+  .clear-text {
+    @include set-color($text-clear);
+  }
+  .bold {
+    font-weight: bold;
+  }
+  .primary-font {
+      font-family: montserrat;
+  }
+  .contained {
+    object-fit: contain;
+  }
+
+  .flex-row {
+    display: flex; 
+    flex-direction: row;
+  }
+  /* Colorisation */
+  .primary-colored {
+    color: $primary-color
+  }
+  .tertiary-colored {
+    color: $tertiary-color
+  }
+  .green {
+    color: green;
+  }
+  
+  .grey {
+    color: grey !important;
+  }

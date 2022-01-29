@@ -49,8 +49,9 @@ exports.getOneUser = (req, res) => {
 }
 
 /* B - 3 - a - SIGNUP (= createUser) (POST) 
-Fonction permettant d'inscrire unnouveau 'user' dans la table 'User' de la base de données.Le mots de passe recuperé dans la 
-requête (key 'password') est hashé via "bcrypt" (Promise).PUIS utilise la methode "Sequelize" 'create' pour creé le 'user' dans la table. 
+Fonction permettant d'inscrire un nouveau 'user' dans la table 'User' de la BDD. Le mots de passe recuperé dans la 
+requête (key 'password') est hashé via "bcrypt" (Promise).PUIS utilise la methode "Sequelize" 'create' pour creé le 'user' dans la table, 
+enregistrant l''Email', le 'password' ainsi que le 'nickname' que l'utilisateur as renseigné. 
 */
 exports.signup = (req, res) => {
   bcrypt /* hashage du mots de passe (recuperer dans le body de la requête (key 'password' )- Promise */
@@ -61,6 +62,8 @@ exports.signup = (req, res) => {
         email: req.body.email,
         /* le mot de passe est le hash resultant de la promise de 'bcrypt' */
         password: hash,
+        /* le nom complet (appelé 'nickname') est recuperer dans le body de la requête */
+        nickname: req.body.nickname,
         /* WORK IN PROGRESS */
         isAdmin: req.body.isAdmin
       })

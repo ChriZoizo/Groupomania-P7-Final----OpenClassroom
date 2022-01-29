@@ -2,34 +2,20 @@
 <template>
   <div class="container-post-list">
     <!-- LOADER -->
-    <div v-if="loading" class="">Chargement des publications ...</div>
+    <div v-show="loading" class="">Chargement des publications ... (ANIMATION Work In Progress..)</div>
     <!-- LOOP (Boucle iterant sur le resultat de la methode GETALLPOST du module (Array))  -->
     <div v-for="(post, index) in listOfPosts" :key="index" class="post">
       <!-- CARD BEGIN-->
       <router-link class="post-card remove-decoration" :to="'/post/' + post.id">
         <!-- CARD-header -->
         <div class="post-card__header">
-          <!-- Image de pofil -->
-          <div class="post-card__header-profilImg">
-            <img
-              class="post-card__header-profilImg container-sm"
-              src="../assets/default_profil_image.png"
-            />
-          </div>
           <!-- Nom (ou email) de l'utilisateur -->
           <div class="post-card__header-userName">
             <router-link
-              class="remove-decoration bold"
+              class="remove-decoration bold post-card__header-userName"
               v-if="post.User.nickname != undefined"
               :to="'/profil/' + post.userId"
-              >{{ post.User.nickname }}</router-link
-            >
-            <router-link
-              class="remove-decoration bold"
-              v-else
-              :to="'/profil/' + post.userId"
-              >{{ post.User.email }}</router-link
-            >
+              >{{ post.User.nickname ||post.User.email }}</router-link>
           </div>
           <!-- Bouton DELETE -->
           <button
@@ -62,8 +48,8 @@
         </div>
         <div class="post-card__footer">
           <div class="post-card__footer__date">
-            <p>
-              Publié le : {{ new Date(post.createdAt).getDate() }} /
+            <p><span >Publiée le : </span>
+               {{ new Date(post.createdAt).getDate() }} /
               {{ new Date(post.createdAt).getMonth() + 1 }} /
               {{ new Date(post.createdAt).getFullYear() }}
             </p>
@@ -72,14 +58,14 @@
           <!-- like -->
           <div class="post-card__footer__reaction flex-row">
             <div v-on:click="reactToPost(1, post.id)" class="reaction__button">
-              <i class="fas fa-thumbs-up green"></i
+              <i class="fas fa-thumbs-up grey"></i
               ><span class="reaction__like--counter">{{
                 post.likeCounter
               }}</span>
             </div>
             <!-- dislike -->
             <div v-on:click="reactToPost(-1, post.id)" class="reaction__button">
-              <i class="fas fa-thumbs-down red"></i
+              <i class="fas fa-thumbs-down grey"></i
               ><span class="reaction__dislike--counter">{{
                 post.dislikeCounter
               }}</span>
@@ -122,7 +108,7 @@
                 class="remove-decoration"
                 :to="'/post/' + comment.UserId"
                 >{{ comment.User.nickname || comment.User.email }} à
-                dit</router-link
+                dit :</router-link
               >
             </div>
             <div class="post-card__comments-section__comments__right-content">
@@ -180,32 +166,37 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
     Enfin, change le data 'loading' en false */
     getAllPostAndSetData() {
       /*  Appel a l'API */
-      this.axios.get("http://localhost:3000/api/post/").then((posts) => {
-        /* Puis, enregistrement des posts reçus dans la data 'listOfPosts' */
-        this.listOfPosts = posts.data.posts;
-        /* Loop "for...in" sur la Data Array contenant TOUT les Posts) 
+      this.axios
+        .get("http://localhost:3000/api/post/")
+        .then((posts) => {
+          /* Puis, enregistrement des posts reçus dans la data 'listOfPosts' */
+          this.listOfPosts = posts.data.posts;
+          /* Loop "for...in" sur la Data Array contenant TOUT les Posts) 
         Et nous allons créer, pour chaque post, une entrée dans notre Data 'comments', qui serviras de point d'ancrage pour
         les formulaire de commentaires. En effet, chaque Post auras sa propre entrée dans la Data 'comments' ayant l'ID du post comme Key 
         (PS: desolé pour le mal de tête)*/
-        for (const post of this.listOfPosts) {
-          console.log(post);
-          /* recuperation de l'ID du post qui servira de "key" */
-          let index = post.Id;
-          /* Ajout de l'Objet Vide dans 'initialiBoard'*/
-          this.comments[index];
-        }
-      })
-      .catch(err=> console.log(err));
+          for (const post of this.listOfPosts) {
+            console.log(post);
+            /* recuperation de l'ID du post qui servira de "key" */
+            let index = post.Id;
+            /* Ajout de l'Objet Vide dans 'initialiBoard'*/
+            this.comments[index];
+          }
+        })
+        .then(()=> this.loading = false)
+        .catch((err) => console.log(err));
       /* passe la Data Booleen 'loading' en false */
-      this.loading = false;
+
     },
 
     deletePost(id) {
-      this.axios.delete(`http://localhost:3000/api/post/${id}`).then(() => {
-        console.log("POST DELETED");
-        this.$router.go("/home");
-      })
-      .catch(err=> console.log(err));
+      this.axios
+        .delete(`http://localhost:3000/api/post/${id}`)
+        .then(() => {
+          console.log("POST DELETED");
+          this.$router.go("/home");
+        })
+        .catch((err) => console.log(err));
     },
 
     addComment(id) {
@@ -220,7 +211,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       this.axios
         .post("http://localhost:3000/api/comment", newComment)
         .then(() => history.go(0))
-        .catch(err=> console.log(err));
+        .catch((err) => console.log(err));
     },
 
     reactToPost(val, postId) {
@@ -268,23 +259,114 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
 </script>
 
 <style lang="scss">
-/* .post {
+@import "../../public/style.scss";
+
+.post {
+  margin: 35px 0;
   &-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border: 2px solid black;
+    border: none;
     padding: 5px 5px 5px 5px;
-    margin: 5px 0;
-    max-height: 350px;
     min-height: 200px;
+    background-color: lighten($color: $grey-light-color, $amount: 20);
+    box-shadow: 1px 1px 3px $primary-color;
+    border-radius: 30px 30px 0px 0px;
+    overflow: hidden;
+
     &__header {
       display: flex;
       justify-content: space-between;
-      height: 75px;
-      background-color: rgb(252, 241, 228);
-      &-profilImg {
-        height: 100%;
+      align-items: center;
+      border-radius: 28px 28px 0px 0px;
+      height: 50px;
+      padding: 0 40px 0 25px;
+      /*       background-color: lighten($color: $primary-color, $amount: 70); */
+      &-userName {
+        font-family: $secondary-font;
+        font-size: 24px;
+        &:before{
+      content: "";
+      position: relative;
+      width: 50%;
+      height: 150px;
+      bottom: 0;
+      left: 25%;
+      border-bottom: 1px solid red;}
+      }
+
+      &-action {
+        border: none;
+        width: 30px;
+      }
+    }
+
+    &__body {
+      padding: 15px 40px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      & p {
+        font-size: 28px;
+      }
+      &__image {
+        margin: 0 0 0 15%;
+      }
+    }
+
+    &__footer {
+      padding: 0 30px;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
+
+      &__reaction {
+        min-width: 120px;
+        justify-content: space-between;
+      }
+
+      &__date{
+        & span{
+          font-size: 13px;
+        }
+      }
+    }
+
+    &__comments-section {
+      box-shadow: 1px 1px 3px $primary-color;
+      & form {
+        display: flex;
+        margin-top: 0 !important;
+        & textarea {
+          width: 90%;
+          resize: none; 
+        }
+      }
+      &__comments {
+        font-family: $primary-font;
+        background-color: lighten($color: $primary-color, $amount: 80);
+        border: $primary-color 1px solid;
+        justify-content: space-between;
+        padding: 4px 10%;
+        &__left-author {
+          color: $secondary-color;
+          min-width: 15%;
+          font-family: $secondary-font;
+          display:flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        &__right-content {
+          width: 75%;
+          font-size: 15px;
+   white-space: pre-wrap;      /* CSS3 */   
+   white-space: -moz-pre-wrap; /* Firefox */    
+   white-space: -o-pre-wrap;   /* Opera 7 */    
+   word-wrap: break-word; 
+        }
       }
     }
   }
@@ -292,8 +374,14 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
   &-image-container {
     max-width: 100em;
     max-height: 10em;
-    object-fit: scale-down;
+    object-fit:contain;
+  }
+
+  & .reaction {
+    &__button {
+      min-width: 60px;
+      min-height: 25px;
+    }
   }
 }
- */
 </style>

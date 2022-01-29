@@ -14,11 +14,11 @@
         </div>
             <a href="mailto:groupomania-support@yopmail.com">Contactez nous</a>
           <router-link class="remove-decoration" to="/about"
-            >A propos</router-link
+            ><p>A propos de l'entreprise</p></router-link
           >
       </div>
       <div class="footer__bottom copyright">
-          <p> © Copyright 2021 - 2022</p>
+          <p><span class="tertiary-colored">©</span>Copyright 2021 - 2022</p>
       </div>
     </div>
   </footer>
@@ -36,3 +36,50 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+
+/* FOOTER */
+@import "../../public/style.scss";
+
+footer {
+  @include set-background-color($primary-color);
+  padding: 30px 0 0 0;
+
+  & a, p {
+    text-decoration: none;
+        display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    @include set-color($text-clear);
+
+    & .fas {
+      @include set-color($tertiary-color);
+    }
+  }
+
+  & .footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 100px;
+    & img {
+      height: 40px;
+      object-fit: contain;
+    }
+    &__top {
+      height: 40px;
+    }
+
+    &__middle {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    &__image {
+      object-fit: contain;
+    }
+  }
+}
+</style>

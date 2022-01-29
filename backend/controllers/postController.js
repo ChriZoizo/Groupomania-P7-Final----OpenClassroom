@@ -284,14 +284,3 @@ exports.likeOrDislikePost = (req, res) => {
       )
   }
 }
-
-/* UPVOTE POST
- */
-exports.upvotePost = (req, res) => {
-  const voteValue = req.body.voteValue
-
-  if (voteValue == 1) {
-  }
-  if (voteValue == 0) {
-  }
-}

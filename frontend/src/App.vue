@@ -4,7 +4,7 @@
     <div v-if="isSigned != true">
       <Login v-on:signed="signed"/>
     </div>
-    <div v-if="isSigned == true">
+    <div class="router-view" v-if="isSigned == true">
       <router-view :key="$route.fullPath"/>
     </div>
     <Footer />
@@ -85,174 +85,14 @@ export default {
 </script>
 
 <style lang="scss">
-/* SCSS SETTINGS (partie contenant les mixins, variables et importations) */
-/* Fonts ( 'Montserra' ) */
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
-
-/* VARIABLES */
-/* Couleurs  */
-$primary-color: #222831;
-$secondary-color: #393e46;
-$tertiary-color: #00adb5;
-
-$grey-light-color: #eeeeee;
-$grey-color: #7e7e7e;
-
-$text-clear: #eeeeee;
-
-/* MIXINS */
-/* colorations */
-
-@mixin set-color($color) {
-  color: $color;
-}
-
-@mixin set-background-color($color) {
-  background-color: $color;
-}
-
-/* SETTINGS END */
-
-/* CSS BEGIN */
-/* global */
-
-section {
-  width: 80%;
-  margin: 0 auto;
-}
-/* ?? */
-#view {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 100%;
-}
-
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-span,
-button {
-  font-family: "Montserrat", sans-serif;
-}
-
-p,
-span {
-  font-size: 16px;
-}
-/* classes utilitaires */
-.remove-decoration {
-  text-decoration: none;
-  color: $primary-color
-}
-
-.clear-text {
-  @include set-color($text-clear);
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.contained {
-  object-fit: contain;
-}
-
-.primary-colored {
-  color: $primary-color
-}
-
-.tertiary-colored {
-  color: $tertiary-color
-}
-
-.flex-row {
-      display: flex;
-      flex-direction: row;
-}
-
-/* ID */
+/* Variables, Mixins, ... IMPORT */
+@import "../public/style.scss";
 
 #app {
   text-align: center;
 }
 
-/* NAVBAR */
 
-#navbar {
-  padding: 0 50px;
-  max-height: 200px;
-  display: flex;
-  justify-content: space-between;
-  @include set-background-color($primary-color);
 
-  &__left {
-    width: 200px;
 
-    & .main-logo {
-      max-height: 100%;
-    }
-  }
-
-  &__right {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    max-width: 60%;
-
-    & span {
-      margin: 0 8px;
-
-      &:hover {
-        transition: 500ms;
-        @include set-color($tertiary-color);
-      }
-    }
-  }
-}
-
-/* FOOTER */
-footer {
-  @include set-background-color($primary-color);
-  padding: 30px 0 0 0;
-
-  & a, p {
-    text-decoration: none;
-        display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    @include set-color($text-clear);
-
-    & .fas {
-      @include set-color($tertiary-color);
-    }
-  }
-
-  & .footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 0 100px;
-    & img {
-      height: 40px;
-      object-fit: contain;
-    }
-    &__top {
-      height: 40px;
-    }
-
-    &__middle {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-
-    &__image {
-      object-fit: contain;
-    }
-  }
-}
 </style>
