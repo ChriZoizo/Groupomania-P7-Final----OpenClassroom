@@ -8,7 +8,8 @@
       <router-link
         class="remove-decoration primary-font"
         :to="'/profil/' + post.userId"
-        ><span class="bold">de </span>{{ post.User.nickname || post.User.email }}</router-link
+        ><span class="bold">de </span
+        >{{ post.User.nickname || post.User.email }}</router-link
       >
     </h3>
     <!-- CARD BEGIN -->
@@ -18,9 +19,7 @@
         <!-- Boutons d'action  -->
         <!-- UNIQUEMENT Si l'utilisateur actuel est Administrateur, ou est l'auteur dela publication -->
         <div
-          v-if="
-            post.userId == currentUserId || isAdmin == 'true'
-          "
+          v-if="post.userId == currentUserId || isAdmin == 'true'"
           class="post-view__action"
         >
           <!-- Bouton modifier (Passe la data 'update' a true, faisant disparaitre cette section au profit de la section UPDATE) -->
@@ -33,9 +32,7 @@
           <!-- Bouton suprrimer -->
           <button
             class="post-view__action__button"
-            v-if="
-              post.userId == currentUserId || isAdmin == 'true'
-            "
+            v-if="post.userId == currentUserId || isAdmin == 'true'"
             onclick="return confirm('Etes-vous sûr de vouloir supprimer cette publication ?')"
             v-on:click="deletePost(post.id)"
           >
@@ -67,7 +64,8 @@
         <!-- Date de creation de la publication -->
         <div class="post-view-card__footer__date">
           <p class="date">
-            <span>date de publication : </span> {{ new Date(post.createdAt).getDate() }} /
+            <span>date de publication : </span>
+            {{ new Date(post.createdAt).getDate() }} /
             {{ new Date(post.createdAt).getMonth() + 1 }} /
             {{ new Date(post.createdAt).getFullYear() }}
           </p>
@@ -122,40 +120,45 @@
           <input type="submit" value="Publier votre commentaire" />
         </form>
 
-        <!--  COMMENT LOOP (boucle iterant sur l'Array de commentaires associés a la publication) -->
-        <div
-          v-for="(comment, index) in post.Comments"
-          :key="index"
-          class="post-view-card__comments-section__post-card"
-        >
-          <div class="post-view-card__comments-section__comment-card__author">
-            <!-- Prenom OU nom OU email de l'auteur du commentaire -->
-            <router-link
-              class="remove-decoration"
-              :to="'/profil/' + comment.User.id"
-              ><p>
-                {{ comment.User.nickname || comment.User.email }}
-              </p></router-link
-            >
-          </div>
-          <!-- Contenus du commentaire -->
-          <div class="post-view-card__comments-section__comment-card__content">
-            {{ comment.content }}
-          </div>
-          <!-- Date du commentaire -->
-          <div class="post-view-card__comments-section__comment-card__footer">
-            <p class="date">
-              {{ new Date(post.createdAt).getDate() }} /
-              {{ new Date(post.createdAt).getMonth() + 1 }} /
-              {{ new Date(post.createdAt).getFullYear() }}
-            </p>
+        <div class="post-view-card__comments-section">
+          <!--  COMMENT LOOP (boucle iterant sur l'Array de commentaires associés a la publication) -->
+
+          <div
+            v-for="(comment, index) in post.Comments"
+            :key="index"
+            class="post-view-card__comments-section__comment-card"
+          >
+            <div class="post-view-card__comments-section__comment-card__author">
+              <!-- Prenom OU nom OU email de l'auteur du commentaire -->
+              <router-link
+                class="remove-decoration"
+                :to="'/profil/' + comment.User.id"
+                ><p>
+                  {{ comment.User.nickname || comment.User.email }} :
+                </p></router-link
+              >
+            </div>
+            <!-- Contenus du commentaire -->
             <div
-              v-if="comment.User.id == currentUserId || userIsAdmin == 'true'"
-              v-on:click="deleteComment(comment.id)"
-              onclick="return confirm('Etes-vous sûr d'effacer ce commentaire ?)"
-              class="post-view-card__comments-section__comment-card__footer-delete"
+              class="post-view-card__comments-section__comment-card__content"
             >
-              <i class="fas fa-trash"></i>
+              <p>{{ comment.content }}</p>
+            </div>
+            <!-- Date du commentaire -->
+            <div class="post-view-card__comments-section__comment-card__footer">
+              <p class="date">
+                {{ new Date(post.createdAt).getDate() }} /
+                {{ new Date(post.createdAt).getMonth() + 1 }} /
+                {{ new Date(post.createdAt).getFullYear() }}
+              </p>
+              <div
+                v-if="comment.User.id == currentUserId || userIsAdmin == 'true'"
+                v-on:click="deleteComment(comment.id)"
+                onclick="return confirm('Etes-vous sûr d'effacer ce commentaire ?)"
+                class="post-view-card__comments-section__comment-card__footer-delete"
+              >
+                <i class="fas fa-trash"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -163,6 +166,7 @@
     </div>
     <!-- !!! UPDATE SECTION !!! ne s'affiche que lorsque la data 'update' passe a true, faisant disparaitre la section CARD-POST -->
     <div class="post-update-card" v-show="update">
+      <h2>Modification</h2>
       <div class="post-update-card__body">
         <!--  FORM BEGIN -->
         <form @submit="updatePost(post.id)" class="post-update-form__content">
@@ -380,12 +384,29 @@ export default {
 <style lang="scss">
 @import "../../public/style.scss";
 
+    h1{
+      width: 200px;
+    position:relative;
+        &::after {
+          content: "";
+          height: 2px;
+          width: 100px;
+          background: $tertiary-color;
+          position: absolute;
+          left: 50px;
+          bottom: -5px;
+        }}
+
 .container-post-view {
   padding-top: 20px;
+  margin-bottom: 20px;
   max-width: 80%;
   background-image: url("../assets/icon.png");
   background-repeat: no-repeat;
   background-position: center;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .post-view {
@@ -398,10 +419,10 @@ export default {
     margin-top: 5px;
   }
 
-  &__action{
+  &__action {
     &__button {
       width: 70px;
-      border: none
+      border: none;
     }
   }
 
@@ -414,13 +435,13 @@ export default {
   }
 }
 
-.post-view-card{
-  &__header{
-   display: flex;
-   flex-direction: row-reverse;
+.post-view-card {
+  &__header {
+    display: flex;
+    flex-direction: row-reverse;
   }
 
-  &__body{
+  &__body {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -428,7 +449,7 @@ export default {
 
     &__content {
       & p {
-      font-size: 30px;
+        font-size: 30px;
       }
     }
 
@@ -438,22 +459,134 @@ export default {
       max-height: 400px;
     }
   }
+  /* Bouton "COMMENTER" standard */
+  & .button {
+    border: none;
+    padding: 5px 7px;
+    width: 80%;
+    height: 50px;
+    font-size: 22px;
+    color: $grey-light-color;
+    background-color: $primary-color;
+    &:hover {
+      background: rgba(0, 0, 0, 0.3);
+      color: $primary-color;
+      transition-duration: 500ms;
+      width: 85%;
+      transform: scale(0.96);
+    }
+  }
 
-    & .button {
-      border: none;
-      padding: 5px 7px;
-      width: 80%;
-      height: 50px; /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-      font-size: 22px;
-      color: $grey-light-color;
-      background-color: $primary-color;
-      &:hover {
-              background: rgba(0, 0, 0, 0.3);
-              color: $primary-color;
-              transition-duration: 500ms;
-              width: 85%;
-              transform: scale(0.96);
+  &__comments-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & p {
+      margin: 3px;
+    }
+
+    &__comment-card {
+      border-bottom: black 1px solid;
+      padding: 10px;
+      margin: 5px auto;
+      min-width: 50%;
+      max-width: 1400px;
+      min-height: 70px;
+
+      &__author{
+        color: $secondary-color
       }
+
+      &__content {
+        margin: 10px 0 10px 0;
+                font-family: $primary-font;
+        font-size: 18px;      }
+
+      & .date {
+
+        font-size: 12px
+      }
+    }
+  }
+
+  & form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 20px 50px;
+    margin-top: 0 !important;
+    & textarea {
+      width: 90%;
+      resize: none;
+      min-height: 100px;
+      border-radius: 15px;
+      font-family: $primary-font;
+      font-size: 18px;
+    }
+  }
+  /* BOUTON "PUBLIER votre commentaire" */
+  & input[type="submit"] {
+    font-family: $secondary-font;
+    max-width: 300px;
+    font-size: 16px;
+    padding: 5px 15px;
+    border: $primary-color 3px solid;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    &:hover {
+      transition: 500ms;
+      background-color: $primary-color;
+      color: $tertiary-color;
+    }
+  }
+
+  /* BOUTTON "Choisir Un fichier" */
+  & input[type="file"] {
+    &::-webkit-file-upload-button {
+      font-family: $primary-font;
+      border: none;
+      padding: 5px 15px;
+      background-color: $secondary-color;
+      color: $grey-light-color;
+      &:hover {
+        transition: 500ms;
+        background-color: $primary-color;
+        color: $tertiary-color;
+      }
+    }
+  }
+
+  /* TEXTAREA Style Sup */
+  /* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
+  & ::-webkit-input-placeholder {
+    text-align: center;
+    font-family: $secondary-font;
+    font-size: 1.7em;
+    color: $primary-color;
+  }
+
+  /* Style de la scrollbar */
+  & textarea::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  & textarea::-webkit-scrollbar {
+    position: absolute;
+    right: 10px;
+    width: 22px;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 0 30px 30px 0;
+  }
+
+  & textarea::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: $primary-color;
   }
 }
+
 </style>

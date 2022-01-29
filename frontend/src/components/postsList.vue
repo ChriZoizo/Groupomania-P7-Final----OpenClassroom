@@ -13,9 +13,8 @@
           <div class="post-card__header-userName">
             <router-link
               class="remove-decoration bold post-card__header-userName"
-              v-if="post.User.nickname != undefined"
               :to="'/profil/' + post.userId"
-              >{{ post.User.nickname ||post.User.email }}</router-link>
+              >{{ post.User.nickname || post.User.email }}</router-link>
           </div>
           <!-- Bouton DELETE -->
           <button
@@ -119,7 +118,6 @@
       </div>
       <!-- CARD APPEND END -->
     </div>
-    <button v-on:click="test">cdlkfpfpref</button>
   </div>
 </template>
 
@@ -384,4 +382,6 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
     }
   }
 }
+
+
 </style>
