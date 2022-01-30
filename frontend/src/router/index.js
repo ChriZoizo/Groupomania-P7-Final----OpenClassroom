@@ -10,6 +10,7 @@ import AdminDashboard from '../views/AdminDashboard.vue'
 const routes = [
   {
     path: '/home',
+    alias: ['/', '/home'],
     name: 'Home',
     component: Home
   },

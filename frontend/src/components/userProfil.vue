@@ -3,19 +3,20 @@
     <div v-show="!updateMode" class="profil">
       <div class="profil__header">
         <div class="profil__header__names">
-          <p v-if="user.nickname != null && user.id == currentUserId">
+          <h3 v-if="user.userId == currentUserId">
             Bienvenue
-            <span class="informations">"{{ user.nickname }}"</span>
-          </p>
-          <p v-if="user.nickname == null && user.id == currentUserId">Votre profil</p>
+            <span class="informations">{{ user.nickname }}</span>
+          </h3>
+          <p v-if="user.userId == currentUserId">Votre profil</p>
+          <p v-else>Profil de {{user.nickname || user.email}}</p>
         </div>
       </div>
       <div class="profil__body">
           <p class="profil__body__info">
-            Email : <span class="informations">{{ user.email }}</span>
+            <i class="fas fa-at icon-fa"></i> Email : <span class="informations">{{ user.email }}</span>
           </p>
           <p class="profil__body__info">
-            Nom complet : <span class="informations">{{ user.nickname }}</span>
+            <i class="far fa-id-card icon-fa"></i> Nom complet : <span class="informations">{{ user.nickname || 'Nom inconnus ' }}</span>
           </p>
         </div>
 
@@ -36,8 +37,8 @@
         class="profil__action-buttons"
         v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
       >
-        <button v-on:click="updateMode = !updateMode" class="privilege">
-          <i class="fas fa-pencil-alt"></i> votre nom
+        <button v-on:click="updateMode = !updateMode" class="button button--main shadow-button">
+          Modifier votre nom <i class="fas fa-pencil-alt"></i> 
         </button>
       </div>
     </div>
@@ -62,7 +63,9 @@
         onclick="return confirm('Etes-vous sûr des modifications apportés ?')"
       />
     </form>
-    <button v-on:click="deleteProfil" class='danger'>Supprimer le compte ?</button>
+    <button v-show="!updateMode"  v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
+    v-on:click="deleteProfil(user.userId)" class='button button--danger shadow-button'
+    onclick="return confirm('ATTENTION ! Ce profil seras definitivement effacer !">Supprimer le compte ?</button>
   </div>
 </template>
 
@@ -78,11 +81,12 @@ export default {
       currentUserIsAdmin: localStorage.getItem("userIsAdmin"),
       currentUserToken: localStorage.getItem("userToken"),
 
+      userIdToDisplay: 0, 
+
       user: {
         userId: 0,
         email: "",
         nickname: "",
-        bio: "",
         isAdmin: false,
         createdAt: "",
       },
@@ -103,10 +107,7 @@ export default {
 
     setUserInData(data) {
       this.user.email = data.email;
-      this.user.firstName = data.firstName;
-      this.user.lastName = data.lastName;
       this.user.nickname = data.firstName;
-      this.user.bio = data.firstName;
     },
 
     getUserInfos(id) {
@@ -116,12 +117,10 @@ export default {
           let userInfo = user.data.user;
           (this.user.userId = userInfo.id),
             (this.user.email = userInfo.email),
-            (this.user.firstName = userInfo.firstName),
-            (this.user.lastName = userInfo.lastName),
             (this.user.nickname = userInfo.nickname),
-            (this.user.bio = userInfo.bio),
             (this.user.createdAt = userInfo.createdAt),
             (this.user.isAdmin = userInfo.isAdmin);
+            console.log(this.user)
         })
         .catch((err) => console.log(err));
     },
@@ -136,11 +135,10 @@ export default {
         .catch((err) => console.log(err));
     },
 
-    deleteProfil() {
+    deleteProfil(id) {
       this.axios
-        .delete(`http://localhost:3000/api/user/${this.user.userId}`)
+        .delete(`http://localhost:3000/api/user/${id}`)
         .then(() => {
-          localStorage.clear();
           this.$router.go("/home");
         })
         .catch((err) => console.log(err));
@@ -150,7 +148,75 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../../public/style.scss";
+
 .informations {
   font-weight: bolder;
+  &--aside {
+    font-size: 12px
+  }
 }
+
+.container-profil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profil {
+max-width: 1000px;
+width: 60%;
+
+&__body{
+  display: flex;
+  justify-content: space-around;
+  &__info {
+
+    display:flex;
+    align-items: center;
+    & .icon-fa{
+  color: $primary-color;
+  font-size: 25px
+}
+  }
+
+}
+
+}
+
+ .button {
+    border: none;
+    padding: 5px 7px;
+    width: 50%;
+    min-width: 300px;
+    max-width: 900px;
+    height: 50px;
+
+    &--main {
+    height: 50px;
+    font-size: 22px;
+    color: $grey-light-color;
+    background-color: $primary-color;
+    &:hover {
+      background-color: $secondary-color;
+      color: white;
+      transition-duration: 500ms;
+      width: 55%;
+      transform: scale(0.96);
+    }
+    }
+
+    &--danger{
+      font-size: 22px;
+      color: $grey-light-color;
+      background-color: $primary-color;
+      &:hover {
+        background-color: rgb(114, 0, 0);
+        color:white;
+        transition-duration: 500ms;
+        width: 55%;
+        transform: scale(0.96);
+      }
+    }
+  }
 </style>

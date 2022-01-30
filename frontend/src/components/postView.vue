@@ -399,7 +399,7 @@ export default {
 
 .container-post-view {
   padding-top: 20px;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   max-width: 80%;
   background-image: url("../assets/icon.png");
   background-repeat: no-repeat;

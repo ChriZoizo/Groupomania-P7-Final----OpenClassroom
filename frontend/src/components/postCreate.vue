@@ -3,7 +3,7 @@
     <div v-if="isWriting == false">
       <button
         v-on:click="isWriting = !isWriting"
-        class="form-create-post__button-init"
+        class="form-create-post__button-init button-shadow"
       >
         Ecrire une publication
       </button>
@@ -12,7 +12,7 @@
       <div class="form-create-post__header">
         <button
           v-on:click="isWriting = !isWriting"
-          class="form-create-post__button-init"
+          class="form-create-post__button-init button-shadow"
         >
           Fermer le formulaire
         </button>
@@ -102,9 +102,9 @@ export default {
     height: 50px;
     font-size: 22px;
     color: $grey-light-color;
-    background-color: $secondary-color;
-    &:hover {
       background-color: $primary-color;
+    &:hover {
+      background-color: $secondary-color;
       color: $grey-light-color;
       transition-duration: 500ms;
       width: 85%;
@@ -125,10 +125,10 @@ export default {
       font-family: $primary-font;
       font-size: 20px;
       padding-left: 20px;
-      min-height: 4.5rem;
+      min-height: 8rem;
       height: auto;
       width: 85%;
-      border: none;
+      border: $primary-color 1px solid;
       overflow: auto;
       outline: none;
 
@@ -187,14 +187,15 @@ export default {
 & textarea::-webkit-scrollbar {
   position: absolute;
   right: 10px;
-  width: 22px;
+  width: 30px;
   background-color: rgba(0, 0, 0, 0);
-  border-radius: 0 30px 30px 0;
+  border-radius: 100px;
 }
 
 & textarea::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: $primary-color;
 }
 }

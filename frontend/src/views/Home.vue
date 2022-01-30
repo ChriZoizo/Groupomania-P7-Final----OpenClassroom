@@ -36,16 +36,7 @@ export default {
     justify-content: center;
     & h1{
       width: 200px;
-    position:relative;
-        &::after {
-          content: "";
-          height: 2px;
-          width: 100px;
-          background: $tertiary-color;
-          position: absolute;
-          left: 50px;
-          bottom: -5px;
-        }}
+}
 
 
   }

@@ -2,9 +2,15 @@
 <template>
   <div class="container-post-list">
     <!-- LOADER -->
-    <div v-show="loading" class="">Chargement des publications ... (ANIMATION Work In Progress..)</div>
+    <div v-show="loading" class="">
+      Chargement des publications ... (ANIMATION Work In Progress..)
+    </div>
     <!-- LOOP (Boucle iterant sur le resultat de la methode GETALLPOST du module (Array))  -->
-    <div v-for="(post, index) in listOfPosts" :key="index" class="post">
+    <div
+      v-for="(post, index) in listOfPosts"
+      :key="index"
+      class="post shadow-card"
+    >
       <!-- CARD BEGIN-->
       <router-link class="post-card remove-decoration" :to="'/post/' + post.id">
         <!-- CARD-header -->
@@ -12,9 +18,10 @@
           <!-- Nom (ou email) de l'utilisateur -->
           <div class="post-card__header-userName">
             <router-link
-              class="remove-decoration bold post-card__header-userName"
+              class="remove-decoration bold post-card__header-userName underlined--secondary-color"
               :to="'/profil/' + post.userId"
-              >{{ post.User.nickname || post.User.email }}</router-link>
+              >{{ post.User.nickname || post.User.email }}</router-link
+            >
           </div>
           <!-- Bouton DELETE -->
           <button
@@ -27,15 +34,13 @@
         </div>
         <!-- BODY DE CARD -->
         <!-- Contenus -->
-        <div class="post-card__body">
+        <!--  SI il y a une image lié affiche cette DIV contenant le content et l'image du Post -->
+        <div v-if="post.postImageUrl.length != 0" class="post-card__body">
           <div class="post-card__body__content">
             <p>{{ post.content }}</p>
           </div>
           <!-- Image de la publication -->
-          <div
-            v-if="post.postImageUrl.length != 0"
-            class="post-card__body__image"
-          >
+          <div class="post-card__body__image">
             <img
               :src="post.postImageUrl"
               v-bind:alt="
@@ -45,10 +50,16 @@
             />
           </div>
         </div>
+        <div v-else class="post-card__body__content-alt post-card__body">
+          <div class="post-card__body ">
+            <p>{{ post.content }}</p>
+          </div>
+        </div>
         <div class="post-card__footer">
           <div class="post-card__footer__date">
-            <p><span >Publiée le : </span>
-               {{ new Date(post.createdAt).getDate() }} /
+            <p>
+              <span>Publiée le : </span>
+              {{ new Date(post.createdAt).getDate() }} /
               {{ new Date(post.createdAt).getMonth() + 1 }} /
               {{ new Date(post.createdAt).getFullYear() }}
             </p>
@@ -106,8 +117,9 @@
               <router-link
                 class="remove-decoration"
                 :to="'/post/' + comment.UserId"
-                >{{ comment.User.nickname || comment.User.email }} à
-                dit :</router-link
+                ><i class="far fa-comments"></i> -
+                {{ comment.User.nickname || comment.User.email }} à dit
+                :</router-link
               >
             </div>
             <div class="post-card__comments-section__comments__right-content">
@@ -181,10 +193,9 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
             this.comments[index];
           }
         })
-        .then(()=> this.loading = false)
+        .then(() => (this.loading = false))
         .catch((err) => console.log(err));
       /* passe la Data Booleen 'loading' en false */
-
     },
 
     deletePost(id) {
@@ -261,6 +272,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
 
 .post {
   margin: 35px 0;
+  border-radius: 30px 30px 0px 0px;
   &-card {
     display: flex;
     flex-direction: column;
@@ -269,7 +281,6 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
     padding: 5px 5px 5px 5px;
     min-height: 200px;
     background-color: lighten($color: $grey-light-color, $amount: 20);
-    box-shadow: 1px 1px 3px $primary-color;
     border-radius: 30px 30px 0px 0px;
     overflow: hidden;
 
@@ -284,14 +295,6 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       &-userName {
         font-family: $secondary-font;
         font-size: 24px;
-        &:before{
-      content: "";
-      position: relative;
-      width: 50%;
-      height: 150px;
-      bottom: 0;
-      left: 25%;
-      border-bottom: 1px solid red;}
       }
 
       &-action {
@@ -312,6 +315,10 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       &__image {
         margin: 0 0 0 15%;
       }
+
+      &__content-alt{
+              justify-content: center !important;
+      }
     }
 
     &__footer {
@@ -326,21 +333,20 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
         justify-content: space-between;
       }
 
-      &__date{
-        & span{
+      &__date {
+        & span {
           font-size: 13px;
         }
       }
     }
 
     &__comments-section {
-      box-shadow: 1px 1px 3px $primary-color;
       & form {
         display: flex;
         margin-top: 0 !important;
         & textarea {
           width: 90%;
-          resize: none; 
+          resize: none;
         }
       }
       &__comments {
@@ -353,17 +359,17 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
           color: $secondary-color;
           min-width: 15%;
           font-family: $secondary-font;
-          display:flex;
+          display: flex;
           flex-direction: column;
           justify-content: center;
         }
         &__right-content {
           width: 75%;
           font-size: 15px;
-   white-space: pre-wrap;      /* CSS3 */   
-   white-space: -moz-pre-wrap; /* Firefox */    
-   white-space: -o-pre-wrap;   /* Opera 7 */    
-   word-wrap: break-word; 
+          white-space: pre-wrap; /* CSS3 */
+          white-space: -moz-pre-wrap; /* Firefox */
+          white-space: -o-pre-wrap; /* Opera 7 */
+          word-wrap: break-word;
         }
       }
     }
@@ -372,7 +378,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
   &-image-container {
     max-width: 100em;
     max-height: 10em;
-    object-fit:contain;
+    object-fit: contain;
   }
 
   & .reaction {
@@ -382,6 +388,4 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
     }
   }
 }
-
-
 </style>

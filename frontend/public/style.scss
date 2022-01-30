@@ -18,6 +18,8 @@ $text-clear: #eeeeee;
 $primary-font: Montserrat;
 $secondary-font: Lobster;
 
+$breakpoints: ("phone-small": 600px, "phone": 800px, "tablet": 900px, 'notebook': 1024px, "desktop": 1600px);
+
 /* MIXINS */
 /* colorations */
 @mixin set-color($color) {
@@ -113,4 +115,61 @@ section {
   
   .grey {
     color: grey !important;
+  }
+
+
+  .shadow-button{
+    -webkit-box-shadow: 1px 1px 12px 0 #000000;
+    -moz-box-shadow: 1px 1px 12px 0 #000000;
+    box-shadow: 1px 1px 12px 0 #000000;
+  }
+  .shadow-card{
+    -webkit-box-shadow: 1px 1px 8px 0 $primary-color;
+    -moz-box-shadow: 1px 1px 8px 0 $primary-color;
+    box-shadow: 1px 1px 8px 0 $primary-color;
+    &:hover{
+      transition: 500ms;
+    -webkit-box-shadow: 1px 1px 15px 0 $primary-color;
+    -moz-box-shadow: 1px 1px 15px 0 $primary-color;
+    box-shadow: 1px 1px 15px 0 $primary-color;
+
+  }
+  }
+
+
+  .underlined{
+    position:relative;
+    &::after {
+      content: "";
+      height: 2px;
+      width: 100px;
+      background: $tertiary-color;
+      position: absolute;
+      left: 50px;
+      bottom: -5px;
+    }
+  }
+  .underlined--secondary-color{
+    position:relative;
+    &::after {
+      content: "";
+      height: 2px;
+      width: 80%;
+      background: $secondary-color;
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+    }
+  }
+  .underlined--grey{
+    position:relative;
+    &::after {
+      content: "";
+      height: 1px;
+      width: 80%;
+      background: $grey-color;
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+    }
   }
