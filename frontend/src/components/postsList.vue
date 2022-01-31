@@ -12,13 +12,13 @@
       class="post shadow-card"
     >
       <!-- CARD BEGIN-->
-      <router-link class="post-card remove-decoration" :to="'/post/' + post.id">
+      <router-link class="post-card post-card--background remove-decoration" :to="'/post/' + post.id">
         <!-- CARD-header -->
         <div class="post-card__header">
           <!-- Nom (ou email) de l'utilisateur -->
           <div class="post-card__header-userName">
             <router-link
-              class="remove-decoration bold post-card__header-userName underlined--secondary-color"
+              class="remove-decoration  post-card--background bold post-card__header-userName underlined--secondary-color"
               :to="'/profil/' + post.userId"
               >{{ post.User.nickname || post.User.email }}</router-link
             >
@@ -97,7 +97,7 @@
             name="comment"
             id="comment"
             v-model="comments[post.id]"
-            placeholder="Commentez cette publication"
+            placeholder="Commentez cette publication..."
             maxlength="200"
             required
           ></textarea>
@@ -273,6 +273,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
 .post {
   margin: 35px 0;
   border-radius: 30px 30px 0px 0px;
+
   &-card {
     display: flex;
     flex-direction: column;
@@ -300,6 +301,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       &-action {
         border: none;
         width: 30px;
+                background-color: lighten($color: $primary-color, $amount: 80);
       }
     }
 
@@ -372,6 +374,10 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
           word-wrap: break-word;
         }
       }
+    }
+
+    &--background {
+        background-color: lighten($color: $primary-color, $amount: 80);
     }
   }
 

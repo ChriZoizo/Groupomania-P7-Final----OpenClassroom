@@ -423,6 +423,11 @@ export default {
     &__button {
       width: 70px;
       border: none;
+      background-color: rgba(0, 0, 0, 0);
+      &:hover{
+        color: $tertiary-color;
+              @include blur-filter
+      }
     }
   }
 
@@ -439,6 +444,7 @@ export default {
   &__header {
     display: flex;
     flex-direction: row-reverse;
+    height: 40px;
   }
 
   &__body {
@@ -468,12 +474,14 @@ export default {
     font-size: 22px;
     color: $grey-light-color;
     background-color: $primary-color;
+    border-radius: 30px;
     &:hover {
-      background: rgba(0, 0, 0, 0.3);
-      color: $primary-color;
+      background: $secondary-color;
+      color: $tertiary-color;
       transition-duration: 500ms;
       width: 85%;
       transform: scale(0.96);
+      @include blur-filter
     }
   }
 

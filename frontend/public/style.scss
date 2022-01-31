@@ -4,7 +4,7 @@
 
 /* VARIABLES */
 /* Couleurs  */
-$primary-color: #222831;
+$primary-color: #171c22;
 $secondary-color: #393e46;
 $tertiary-color: #00adb5;
 
@@ -46,18 +46,31 @@ $breakpoints: ("phone-small": 600px, "phone": 800px, "tablet": 900px, 'notebook'
   flex-direction: row;
 }
 
+@mixin blur-filter {
+  filter: blur(1px)
+}
+
 /* MAPS */
 
 $breakPoints: (mobile: 600px, tablet: 900px, notebook: 1024px, intermediate: 1600px, fullHd: 1920px);
 
-/* CLASSE GLOBALE */
+/* GLOBALE */
+/* BALISE */
+
+.router-view{
+  min-height: 86.25vh;
+}
+
+#app {
+}
 
 section {
-    width: 80%;
-    margin: 0 auto;
-  }
+  width: 80%;
+  margin: 0 auto;
+}
 
-  #view {
+#view {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

@@ -23,7 +23,7 @@
         class="remove-decoration clear-text bold nav-link"
         v-if="this.isAdmin == 'true'"
         to="/admin-dashboard/"
-        ><span>( Dashboard Administrateur) </span></router-link
+        ><span>( Administration ) </span></router-link
       >
       <button id="button-deconnect" v-on:click="deconnect()">
         <p class="bold">deconnexion</p>
@@ -114,8 +114,15 @@ export default {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    min-width: 30%;
-    max-width: 60%;
+
+  & .nav-link {
+    margin: 5px 15px;
+    @media screen and (max-width: map-get($breakpoints, "notebook")) {
+margin: 5px -1px
+    }
+
+
+  }
 
     & span {
       margin: 0 8px;
@@ -155,6 +162,8 @@ export default {
       }
       float: left;
       width: 150px;
+          display: flex;
+    align-items: center;
 
       & .dropdown-button {
         font-family: $secondary-font; /* Important for vertical align on mobile phones */
@@ -190,9 +199,6 @@ export default {
     }
   }
 
-  & .nav-link {
-    margin: 5px 15px;
-  }
 
   & button {
     width: 9rem;

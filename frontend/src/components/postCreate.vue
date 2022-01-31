@@ -103,6 +103,7 @@ export default {
     font-size: 22px;
     color: $grey-light-color;
       background-color: $primary-color;
+      border-radius: 30px;
     &:hover {
       background-color: $secondary-color;
       color: $grey-light-color;

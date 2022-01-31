@@ -18,7 +18,7 @@
           >
       </div>
       <div class="footer__bottom copyright">
-          <p><span class="tertiary-colored">©</span>Copyright 2021 - 2022</p>
+          <p><span class="tertiary-colored"> © </span>Copyright 2021 - 2022</p>
       </div>
     </div>
   </footer>
@@ -43,6 +43,11 @@ export default {
 @import "../../public/style.scss";
 
 footer {
+  height: 15.5vh;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+
   @include set-background-color($primary-color);
   padding: 30px 0 0 0;
 
@@ -77,9 +82,15 @@ footer {
       justify-content: space-evenly;
     }
 
-    &__image {
-      object-fit: contain;
+    &__bottom {
+      display:flex;
+      flex-direction: row;
+      justify-content: center;
+      & span {
+        display: contents;
+      }
     }
+
   }
 }
 </style>
