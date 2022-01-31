@@ -43,7 +43,8 @@ export default {
 @import "../../public/style.scss";
 
 footer {
-  height: 15.5vh;
+  z-index: 6;
+  height: 15vh;
   position: absolute;
   bottom: 0;
   width: 100%;

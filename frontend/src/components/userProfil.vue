@@ -8,18 +8,21 @@
             <span class="informations">{{ user.nickname }}</span>
           </h3>
           <p v-if="user.userId == currentUserId">Votre profil</p>
-          <p v-else>Profil de {{user.nickname || user.email}}</p>
+          <p v-else>Profil de {{ user.nickname || user.email }}</p>
         </div>
       </div>
       <div class="profil__body">
-          <p class="profil__body__info">
-            <i class="fas fa-at icon-fa"></i> Email : <span class="informations">{{ user.email }}</span>
-          </p>
-          <p class="profil__body__info">
-            <i class="far fa-id-card icon-fa"></i> Nom complet : <span class="informations">{{ user.nickname || 'Nom inconnus ' }}</span>
-          </p>
-        </div>
-
+        <p class="profil__body__info">
+          <i class="fas fa-at icon-fa"></i> Email :
+          <span class="informations">{{ user.email }}</span>
+        </p>
+        <p class="profil__body__info">
+          <i class="far fa-id-card icon-fa"></i> Nom complet :
+          <span class="informations">{{
+            user.nickname || "Nom inconnus "
+          }}</span>
+        </p>
+      </div>
 
       <div class="profil__footer">
         <div class="profil__footer__left">
@@ -37,8 +40,11 @@
         class="profil__action-buttons"
         v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
       >
-        <button v-on:click="updateMode = !updateMode" class="button button--main shadow-button">
-          Modifier votre nom <i class="fas fa-pencil-alt"></i> 
+        <button
+          v-on:click="updateMode = !updateMode"
+          class="button button--main shadow-button"
+        >
+          Modifier votre nom <i class="fas fa-pencil-alt"></i>
         </button>
       </div>
     </div>
@@ -47,8 +53,8 @@
       v-show="updateMode"
       class="profil__update-form"
     >
-      <div class="profil__update-form__element names form-group">
-        <label for="new-names">nom complet : </label>
+      <div class="profil__update-form__element form-group">
+        <label for="new-names" class="label">nom complet : </label>
         <input
           type="text"
           id="new-names"
@@ -63,9 +69,15 @@
         onclick="return confirm('Etes-vous sûr des modifications apportés ?')"
       />
     </form>
-    <button v-show="!updateMode"  v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
-    v-on:click="deleteProfil(user.userId)" class='button button--danger shadow-button'
-    onclick="return confirm('ATTENTION ! Ce profil seras definitivement effacer !">Supprimer le compte ?</button>
+    <button
+      v-show="!updateMode"
+      v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
+      v-on:click="deleteProfil(user.userId)"
+      class="button button--danger shadow-button"
+      onclick="return confirm('ATTENTION ! Ce profil seras definitivement effacer !"
+    >
+      Supprimer le compte ?
+    </button>
   </div>
 </template>
 
@@ -81,7 +93,7 @@ export default {
       currentUserIsAdmin: localStorage.getItem("userIsAdmin"),
       currentUserToken: localStorage.getItem("userToken"),
 
-      userIdToDisplay: 0, 
+      userIdToDisplay: 0,
 
       user: {
         userId: 0,
@@ -120,7 +132,7 @@ export default {
             (this.user.nickname = userInfo.nickname),
             (this.user.createdAt = userInfo.createdAt),
             (this.user.isAdmin = userInfo.isAdmin);
-            console.log(this.user)
+          console.log(this.user);
         })
         .catch((err) => console.log(err));
     },
@@ -152,8 +164,9 @@ export default {
 
 .informations {
   font-weight: bolder;
+
   &--aside {
-    font-size: 12px
+    font-size: 12px;
   }
 }
 
@@ -164,39 +177,39 @@ export default {
 }
 
 .profil {
-max-width: 1000px;
-width: 60%;
+  max-width: 1000px;
+  width: 60%;
 
-&__body{
-  display: flex;
-  justify-content: space-around;
-  &__info {
+  &__body {
+    display: flex;
+    justify-content: space-around;
 
-    display:flex;
-    align-items: center;
-    & .icon-fa{
-  color: $primary-color;
-  font-size: 25px
-}
+    &__info {
+      display: flex;
+      align-items: center;
+
+      & .icon-fa {
+        color: $primary-color;
+        font-size: 25px;
+      }
+    }
   }
-
 }
 
-}
+.button {
+  border: none;
+  padding: 5px 7px;
+  width: 50%;
+  min-width: 300px;
+  max-width: 900px;
+  height: 50px;
 
- .button {
-    border: none;
-    padding: 5px 7px;
-    width: 50%;
-    min-width: 300px;
-    max-width: 900px;
-    height: 50px;
-
-    &--main {
+  &--main {
     height: 50px;
     font-size: 22px;
     color: $grey-light-color;
     background-color: $primary-color;
+
     &:hover {
       background-color: $secondary-color;
       color: white;
@@ -204,19 +217,20 @@ width: 60%;
       width: 55%;
       transform: scale(0.96);
     }
-    }
+  }
 
-    &--danger{
-      font-size: 22px;
-      color: $grey-light-color;
-      background-color: $primary-color;
-      &:hover {
-        background-color: rgb(114, 0, 0);
-        color:white;
-        transition-duration: 500ms;
-        width: 55%;
-        transform: scale(0.96);
-      }
+  &--danger {
+    font-size: 22px;
+    color: $grey-light-color;
+    background-color: $primary-color;
+    
+    &:hover {
+      background-color: rgb(114, 0, 0);
+      color: white;
+      transition-duration: 500ms;
+      width: 55%;
+      transform: scale(0.96);
     }
   }
+}
 </style>

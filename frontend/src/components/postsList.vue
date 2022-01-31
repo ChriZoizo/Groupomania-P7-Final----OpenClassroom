@@ -1,9 +1,13 @@
 <!-- * - COMPOSANT : Liste des publications de la BDD -->
 <template>
-  <div class="container-post-list">
+  <section class="container-post-list">
     <!-- LOADER -->
-    <div v-show="loading" class="">
-      Chargement des publications ... (ANIMATION Work In Progress..)
+    <div v-show="loading" class="loader">
+      <div class="loader__container">
+        <div class="loader__container__element"></div>
+        <div class="loader__container__element2"></div>
+        <p class="loader__container__text">Chargement des publications ...</p>
+      </div>
     </div>
     <!-- LOOP (Boucle iterant sur le resultat de la methode GETALLPOST du module (Array))  -->
     <div
@@ -12,13 +16,16 @@
       class="post shadow-card"
     >
       <!-- CARD BEGIN-->
-      <router-link class="post-card post-card--background remove-decoration" :to="'/post/' + post.id">
+      <router-link
+        class="post-card post-card--background remove-decoration"
+        :to="'/post/' + post.id"
+      >
         <!-- CARD-header -->
         <div class="post-card__header">
           <!-- Nom (ou email) de l'utilisateur -->
           <div class="post-card__header-userName">
             <router-link
-              class="remove-decoration  post-card--background bold post-card__header-userName underlined--secondary-color"
+              class="remove-decoration post-card--background bold post-card__header-userName underlined--secondary-color"
               :to="'/profil/' + post.userId"
               >{{ post.User.nickname || post.User.email }}</router-link
             >
@@ -51,7 +58,7 @@
           </div>
         </div>
         <div v-else class="post-card__body__content-alt post-card__body">
-          <div class="post-card__body ">
+          <div class="post-card__body">
             <p>{{ post.content }}</p>
           </div>
         </div>
@@ -130,7 +137,7 @@
       </div>
       <!-- CARD APPEND END -->
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -180,7 +187,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
         .get("http://localhost:3000/api/post/")
         .then((posts) => {
           /* Puis, enregistrement des posts reçus dans la data 'listOfPosts' */
-          this.listOfPosts = posts.data.posts;
+          this.listOfPosts = posts.data.posts.reverse();
           /* Loop "for...in" sur la Data Array contenant TOUT les Posts) 
         Et nous allons créer, pour chaque post, une entrée dans notre Data 'comments', qui serviras de point d'ancrage pour
         les formulaire de commentaires. En effet, chaque Post auras sa propre entrée dans la Data 'comments' ayant l'ID du post comme Key 
@@ -301,7 +308,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       &-action {
         border: none;
         width: 30px;
-                background-color: lighten($color: $primary-color, $amount: 80);
+        background-color: lighten($color: $primary-color, $amount: 80);
       }
     }
 
@@ -309,17 +316,29 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       padding: 15px 40px;
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: center;
+      flex-wrap: wrap;
       align-items: center;
       & p {
         font-size: 28px;
       }
+
+      &__content {
+        text-align: center;
+        min-width: 90%;
+      }
       &__image {
-        margin: 0 0 0 15%;
+        align-items: center;
+        margin: 0 auto;
+        & img {
+          max-width: 100%;
+          max-height: 400px;
+          object-fit: contain;
+        }
       }
 
-      &__content-alt{
-              justify-content: center !important;
+      &__content-alt {
+        justify-content: center !important;
       }
     }
 
@@ -377,20 +396,117 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
     }
 
     &--background {
-        background-color: lighten($color: $primary-color, $amount: 80);
+      background-color: lighten($color: $primary-color, $amount: 80);
     }
-  }
-
-  &-image-container {
-    max-width: 100em;
-    max-height: 10em;
-    object-fit: contain;
   }
 
   & .reaction {
     &__button {
       min-width: 60px;
       min-height: 25px;
+    }
+  }
+}
+
+/* - LOADER - */
+@keyframes spin1 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(540deg);
+  }
+}
+@keyframes spin2 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(1080deg);
+  }
+}
+/* Load Ended */
+@keyframes loaded {
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.loader {
+  position: fixed;
+  z-index: 5; /* z-index Navbar et Footer a 6 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: hsla(0, 0%, 100%, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__container {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__element {
+      position: relative;
+      height: 50px;
+      width: 50px;
+      display: inline-block;
+      border-radius: 50px;
+      border: 6px solid transparent;
+      &:after {
+        content: "";
+        height: 50px;
+        width: 50px;
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        bottom: -5px;
+        right: -5px;
+        height: 50px;
+        display: inline-block;
+
+        border-radius: 50px;
+        border: 6px solid transparent;
+        border-top-color: $tertiary-color;
+        border-bottom-color: $tertiary-color;
+        animation: spin1 3s cubic-bezier(0.5, 0.7, 0.53, 0.81) infinite;
+      }
+    }
+    &__element2 {
+      position: relative;
+      width: 30px;
+      display: inline-block;
+      border-radius: 50px;
+      border: 6px solid transparent;
+      &:after {
+        content: "";
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        top: -57px;
+        left: -5px;
+        bottom: -5px;
+        right: -5px;
+        height: 30px;
+        display: inline-block;
+
+        border-radius: 50px;
+        border: 6px solid transparent;
+        border-top-color: $secondary-color;
+        border-bottom-color: $secondary-color;
+        animation: spin2 3s cubic-bezier(0, 1.88, 0.99, -0.27) infinite;
+      }
+    }
+
+    &__text {
+      font-size: 40px;
+      font-family: $secondary-font;
     }
   }
 }

@@ -95,6 +95,7 @@ export default {
 @import "../../public/style.scss";
 
 .navbar {
+    z-index: 6;
   padding: 0 50px;
   max-height: 130px;
   display: flex;

@@ -147,7 +147,7 @@ export default {
 
 <style lang="scss">
 @import "../../public/style.scss";
-button {
+/* button {
   width: 120px;
   height: 40px;
   border-radius: 30px;
@@ -161,7 +161,7 @@ button {
     -webkit-transition: 0.3s ease-in;
     transition: 0.3s ease-out;
   }
-}
+} */
 form {
   margin-top: 25px;
 }
@@ -180,6 +180,9 @@ textarea {
   outline: none;
   padding: 10px;
   margin: auto;
+  font-family: $primary-font;
+  font-size: 19px;
+
   &:focus {
     border-color: white;
     box-shadow: 0px 0px 20px #0c2444;
@@ -236,6 +239,7 @@ textarea {
   font-size: 30px;
   height: 60px;
   margin: 7px 10px;
+  width: 60%;
       &:hover {
       background-color: $secondary-color;
   color: $tertiary-color;
