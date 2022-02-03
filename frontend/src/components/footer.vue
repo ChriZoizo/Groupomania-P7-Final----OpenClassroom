@@ -37,20 +37,24 @@ export default {
 }
 </script>
 
-<style lang="scss">
-
-/* FOOTER */
+<style lang="scss" scoped>
 @import "../../public/style.scss";
+
+/* NOTE: breakpoints =
+"phone-small": 600px,
+"phone": 800px,
+"tablet": 900px,
+'notebook': 1024px,
+"desktop": 1600px) */
 
 footer {
   z-index: 6;
-  height: 15vh;
-  position: absolute;
+  height: 140px;
   bottom: 0;
   width: 100%;
 
   @include set-background-color($primary-color);
-  padding: 30px 0 0 0;
+/*   padding: 30px 0 0 0; */
 
   & a, p {
     text-decoration: none;
@@ -68,7 +72,7 @@ footer {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0 100px;
+    padding: 0 50px;
     & img {
       height: 40px;
       object-fit: contain;
@@ -80,7 +84,7 @@ footer {
     &__middle {
       display: flex;
       flex-direction: row;
-      justify-content: space-evenly;
+      justify-content: space-between;
     }
 
     &__bottom {

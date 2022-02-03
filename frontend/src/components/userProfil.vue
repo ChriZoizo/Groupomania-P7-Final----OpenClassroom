@@ -1,33 +1,44 @@
+<!-- * - COMPOSANT : Profil d'utilisateur -->
 <template>
-  <div class="container-profil">
+  <div class="container-profil container">
+    <!-- CARD BEGIN (S'affiche si la Data 'updateMode' est sur false-->
     <div v-show="!updateMode" class="profil">
+      <!-- CARD Header -->
       <div class="profil__header">
         <div class="profil__header__names">
+          <!-- SI l'utilisateur affiché est le meme que celui connecté, affiche un message personnalisé -->
           <h3 v-if="user.userId == currentUserId">
             Bienvenue
             <span class="informations">{{ user.nickname }}</span>
           </h3>
+          <!-- SINON Nom complet OU email de l'utilisateur affiché -->
           <p v-if="user.userId == currentUserId">Votre profil</p>
           <p v-else>Profil de {{ user.nickname || user.email }}</p>
         </div>
       </div>
+      <!-- CARD Body -->
       <div class="profil__body">
         <p class="profil__body__info">
+          <!-- INFOS Utilisateur affiché -->
+          <!-- email -->
           <i class="fas fa-at icon-fa"></i> Email :
           <span class="informations">{{ user.email }}</span>
         </p>
+        <!-- Nom complet OU "Nom Inconnu" -->
         <p class="profil__body__info">
           <i class="far fa-id-card icon-fa"></i> Nom complet :
           <span class="informations">{{
-            user.nickname || "Nom inconnus "
+            user.nickname || "Nom inconnu "
           }}</span>
         </p>
       </div>
-
+      <!-- CARD Footer -->
       <div class="profil__footer">
+        <!-- SI l'utilisateur est un ADMIN, affiche un message dans la partie gauche du footer de Card -->
         <div class="profil__footer__left">
           <p v-if="user.isAdmin == 'true'">Membre Administrateur !</p>
         </div>
+        <!-- Affiche la date de creation du profil dans la partie droite du footer de Card -->
         <div class="profil__footer__right">
           <p class="informations">
             Membre depuis : {{ new Date(user.createdAt).getDate() }} /
@@ -36,25 +47,38 @@
           </p>
         </div>
       </div>
+      <!-- CARD END -->
+      <!-- UPDATE User SECTION -->
+      <!-- BOUTTON S'affiche uniquement si l'utilisateur connecté est ADMIN OU identique a celui affiché (comparaison via userID) -->
       <div
         class="profil__action-buttons"
         v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
-      >
+      ><!-- Passe la Data 'updateMode' en "true" -->
         <button
           v-on:click="updateMode = !updateMode"
-          class="button button--main shadow-button"
+          class="button button--main shadowed"
         >
           Modifier votre nom <i class="fas fa-pencil-alt"></i>
         </button>
       </div>
     </div>
+    <!-- FORM UPDATE User -->
+    <!-- (S'affiche si la Data 'updateMode' est "true") -->
     <form
       @submit.prevent="updateProfil(user.userId)"
       v-show="updateMode"
       class="profil__update-form"
     >
-      <div class="profil__update-form__element form-group">
-        <label for="new-names" class="label">nom complet : </label>
+    <!-- Informations -->
+      <p class="tuto">
+        <i class="fas fa-info-circle"></i> Ici vous pouvez modifier votre nom
+        que les autres utilisateurs peuvent voir
+      </p>
+      <div class="profil__update-form__form form-group">
+        <!-- Input text -->
+        <label for="new-names" class="label"
+          ><i class="far fa-id-card icon-fa"> </i>- Nom complet :
+        </label>
         <input
           type="text"
           id="new-names"
@@ -63,18 +87,19 @@
           maxlength="40"
         />
       </div>
+      <!-- boutton submit -->
       <input
         type="submit"
         value="Enregistrer les modifications ?"
         onclick="return confirm('Etes-vous sûr des modifications apportés ?')"
       />
     </form>
+    <!-- DELETE BUTTON -->
     <button
       v-show="!updateMode"
       v-if="currentUserId == user.userId || currentUserIsAdmin == 'true'"
       v-on:click="deleteProfil(user.userId)"
-      class="button button--danger shadow-button"
-      onclick="return confirm('ATTENTION ! Ce profil seras definitivement effacer !"
+      class="button button--danger shadowed"
     >
       Supprimer le compte ?
     </button>
@@ -148,18 +173,20 @@ export default {
     },
 
     deleteProfil(id) {
+           if (confirm('Etes-vous sûr ?! \nToutes suppression est definitive !')) {
       this.axios
         .delete(`http://localhost:3000/api/user/${id}`)
         .then(() => {
           this.$router.go("/home");
         })
         .catch((err) => console.log(err));
-    },
+    }},
+    
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../public/style.scss";
 
 .informations {
@@ -170,7 +197,7 @@ export default {
   }
 }
 
-.container-profil {
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -187,10 +214,94 @@ export default {
     &__info {
       display: flex;
       align-items: center;
-
       & .icon-fa {
         color: $primary-color;
         font-size: 25px;
+      }
+    }
+  }
+
+  &__update-form {
+    width: 100%;
+    margin-top: 10px;
+    &__form {
+      margin-top: 25px;
+      display: flex;
+      flex-direction: row;
+      font-family: $primary-font;
+    }
+
+    @media screen and (max-width: map-get($breakpoints, "desktop")) {
+      & label {
+        font-size: 20px;
+      }
+
+      & input[type="textarea"] {
+        width: 45%;
+      }
+    }
+
+    @media screen and (max-width: map-get($breakpoints, "notebook")) {
+      & label {
+        font-size: 16px;
+        width: 30%;
+      }
+    }
+
+    @media screen and (max-width: map-get($breakpoints, "tablet")) {
+      &__form {
+        flex-direction: column;
+        & label {
+          font-size: 20px;
+          width: unset;
+          margin: 15px auto;
+        }
+
+        & input[type="text"] {
+          text-align: center !important;
+        }
+      }
+    }
+
+    @media screen and (max-width: map-get($breakpoints, "phone")) {
+      & input[type="submit"] {
+        font-size: 16px !important;
+        font-weight: initial !important;
+        padding: 5px;
+      }
+      & input[type="text"] {
+        font-size: 17px !important;
+      }
+    }
+
+    @media screen and (max-width: map-get($breakpoints, "phone-small")) {
+      
+      & input[type="submit"] {
+        width: 100%;
+        border-right: none !important;
+        border-left: none !important;
+        margin-top: -19px;
+      }
+      & input[type="text"] {
+                border-right: none !important;
+        border-left: none !important;
+        width: 100%;
+      }
+    }
+
+    & input[type="submit"] {
+      font-family: $secondary-font;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 5px 15px;
+      border: $primary-color 3px solid;
+      cursor: pointer;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+      &:hover {
+        transition: 500ms;
+        background-color: $primary-color;
+        color: $tertiary-color;
       }
     }
   }
@@ -200,6 +311,8 @@ export default {
   border: none;
   padding: 5px 7px;
   width: 50%;
+  border-radius: 30px;
+  margin: 15px auto;
   min-width: 300px;
   max-width: 900px;
   height: 50px;
@@ -209,26 +322,23 @@ export default {
     font-size: 22px;
     color: $grey-light-color;
     background-color: $primary-color;
-
     &:hover {
       background-color: $secondary-color;
       color: white;
       transition-duration: 500ms;
-      width: 55%;
       transform: scale(0.96);
     }
   }
 
   &--danger {
-    font-size: 22px;
-    color: $grey-light-color;
+    font-size: 18px;
+    color: rgb(255, 190, 190);
     background-color: $primary-color;
-    
     &:hover {
-      background-color: rgb(114, 0, 0);
-      color: white;
+      background-color: rgb(255, 70, 70);
+      color: $primary-color;
+      font-weight: bolder;
       transition-duration: 500ms;
-      width: 55%;
       transform: scale(0.96);
     }
   }

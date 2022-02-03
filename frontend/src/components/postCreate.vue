@@ -181,6 +181,7 @@ export default {
 /* Style de la scrollbar */
 & textarea::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
   border-radius: 10px;
   background-color: rgba(0, 0, 0, 0);
 }

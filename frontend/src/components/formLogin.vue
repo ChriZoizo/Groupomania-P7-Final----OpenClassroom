@@ -1,5 +1,5 @@
 <template>
-  <section class="formularLog">
+  <section class="formularLog container">
   <div class="formularLog-container">
     <div class="formularLog__header-buttons">
     <button class="main" v-on:click="displayLogin" v-bind:class="{ active: displayLoginForm}">Connectez vous !</button>
@@ -263,6 +263,10 @@ textarea {
         font-size: 18px
       }
     }
+}
+
+footer {
+  position: unset !important
 }
 
 </style>

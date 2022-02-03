@@ -1,39 +1,33 @@
-<!-- * - COMPOSANT : View d'une publication -->
+<!-- * --- COMPOSANT --- : Composant affichant une seul publications et ses informations relative -->
 <template>
-  <section class="container-post-view">
+  <section class="container-post-view container">
     <!-- TITRE -->
-    <h1 class="post-view__title">Publication</h1>
+    <h1 class="post-view-card__title">Publication</h1>
     <!-- Subtitle + auteur de la publication (router-link) -->
-    <h3 class="post-view__subtitle">
-      <router-link
-        class="remove-decoration primary-font"
-        :to="'/profil/' + post.userId"
-        ><span class="bold">de </span
-        >{{ post.User.nickname || post.User.email }}</router-link
-      >
+    <h3 class="post-view-card__subtitle">
+      <span class="bold">de </span>
+      <router-link class="remove-decoration" :to="'/profil/' + post.userId">{{
+        post.User.nickname || post.User.email
+      }}</router-link>
     </h3>
     <!-- CARD BEGIN -->
-    <div class="post-view-card" v-if="update == false">
+    <div class="post-view-card shadowed" v-if="update == false">
       <!-- CARD-header -->
       <div class="post-view-card__header">
         <!-- Boutons d'action  -->
         <!-- UNIQUEMENT Si l'utilisateur actuel est Administrateur, ou est l'auteur dela publication -->
         <div
-          v-if="post.userId == currentUserId || isAdmin == 'true'"
-          class="post-view__action"
+          v-if="post.userId == currentUserId || userIsAdmin == 'true'"
+          class="post-view-card__action"
         >
           <!-- Bouton modifier (Passe la data 'update' a true, faisant disparaitre cette section au profit de la section UPDATE) -->
-          <button
-            class="post-view__action__button"
-            v-on:click="switchUpdateMode()"
-          >
+          <button class="action-button" v-on:click="switchUpdateMode()">
             <i class="fas fa-pencil-alt fa-lg"></i>
           </button>
-          <!-- Bouton suprrimer -->
+          <!-- Bouton supprimer -->
           <button
-            class="post-view__action__button"
-            v-if="post.userId == currentUserId || isAdmin == 'true'"
-            onclick="return confirm('Etes-vous sûr de vouloir supprimer cette publication ?')"
+            class="action-button--delete action-button"
+            v-if="post.userId == currentUserId || userIsAdmin == 'true'"
             v-on:click="deletePost(post.id)"
           >
             <i class="fas fa-trash-alt fa-lg"></i>
@@ -44,7 +38,7 @@
       <div class="post-view-card__body">
         <!-- contenus de la publication -->
         <div class="post-view-card__body__content">
-          <p>{{ post.content }}</p>
+          <p class="post-content">{{ post.content }}</p>
         </div>
         <!-- Image de la publication si il y en as une -->
         <div
@@ -52,7 +46,9 @@
           class="post-view-card__body__image"
         >
           <a :href="post.postImageUrl"
-            ><img
+  target="tab" 
+:click="openImage(post.postImageUrl)">
+<img
               :src="post.postImageUrl"
               alt="'Image contenus dans une publication'"
               class="post-view-image-container"
@@ -61,53 +57,48 @@
       </div>
       <!-- CARD-footer -->
       <div class="post-view-card__footer">
-        <!-- Date de creation de la publication -->
-        <div class="post-view-card__footer__date">
-          <p class="date">
-            <span>date de publication : </span>
-            {{ new Date(post.createdAt).getDate() }} /
-            {{ new Date(post.createdAt).getMonth() + 1 }} /
-            {{ new Date(post.createdAt).getFullYear() }}
-          </p>
-        </div>
         <!-- like -->
-        <div class="post-view-card__footer reaction">
-          <div
-            v-on:click="reactToPost(1)"
-            class="post-view-card__footer reaction__like"
-          >
-            <i
-              v-bind:class="{ grey: liked, green: !liked }"
-              class="fas fa-thumbs-up green"
-            ></i
+        <div class="reaction">
+          <div v-on:click="reactToPost(1)" class="reaction__button">
+            <i v-bind:class="{ green: liked }" class="fas fa-thumbs-up grey"></i
             ><span class="reaction__like--counter">{{
               countLike.numberOfLike
             }}</span>
           </div>
           <!-- dislike -->
-          <div
-            v-on:click="reactToPost(-1)"
-            class="post-view-card__footer reaction__dislike"
-          >
+          <div v-on:click="reactToPost(-1)" class="reaction__button">
             <i
-              v-bind:class="{ grey: disliked, red: !disliked }"
-              class="fas fa-thumbs-down red"
+              v-bind:class="{ red: disliked }"
+              class="fas fa-thumbs-down grey"
             ></i
             ><span class="reaction__dislike--counter">{{
               countLike.numberOfDislike
             }}</span>
           </div>
         </div>
+        <!-- Date de creation de la publication -->
+        <div class="post-view-card__footer__date">
+          <p class="date">
+            <span>Publié le : </span>
+            {{ new Date(post.createdAt).getDate() }} /
+            {{ new Date(post.createdAt).getMonth() + 1 }} /
+            {{ new Date(post.createdAt).getFullYear() }}
+          </p>
+        </div>
       </div>
       <!-- COMMENTS SECTION -->
-      <div class="post-view-card__comments-section">
-        <button v-on:click="commenting = !commenting" class="button">
+      <div class="comments-section">
+        <button
+          v-on:click="commenting = !commenting"
+          v-bind:class="{ active: commenting }"
+          class="comment-button"
+        >
           <i class="far fa-comment-alt fa-lg"></i> Commenter
         </button>
         <form
           v-show="commenting"
           @submit.prevent="addComment"
-          class="post-view-card__comments-section__write-form"
+          class="comments-section__write-form"
         >
           <textarea
             name="comment"
@@ -120,42 +111,41 @@
           <input type="submit" value="Publier votre commentaire" />
         </form>
 
-        <div class="post-view-card__comments-section">
+        <div class="comments-section">
           <!--  COMMENT LOOP (boucle iterant sur l'Array de commentaires associés a la publication) -->
 
           <div
-            v-for="(comment, index) in post.Comments"
+            v-for="(comment, index) in post.Comments.reverse()"
             :key="index"
-            class="post-view-card__comments-section__comment-card"
+            class="comments-section__comment-card"
           >
-            <div class="post-view-card__comments-section__comment-card__author">
-              <!-- Prenom OU nom OU email de l'auteur du commentaire -->
-              <router-link
-                class="remove-decoration"
-                :to="'/profil/' + comment.User.id"
-                ><p>
-                  {{ comment.User.nickname || comment.User.email }} :
-                </p></router-link
-              >
-            </div>
-            <!-- Contenus du commentaire -->
-            <div
-              class="post-view-card__comments-section__comment-card__content"
-            >
-              <p>{{ comment.content }}</p>
+            <div class="comments-section__comment-card__body">
+              <div class="comment-author">
+                <!-- Prenom OU nom OU email de l'auteur du commentaire -->
+                <router-link
+                  class="remove-decoration"
+                  :to="'/profil/' + comment.User.id"
+                  ><p>
+                    {{ comment.User.nickname || comment.User.email }} :
+                  </p></router-link
+                >
+              </div>
+              <!-- Contenus du commentaire -->
+              <div class="comment-content">
+                <p>{{ comment.content }}</p>
+              </div>
             </div>
             <!-- Date du commentaire -->
-            <div class="post-view-card__comments-section__comment-card__footer">
+            <div class="comments-section__comment-card__footer">
               <p class="date">
-                {{ new Date(post.createdAt).getDate() }} /
+                Le {{ new Date(post.createdAt).getDate() }} /
                 {{ new Date(post.createdAt).getMonth() + 1 }} /
                 {{ new Date(post.createdAt).getFullYear() }}
               </p>
               <div
                 v-if="comment.User.id == currentUserId || userIsAdmin == 'true'"
                 v-on:click="deleteComment(comment.id)"
-                onclick="return confirm('Etes-vous sûr d'effacer ce commentaire ?)"
-                class="post-view-card__comments-section__comment-card__footer-delete"
+                class="comments-section__comment-card__footer--delete"
               >
                 <i class="fas fa-trash"></i>
               </div>
@@ -210,17 +200,20 @@
 </template>
 
 <script>
+/* --- SCRIPT --- */
 export default {
   data() {
     return {
       currentUserId: parseInt(localStorage.getItem("userId")),
-      isAdmin: localStorage.getItem("userIsAdmin"),
+      userIsAdmin: localStorage.getItem("userIsAdmin"),
 
       commenting: false,
       update: false,
 
       liked: false,
       disliked: false,
+
+      post: {},
 
       postUpdateData: {
         content: "",
@@ -232,8 +225,6 @@ export default {
         postId: 0,
         content: "",
       },
-
-      post: {},
     };
   },
 
@@ -250,10 +241,9 @@ export default {
     this.setPostDataFromUrlId();
   },
 
-  mounted() {
-    this.likedDisliked();
-  },
+  mounted() {},
 
+  /* - METHODS - */
   methods: {
     /* Methods qui recupere l'id du post dans l'URL, le transforme en Number pui l'enregistre dans la varible 'postId'
     Puis la methode 'getPostInfos' est appeler en passant la variable 'id' en parametre */
@@ -276,7 +266,7 @@ export default {
         .then((res) => {
           /* enregistre TOUT le resultat dans la data 'post' */
           this.post = res.data.post;
-          /* enregistre juste le contenus du post dans la data 'postUpdateData.content' qui utilisé lorsque
+          /* enregistre juste le contenus du post dans la data 'postUpdateData.content' qui seras utilisé lorsque
         l'utilisateur fait une modification de la publication, elle est alors utilisé en tant que 'value' du "textarea" */
           this.postUpdateData.content = res.data.post.content;
           this.likedDisliked();
@@ -288,37 +278,46 @@ export default {
       console.log(this.newComment);
       this.axios
         .post("http://localhost:3000/api/comment", this.newComment)
-        .then(() => history.go(0))
+        .then(() =>  this.setPostDataFromUrlId())
         .catch((err) => console.log(err));
     },
 
     deleteComment(id) {
+      if (confirm('Etes-vous sûr de vouloir supprimer ce commentaire ? \nToutes suppression est definitive !')) {
       this.axios
         .delete(`http://localhost:3000/api/comment/${id}`)
-        .then(() => history.go(0))
+        .then(() =>  this.setPostDataFromUrlId())
         .catch((err) => console.log(err));
-    },
+    } },
 
     likedDisliked() {
-      this.post.LikePosts.find((react) => {
-        console.log(react);
-        switch (react.value) {
+      let reaction = this.post.LikePosts.find(
+        (react) =>
+          react.UserId == this.currentUserId && react.PostId == this.post.id
+      );
+      console.log(reaction);
+      if (reaction.value) {
+        switch (reaction.value) {
           case 1:
             this.liked = true;
+            this.disliked = false;
             break;
           case -1:
             this.disliked = true;
+            this.liked = false;
             break;
           case 0:
             this.disliked = false;
             this.liked = false;
             break;
           default:
+            console.log("@@@@@@@@@@@@@@@@@@@@@");
             break;
         }
-      });
-      console.log(this.liked);
-      console.log(this.disliked);
+      } else {
+        this.disliked = false;
+        this.liked = false;
+      }
     },
 
     reactToPost(val) {
@@ -329,9 +328,10 @@ export default {
       const likeDatas = {
         postId: this.post.id,
         userId: this.currentUserId,
-        value,
+        value: value,
       };
-      console.log(likeDatas);
+      console.log("VALEUR LIKE");
+      console.log(likeDatas.value);
       this.axios
         .post("http://localhost:3000/api/post/like", likeDatas)
         .then(() => {
@@ -340,8 +340,11 @@ export default {
         .catch((err) => console.log(err));
     },
 
-    /* Methode qui supprime le post dont l'id correspond a la valeur passée en paramétre */
+    /* Methode qui supprime le post dont l'id correspond a la valeur passée en paramétre.
+    Demande confirmation de l'utilisateur au prealable */
     deletePost(id) {
+      /* Demande de confirmation */
+           if (confirm('Etes-vous sûr de vouloir supprimer cette publication ? \nToutes suppression est definitive !')) {
       /* fait un appel a l'API en integrant l''id' du parametre de la fonction a l'URI */
       this.axios
         .delete(`http://localhost:3000/api/post/${id}`)
@@ -349,6 +352,7 @@ export default {
           this.$router.go("/home")
         ) /* redirect pour rafraichir la page (j'ai pas trouvé mieux :/) */
         .catch((err) => console.log(err));
+           }
     },
 
     /* Methode pour modifier la publication */
@@ -377,143 +381,187 @@ export default {
     switchUpdateMode() {
       this.update = !this.update;
     },
+
+    openImage(url) {
+      window.open(url,'tab','width=600,height=600')
+    }
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../public/style.scss";
 
-    h1{
-      width: 200px;
-    position:relative;
-        &::after {
-          content: "";
-          height: 2px;
-          width: 100px;
-          background: $tertiary-color;
-          position: absolute;
-          left: 50px;
-          bottom: -5px;
-        }}
+h1 {
+  margin-bottom: 5px;
+  margin-top: 0px;
+  padding-top: 10px;
+  position: relative;
+  &::after {
+    content: "";
+    height: 2px;
+    width: 4em;
+    background: $tertiary-color;
+    position: absolute;
+    left: calc(50% - 2em);
+    bottom: -5px;
+  }
+}
 
 .container-post-view {
-  padding-top: 20px;
-  padding-bottom: 20px;
-  max-width: 80%;
-  background-image: url("../assets/icon.png");
+  padding: 20px 0;
+  margin: auto;
+  min-height: 100% !important;
+
+  /*   background-image: url("../assets/icon.png");
   background-repeat: no-repeat;
-  background-position: center;
-  display:flex;
-  flex-direction: column;
+  background-position: center; */
+  @include flexCol;
   align-items: center;
 }
 
-.post-view {
-  &__title {
-    margin-bottom: 5px;
-    margin-top: 0px;
-    padding-top: 10px;
-  }
-  &__subtitle {
-    margin-top: 5px;
-  }
-
-  &__action {
-    &__button {
-      width: 70px;
-      border: none;
-      background-color: rgba(0, 0, 0, 0);
-      &:hover{
-        color: $tertiary-color;
-              @include blur-filter
-      }
-    }
-  }
-
-  &-image-container {
-    object-fit: contain;
-    max-width: 100%;
-    min-width: 25%;
-    min-height: 50%;
-    max-height: 100%;
-  }
+.post-view-image-container {
 }
 
 .post-view-card {
+  background-color: lighten($color: $primary-color, $amount: 80);
+  min-width: 50%;
+
   &__header {
     display: flex;
     flex-direction: row-reverse;
     height: 40px;
+    & .action-button {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background-color: $primary-color;
+      color: $grey-light-color;
+      &:hover {
+        background-color: $secondary-color;
+        transition: 500ms;
+        color: $tertiary-color;
+      }
+      &--delete {
+        &:hover {
+          color: red !important;
+        }
+      }
+    }
   }
 
   &__body {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    @include flexCol;
+    align-items: center;
     flex-wrap: wrap;
 
     &__content {
-      & p {
+      & .post-content {
         font-size: 30px;
       }
     }
 
     &__image {
-      max-width: 50%;
+      width: 100%;
       min-height: 300px;
-      max-height: 400px;
-    }
-  }
-  /* Bouton "COMMENTER" standard */
-  & .button {
-    border: none;
-    padding: 5px 7px;
-    width: 80%;
-    height: 50px;
-    font-size: 22px;
-    color: $grey-light-color;
-    background-color: $primary-color;
-    border-radius: 30px;
-    &:hover {
-      background: $secondary-color;
-      color: $tertiary-color;
-      transition-duration: 500ms;
-      width: 85%;
-      transform: scale(0.96);
-      @include blur-filter
+      max-height: 550px;
+      overflow: hidden;
+      & img {
+        object-fit: cover;
+        max-width: 100%;
+      }
     }
   }
 
-  &__comments-section {
+  &__footer {
+    @include flexRow;
+    justify-content: space-between;
+    width: 80%;
+    margin: 7px auto;
+    & .reaction {
+      width: 100px;
+      @include flexRow;
+      &__button {
+        @include flexRow;
+        align-items: center;
+        width: 50%;
+      }
+    }
+  }
+
+  /* SECTION COMMENTAIRE  */
+
+  .comments-section {
     display: flex;
     flex-direction: column;
     align-items: center;
 
+    & .comment-button {
+      border: none;
+      padding: 5px 7px;
+      width: 100%;
+      height: 50px;
+      font-size: 22px;
+      color: $grey-light-color;
+      background-color: $primary-color;
+      /*     border-radius: 30px; */
+      &:hover {
+        background: $secondary-color;
+        color: $tertiary-color;
+        transition-duration: 500ms;
+      }
+      &.active {
+        background: $secondary-color;
+        color: $tertiary-color;
+        transition-duration: 500ms;
+      }
+    }
+
     & p {
+      /* selectionne seulement les <p> contenus dans les commentaire */
       margin: 3px;
+      padding: 0 10px;
     }
 
     &__comment-card {
+      @include flexCol;
+      justify-content: space-between;
       border-bottom: black 1px solid;
-      padding: 10px;
+      width: 100%;
       margin: 5px auto;
       min-width: 50%;
       max-width: 1400px;
       min-height: 70px;
 
-      &__author{
-        color: $secondary-color
+      &__body {
+        @include flexRow;
+        & .comment-author {
+          color: $secondary-color;
+          width: 200px;
+        }
+
+        & .comment-content {
+          width: calc(100% - 200px);
+          text-align: center;
+          margin: 10px 0 2px 0;
+          font-family: $primary-font;
+          font-size: 18px;
+        }
       }
-
-      &__content {
-        margin: 10px 0 10px 0;
-                font-family: $primary-font;
-        font-size: 18px;      }
-
       & .date {
-
-        font-size: 12px
+        color: $secondary-color;
+        margin-top: 0;
+        text-align: left;
+        font-size: 12px;
+      }
+      
+      &__footer{
+        position:relative;
+        &--delete{
+          position: absolute;
+          top: -2px;
+          right: 7px;
+        }
       }
     }
   }
@@ -528,7 +576,7 @@ export default {
       width: 90%;
       resize: none;
       min-height: 100px;
-      border-radius: 15px;
+      border-radius: 0 0 15px 15px;
       font-family: $primary-font;
       font-size: 18px;
     }
@@ -578,6 +626,7 @@ export default {
   /* Style de la scrollbar */
   & textarea::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0);
   }
@@ -593,8 +642,8 @@ export default {
   & textarea::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: $primary-color;
   }
 }
-
 </style>

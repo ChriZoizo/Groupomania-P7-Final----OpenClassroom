@@ -1,7 +1,7 @@
 <!-- COMPOSANT : Liste des utilisateurs -->
 <template>
   <!-- CONTAINER user-list -->
-  <div class="container-user-list">
+  <div class="container-user-list container">
     <!-- LOOP (boucle iterant sur le resultat de la methode GETALLUSERS du module (Array))-->
     <div v-for="(user, index) in allUsers" :key="index" class="user">
       <!-- CARD begin -->

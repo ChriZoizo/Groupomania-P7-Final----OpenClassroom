@@ -16,7 +16,7 @@ $grey-color: #7e7e7e;
 $text-clear: #eeeeee;
 
 $primary-font: Montserrat;
-$secondary-font: Lobster;
+$secondary-font: Montserrat;
 
 $breakpoints: ("phone-small": 600px, "phone": 800px, "tablet": 900px, 'notebook': 1024px, "desktop": 1600px);
 
@@ -45,6 +45,10 @@ $breakpoints: ("phone-small": 600px, "phone": 800px, "tablet": 900px, 'notebook'
   display: flex;
   flex-direction: row;
 }
+@mixin flexCol {
+  display: flex;
+  flex-direction: column;
+}
 
 @mixin blur-filter {
   filter: blur(1px)
@@ -52,30 +56,52 @@ $breakpoints: ("phone-small": 600px, "phone": 800px, "tablet": 900px, 'notebook'
 
 /* MAPS */
 
-$breakPoints: (mobile: 600px, tablet: 900px, notebook: 1024px, intermediate: 1600px, fullHd: 1920px);
 
 /* GLOBALE */
 /* BALISE */
 
+/* Classe de la DIV contenant le router-view (Toute l'app SAUF la Navbar et le Footer */
 .router-view{
-  min-height: 86.25vh;
-}
+  /* Pour calculer la hauteur de la Vue, on prend la totalité du viewport-height et on lui 
+  soustrait la somme de la hauteur de la navbar et du footer */
+  min-height: calc(100vh - 270px);
+  /* Pour calculer la largeur de la Vue, on prend la totalité du Viewport-Width et on lui soustrait les marges voulus*/
+  width: calc(100vw - 400px);
+  margin: 0 auto;
+  @media screen and (max-width: map-get($breakpoints, "desktop")){
+    width: calc(100vw - 250px);
+  }
+  @media screen and (max-width: map-get($breakpoints, "notebook")){
+    width: calc(100vw - 100px);
+  }
+  @media screen and (max-width: map-get($breakpoints, "phone")){
+    width: 100%;
+  }
+  @media screen and (max-width: map-get($breakpoints, "phone")){
+    width: 100%;
+  }
 
+}
+/* NOTE: breakpoints =
+"phone-small": 600px,
+"phone": 800px,
+"tablet": 900px,
+'notebook': 1024px,
+"desktop": 1600px) */
 #app {
 }
 
-section {
-  width: 80%;
-  margin: 0 auto;
+.container {
+height: 100%;
 }
 
-#view {
+ #view {
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 100%;
-  }
+    min-height: 100vh;
+  } 
   
   p,
   h1,
@@ -94,6 +120,15 @@ section {
   }
 
   /* classes utilitaires */
+  .tuto {
+    font-family: $primary-font;
+    font-size: 14px;
+    color: $primary-color;
+    margin-top: 5px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
   .remove-decoration {
     text-decoration: none;
     color: $primary-color
@@ -123,15 +158,18 @@ section {
     color: $tertiary-color
   }
   .green {
-    color: green;
+    color: green !important;
   }
   
   .grey {
-    color: grey !important;
+    color: grey;
   }
 
+  .red {
+    color: darkred !important;
+  }
 
-  .shadow-button{
+  .shadowed{
     -webkit-box-shadow: 1px 1px 12px 0 #000000;
     -moz-box-shadow: 1px 1px 12px 0 #000000;
     box-shadow: 1px 1px 12px 0 #000000;

@@ -1,6 +1,6 @@
 <!-- * - COMPOSANT : Liste des publications de la BDD -->
 <template>
-  <section class="container-post-list">
+  <section class="container-post-list container">
     <!-- LOADER -->
     <div v-show="loading" class="loader">
       <div class="loader__container">
@@ -90,7 +90,7 @@
           </div>
         </div>
       </router-link>
-      <!-- CARD END -->
+
 
       <!-- CARD APPEND Comments -->
       <!-- Ecrire un commentaire -->
@@ -125,8 +125,7 @@
                 class="remove-decoration"
                 :to="'/post/' + comment.UserId"
                 ><i class="far fa-comments"></i> -
-                {{ comment.User.nickname || comment.User.email }} à dit
-                :</router-link
+                {{ comment.User.nickname || comment.User.email }}</router-link
               >
             </div>
             <div class="post-card__comments-section__comments__right-content">
@@ -136,6 +135,7 @@
         </div>
       </div>
       <!-- CARD APPEND END -->
+            <!-- CARD END -->
     </div>
   </section>
 </template>
@@ -206,6 +206,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
     },
 
     deletePost(id) {
+           if (confirm('Etes-vous sûr de vouloir supprimer ce commentaire ? \nToutes suppression est definitive !')) {
       this.axios
         .delete(`http://localhost:3000/api/post/${id}`)
         .then(() => {
@@ -213,6 +214,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
           this.$router.go("/home");
         })
         .catch((err) => console.log(err));
+           }
     },
 
     addComment(id) {
@@ -274,12 +276,22 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../public/style.scss";
+
+    .input-wrapper {
+        display:inline-block;
+        position: relative
+    }
+    .input-wrapper:after {
+        font-family: 'FontAwesome';
+        content: '\f274';
+        position: absolute;
+        right: 6px;
+    }
 
 .post {
   margin: 35px 0;
-  border-radius: 30px 30px 0px 0px;
 
   &-card {
     display: flex;
@@ -289,14 +301,11 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
     padding: 5px 5px 5px 5px;
     min-height: 200px;
     background-color: lighten($color: $grey-light-color, $amount: 20);
-    border-radius: 30px 30px 0px 0px;
-    overflow: hidden;
 
     &__header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-radius: 28px 28px 0px 0px;
       height: 50px;
       padding: 0 40px 0 25px;
       /*       background-color: lighten($color: $primary-color, $amount: 70); */
@@ -366,7 +375,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
         display: flex;
         margin-top: 0 !important;
         & textarea {
-          width: 90%;
+          width: 95%;
           resize: none;
         }
       }
@@ -375,7 +384,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
         background-color: lighten($color: $primary-color, $amount: 80);
         border: $primary-color 1px solid;
         justify-content: space-between;
-        padding: 4px 10%;
+        padding: 4px 5%;
         &__left-author {
           color: $secondary-color;
           min-width: 15%;
@@ -383,7 +392,9 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
           display: flex;
           flex-direction: column;
           justify-content: center;
+
         }
+
         &__right-content {
           width: 75%;
           font-size: 15px;
@@ -391,14 +402,39 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
           white-space: -moz-pre-wrap; /* Firefox */
           white-space: -o-pre-wrap; /* Opera 7 */
           word-wrap: break-word;
+                    position: relative;
+          &::after{
+            content: "";
+            border: black 1px solid;
+            width: 0px;
+            height: 100%;
+            position: absolute;
+            left: -5px;
+            bottom: 0;
+          }
         }
       }
     }
+
+ 
 
     &--background {
       background-color: lighten($color: $primary-color, $amount: 80);
     }
   }
+
+     & textarea {
+      font-size: 15px !important
+    }
+
+    & input[type='submit']{
+      font-size: 15px;
+          &:hover {
+      transition: 500ms;
+      background-color: $primary-color;
+      color: $tertiary-color;
+    }
+    }
 
   & .reaction {
     &__button {

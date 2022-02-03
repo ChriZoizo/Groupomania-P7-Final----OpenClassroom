@@ -1,7 +1,7 @@
 <template>
   <!-- View contenant les composant 'postCreate' et 'postList'. C'est la page d'accueil de l'App  -->
   <div class="home">
-    <div class="home__title">    <h1>Accueil</h1></div>
+    <div class="home__title">    <h1>Bienvenue sur Groupomania </h1></div>
 
     <img alt="Vue logo" src="../assets/logo.png" />
     <section>
@@ -35,7 +35,7 @@ export default {
     flex-direction: row;
     justify-content: center;
     & h1{
-      width: 200px;
+width: 500px;
 }
 
 

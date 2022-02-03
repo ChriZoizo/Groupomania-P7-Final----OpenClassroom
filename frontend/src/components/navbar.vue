@@ -95,7 +95,7 @@ export default {
 @import "../../public/style.scss";
 
 .navbar {
-    z-index: 6;
+  z-index: 6;
   padding: 0 50px;
   max-height: 130px;
   display: flex;
@@ -116,14 +116,12 @@ export default {
     align-items: center;
     justify-content: space-between;
 
-  & .nav-link {
-    margin: 5px 15px;
-    @media screen and (max-width: map-get($breakpoints, "notebook")) {
-margin: 5px -1px
+    & .nav-link {
+      margin: 5px 15px;
+      @media screen and (max-width: map-get($breakpoints, "notebook")) {
+        margin: 5px -1px;
+      }
     }
-
-
-  }
 
     & span {
       margin: 0 8px;
@@ -161,13 +159,14 @@ margin: 5px -1px
       @media screen and (min-width: map-get($breakpoints,"phone" )) {
         display: none;
       }
+      position: relative;
       float: left;
       width: 150px;
-          display: flex;
-    align-items: center;
+      display: flex;
+      align-items: center;
 
       & .dropdown-button {
-        font-family: $secondary-font; /* Important for vertical align on mobile phones */
+        font-family: $primary-font; /* Important for vertical align on mobile phones */
         font-size: 22px;
         margin: 0;
       }
@@ -199,12 +198,35 @@ margin: 5px -1px
       }
     }
   }
-
+  button {
+    width: 120px;
+    height: 40px;
+    border-radius: 30px;
+    padding: 10px;
+    margin: 15px 0px 25px 0px;
+    background-color: white;
+    color: #0c2444;
+    &:hover {
+      transform: scale(1.15);
+      opacity: 0.85;
+      -webkit-transition: 0.3s ease-in;
+      transition: 0.3s ease-out;
+    }
+  }
 
   & button {
+    height: 40px;
+    border-radius: 30px;
+    padding: 10px;
+    background-color: white;
+    color: #0c2444;
     width: 9rem;
     margin: 5px 15px;
     &:hover {
+      transform: scale(1.15);
+      opacity: 0.85;
+      -webkit-transition: 0.3s ease-in;
+      transition: 0.3s ease-out;
       @include set-background-color(lighten($tertiary-color, 50%));
     }
     & p {

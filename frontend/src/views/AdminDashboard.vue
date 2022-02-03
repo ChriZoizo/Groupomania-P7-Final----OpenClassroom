@@ -3,20 +3,15 @@
         <section class="admin-dashboard__user-section">
         <UserList/>
         </section>
-        <aside class="admin-dashboard__post-section">
-        <PostList/>
-        </aside>
     </div>
 </template>
 <script>
-import PostList from '@/components/postsList.vue'
 import UserList from '@/components/usersList.vue'
 
 export default{
     name: "AdminDashboard",
     components: {
         UserList, 
-        PostList,
     },
 
     data() {
