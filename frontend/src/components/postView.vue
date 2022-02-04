@@ -11,7 +11,7 @@
       }}</router-link>
     </h3>
     <!-- CARD BEGIN -->
-    <div class="post-view-card shadowed" v-if="update == false">
+    <div class="post-view-card shadowed" v-show="!update">
       <!-- CARD-header -->
       <div class="post-view-card__header">
         <!-- Boutons d'action  -->
@@ -41,19 +41,18 @@
           <p class="post-content">{{ post.content }}</p>
         </div>
         <!-- Image de la publication si il y en as une -->
-        <div
-          v-if="post.postImageUrl.length > 0"
+        <a
+          v-if="post.postImageUrl !== 'undefined'"
+          target="tab"
+          :href="post.postImageUrl"
           class="post-view-card__body__image"
         >
-          <a :href="post.postImageUrl"
-  target="tab" 
-:click="openImage(post.postImageUrl)">
-<img
-              :src="post.postImageUrl"
-              alt="'Image contenus dans une publication'"
-              class="post-view-image-container"
-          /></a>
-        </div>
+          <img
+            :src="post.postImageUrl"
+            alt="'Image contenus dans une publication'"
+            class="post-view-image-container"
+          />
+        </a>
       </div>
       <!-- CARD-footer -->
       <div class="post-view-card__footer">
@@ -115,8 +114,8 @@
           <!--  COMMENT LOOP (boucle iterant sur l'Array de commentaires associés a la publication) -->
 
           <div
-            v-for="(comment, index) in post.Comments.reverse()"
-            :key="index"
+            v-for="comment in post.Comments"
+            :key="comment.id"
             class="comments-section__comment-card"
           >
             <div class="comments-section__comment-card__body">
@@ -176,6 +175,7 @@
           <div class="form-group">
             <label for="postImg">Ajouter une image/GIF</label> :
             <input
+              id="imageChanger"
               type="file"
               name="fileAttachment"
               class="form-control"
@@ -185,6 +185,16 @@
           </div>
           <!-- Bouton d'enregitrement des modifications -->
           <input type="submit" value="Enregistrer les modifications" />
+          <!-- IMAGE UPDATE -->
+          <div class="post-view-card__body__image">
+          <img
+            :src="post.postImageUrl"
+            alt="'Image actuelle de la publication'"
+            id="previewer"
+            class="post-view-image-container"
+          />
+          </div>
+          <!-- sdkjdfkdfd -->
         </form>
       </div>
       <div class="post-update__action">
@@ -278,17 +288,22 @@ export default {
       console.log(this.newComment);
       this.axios
         .post("http://localhost:3000/api/comment", this.newComment)
-        .then(() =>  this.setPostDataFromUrlId())
+        .then(() => this.setPostDataFromUrlId())
         .catch((err) => console.log(err));
     },
 
     deleteComment(id) {
-      if (confirm('Etes-vous sûr de vouloir supprimer ce commentaire ? \nToutes suppression est definitive !')) {
-      this.axios
-        .delete(`http://localhost:3000/api/comment/${id}`)
-        .then(() =>  this.setPostDataFromUrlId())
-        .catch((err) => console.log(err));
-    } },
+      if (
+        confirm(
+          "Etes-vous sûr de vouloir supprimer ce commentaire ? \nToutes suppression est definitive !"
+        )
+      ) {
+        this.axios
+          .delete(`http://localhost:3000/api/comment/${id}`)
+          .then(() => this.setPostDataFromUrlId())
+          .catch((err) => console.log(err));
+      }
+    },
 
     likedDisliked() {
       let reaction = this.post.LikePosts.find(
@@ -296,7 +311,7 @@ export default {
           react.UserId == this.currentUserId && react.PostId == this.post.id
       );
       console.log(reaction);
-      if (reaction.value) {
+      if (typeof reaction !== "undefined") {
         switch (reaction.value) {
           case 1:
             this.liked = true;
@@ -344,15 +359,19 @@ export default {
     Demande confirmation de l'utilisateur au prealable */
     deletePost(id) {
       /* Demande de confirmation */
-           if (confirm('Etes-vous sûr de vouloir supprimer cette publication ? \nToutes suppression est definitive !')) {
-      /* fait un appel a l'API en integrant l''id' du parametre de la fonction a l'URI */
-      this.axios
-        .delete(`http://localhost:3000/api/post/${id}`)
-        .then(() =>
-          this.$router.go("/home")
-        ) /* redirect pour rafraichir la page (j'ai pas trouvé mieux :/) */
-        .catch((err) => console.log(err));
-           }
+      if (
+        confirm(
+          "Etes-vous sûr de vouloir supprimer cette publication ? \nToutes suppression est definitive !"
+        )
+      ) {
+        /* fait un appel a l'API en integrant l''id' du parametre de la fonction a l'URI */
+        this.axios
+          .delete(`http://localhost:3000/api/post/${id}`)
+          .then(() =>
+            this.$router.go("/home")
+          ) /* redirect pour rafraichir la page (j'ai pas trouvé mieux :/) */
+          .catch((err) => console.log(err));
+      }
     },
 
     /* Methode pour modifier la publication */
@@ -376,6 +395,12 @@ export default {
     loadAttachment(event) {
       this.postUpdateData.postImageUrl = event.target.files[0].name;
       this.postUpdateData.file = event.target.files[0];
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('previewer').src =  e.target.result
+      }
+      reader.readAsDataURL(event.target.files[0])
+
     },
 
     switchUpdateMode() {
@@ -383,8 +408,8 @@ export default {
     },
 
     openImage(url) {
-      window.open(url,'tab','width=600,height=600')
-    }
+      window.open(url, "tab", "width=600,height=600");
+    },
   },
 };
 </script>
@@ -495,6 +520,7 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 
     & .comment-button {
       border: none;
@@ -554,10 +580,10 @@ h1 {
         text-align: left;
         font-size: 12px;
       }
-      
-      &__footer{
-        position:relative;
-        &--delete{
+
+      &__footer {
+        position: relative;
+        &--delete {
           position: absolute;
           top: -2px;
           right: 7px;
@@ -565,85 +591,89 @@ h1 {
       }
     }
   }
+}
 
-  & form {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    margin: 20px 50px;
-    margin-top: 0 !important;
-    & textarea {
-      width: 90%;
-      resize: none;
-      min-height: 100px;
-      border-radius: 0 0 15px 15px;
-      font-family: $primary-font;
-      font-size: 18px;
-    }
+.post-update-card {
+  width: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 20px 50px;
+  margin-top: 0 !important;
+  & textarea {
+    width: 90%;
+    resize: none;
+    min-height: 100px;
+    border-radius: 0 0 15px 15px;
+    font-family: $primary-font;
+    font-size: 18px;
   }
-  /* BOUTON "PUBLIER votre commentaire" */
-  & input[type="submit"] {
-    font-family: $secondary-font;
-    max-width: 300px;
-    font-size: 16px;
+}
+/* BOUTON "PUBLIER votre commentaire" */
+input[type="submit"] {
+  font-family: $secondary-font;
+  max-width: 300px;
+  font-size: 16px;
+  padding: 5px 15px;
+  border: $primary-color 3px solid;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  &:hover {
+    transition: 500ms;
+    background-color: $primary-color;
+    color: $tertiary-color;
+  }
+}
+
+/* BOUTTON "Choisir Un fichier" */
+input[type="file"] {
+  &::-webkit-file-upload-button {
+    font-family: $primary-font;
+    border: none;
     padding: 5px 15px;
-    border: $primary-color 3px solid;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
+    background-color: $secondary-color;
+    color: $grey-light-color;
     &:hover {
       transition: 500ms;
       background-color: $primary-color;
       color: $tertiary-color;
     }
   }
+}
 
-  /* BOUTTON "Choisir Un fichier" */
-  & input[type="file"] {
-    &::-webkit-file-upload-button {
-      font-family: $primary-font;
-      border: none;
-      padding: 5px 15px;
-      background-color: $secondary-color;
-      color: $grey-light-color;
-      &:hover {
-        transition: 500ms;
-        background-color: $primary-color;
-        color: $tertiary-color;
-      }
-    }
-  }
+/* TEXTAREA Style Sup */
+/* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
+::-webkit-input-placeholder {
+  text-align: center;
+  font-family: $secondary-font;
+  font-size: 1.7em;
+  color: $primary-color;
+}
 
-  /* TEXTAREA Style Sup */
-  /* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
-  & ::-webkit-input-placeholder {
-    text-align: center;
-    font-family: $secondary-font;
-    font-size: 1.7em;
-    color: $primary-color;
-  }
+/* Style de la scrollbar */
+textarea::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+  border-radius: 10px 10px;
+  background-color: rgba(0, 0, 0, 0);
+}
 
-  /* Style de la scrollbar */
-  & textarea::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-    border-radius: 10px;
-    background-color: rgba(0, 0, 0, 0);
-  }
+textarea::-webkit-scrollbar {
+  position: absolute;
+  right: 10px;
+  width: 22px;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 0 30px 30px 0;
+}
 
-  & textarea::-webkit-scrollbar {
-    position: absolute;
-    right: 10px;
-    width: 22px;
-    background-color: rgba(0, 0, 0, 0);
-    border-radius: 0 30px 30px 0;
-  }
-
-  & textarea::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    background-color: $primary-color;
-  }
+textarea::-webkit-scrollbar-thumb {
+  border-radius: 0 0 10px 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: $primary-color;
 }
 </style>

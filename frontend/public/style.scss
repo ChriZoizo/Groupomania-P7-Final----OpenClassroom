@@ -60,12 +60,13 @@ $breakpoints: ("phone-small": 600px, "phone": 800px, "tablet": 900px, 'notebook'
 /* GLOBALE */
 /* BALISE */
 
+body {
+  margin: 0
+}
+
 /* Classe de la DIV contenant le router-view (Toute l'app SAUF la Navbar et le Footer */
 .router-view{
-  /* Pour calculer la hauteur de la Vue, on prend la totalité du viewport-height et on lui 
-  soustrait la somme de la hauteur de la navbar et du footer */
   min-height: calc(100vh - 270px);
-  /* Pour calculer la largeur de la Vue, on prend la totalité du Viewport-Width et on lui soustrait les marges voulus*/
   width: calc(100vw - 400px);
   margin: 0 auto;
   @media screen and (max-width: map-get($breakpoints, "desktop")){
