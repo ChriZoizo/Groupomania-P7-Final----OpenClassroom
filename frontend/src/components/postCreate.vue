@@ -18,7 +18,6 @@
         </button>
         <h2>Formulaire de publication</h2>
       </div>
-      <!--    enctype="multipart/form-data" -->
       <form @submit.prevent="submitPost" class="form-create-post__formular">
         <div class="form-group">
           <textarea
@@ -40,6 +39,14 @@
             class="form-control file-input"
             accept=".jpeg, .png, .jpg .gif"
             v-on:change="loadAttachment($event)"
+          />
+        </div>
+        <div class="image-preview">
+          <img
+            src="../assets/no_preview.png"
+            alt="'Image actuelle de la publication'"
+            id="previewer"
+            class="post-create-image-container"
           />
         </div>
         <input type="submit" value="Publier !" />
@@ -66,9 +73,14 @@ export default {
 
   methods: {
     loadAttachment(event) {
-      console.log(event.target.files[0]);
       this.postCreateInput.postImageUrl = event.target.files[0].name;
       this.postCreateInput.file = event.target.files[0];
+
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById("previewer").src = e.target.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
     },
 
     submitPost() {
@@ -102,8 +114,8 @@ export default {
     height: 50px;
     font-size: 22px;
     color: $grey-light-color;
-      background-color: $primary-color;
-      border-radius: 30px;
+    background-color: $primary-color;
+    border-radius: 30px;
     &:hover {
       background-color: $secondary-color;
       color: $grey-light-color;
@@ -137,10 +149,19 @@ export default {
 
       border-radius: 30px;
     }
+
+    & .image-preview {
+      margin-bottom: 10px;
+      & img {
+        object-fit: contain;
+        max-height: 500px;
+        width: 70%;
+      }
+    }
   }
 
-/* BOUTON "PUBLIER" */
- & input[type="submit"] {
+  /* BOUTON "PUBLIER" */
+  & input[type="submit"] {
     font-family: $secondary-font;
     font-size: 20px;
     font-weight: bold;
@@ -156,8 +177,8 @@ export default {
     }
   }
 
-/* BOUTTON "Choisir Un fichier" */
- & input[type="file"] {
+  /* BOUTTON "Choisir Un fichier" */
+  & input[type="file"] {
     &::-webkit-file-upload-button {
       font-family: $primary-font;
       border: none;
@@ -172,33 +193,33 @@ export default {
     }
   }
 
-/* TEXTAREA Style */
-/* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
-& ::-webkit-input-placeholder {
-  text-align: center;
-}
+  /* TEXTAREA Style */
+  /* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
+  & ::-webkit-input-placeholder {
+    text-align: center;
+  }
 
-/* Style de la scrollbar */
-& textarea::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-  border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0);
-}
+  /* Style de la scrollbar */
+  & textarea::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0);
+  }
 
-& textarea::-webkit-scrollbar {
-  position: absolute;
-  right: 10px;
-  width: 30px;
-  background-color: rgba(0, 0, 0, 0);
-  border-radius: 100px;
-}
+  & textarea::-webkit-scrollbar {
+    position: absolute;
+    right: 10px;
+    width: 30px;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 100px;
+  }
 
-& textarea::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: $primary-color;
-}
+  & textarea::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: $primary-color;
+  }
 }
 </style>

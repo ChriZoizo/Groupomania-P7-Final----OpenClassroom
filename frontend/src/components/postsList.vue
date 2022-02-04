@@ -91,7 +91,6 @@
         </div>
       </router-link>
 
-
       <!-- CARD APPEND Comments -->
       <!-- Ecrire un commentaire -->
       <div class="post-card__comments-section">
@@ -135,7 +134,7 @@
         </div>
       </div>
       <!-- CARD APPEND END -->
-            <!-- CARD END -->
+      <!-- CARD END -->
     </div>
   </section>
 </template>
@@ -206,15 +205,19 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
     },
 
     deletePost(id) {
-           if (confirm('Etes-vous sûr de vouloir supprimer ce commentaire ? \nToutes suppression est definitive !')) {
-      this.axios
-        .delete(`http://localhost:3000/api/post/${id}`)
-        .then(() => {
-          console.log("POST DELETED");
-          this.$router.go("/home");
-        })
-        .catch((err) => console.log(err));
-           }
+      if (
+        confirm(
+          "Etes-vous sûr de vouloir supprimer ce commentaire ? \nToutes suppression est definitive !"
+        )
+      ) {
+        this.axios
+          .delete(`http://localhost:3000/api/post/${id}`)
+          .then(() => {
+            console.log("POST DELETED");
+            this.$router.go("/home");
+          })
+          .catch((err) => console.log(err));
+      }
     },
 
     addComment(id) {
@@ -251,7 +254,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
         .catch((err) => console.log(err));
     },
 
-    checkReact(post) {
+/*     checkReact(post) {
       post.LikePosts.find((react) => {
         if (react.UserId == this.currentUserId) {
           switch (react.value) {
@@ -266,7 +269,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
           }
         }
       });
-    },
+    }, */
 
     setLocalStorageValue() {
       this.currentUserId = localStorage.getItem("userId");
@@ -279,16 +282,16 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
 <style lang="scss" scoped>
 @import "../../public/style.scss";
 
-    .input-wrapper {
-        display:inline-block;
-        position: relative
-    }
-    .input-wrapper:after {
-        font-family: 'FontAwesome';
-        content: '\f274';
-        position: absolute;
-        right: 6px;
-    }
+.input-wrapper {
+  display: inline-block;
+  position: relative;
+}
+.input-wrapper:after {
+  font-family: "FontAwesome";
+  content: "\f274";
+  position: absolute;
+  right: 6px;
+}
 
 .post {
   margin: 35px 0;
@@ -298,7 +301,6 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
     flex-direction: column;
     justify-content: space-between;
     border: none;
-    padding: 5px 5px 5px 5px;
     min-height: 200px;
     background-color: lighten($color: $grey-light-color, $amount: 20);
 
@@ -307,22 +309,25 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       justify-content: space-between;
       align-items: center;
       height: 50px;
-      padding: 0 40px 0 25px;
       /*       background-color: lighten($color: $primary-color, $amount: 70); */
       &-userName {
         font-family: $secondary-font;
         font-size: 24px;
+        margin-left: 20px;
       }
 
       &-action {
         border: none;
         width: 30px;
-        background-color: lighten($color: $primary-color, $amount: 80);
+        background-color: $primary-color;
+        color: white;
+        height: 100%;
+        width: 50px;
       }
     }
 
     &__body {
-      padding: 15px 40px;
+      padding: 15px 0px;
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -333,16 +338,18 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       }
 
       &__content {
+        margin: 0 20px;
         text-align: center;
         min-width: 90%;
       }
       &__image {
+        width: 100%;
         align-items: center;
         margin: 0 auto;
         & img {
-          max-width: 100%;
-          max-height: 400px;
-          object-fit: contain;
+          width: 100%;
+          max-height: 500px;
+          object-fit: cover;
         }
       }
 
@@ -392,7 +399,6 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
           display: flex;
           flex-direction: column;
           justify-content: center;
-
         }
 
         &__right-content {
@@ -402,8 +408,8 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
           white-space: -moz-pre-wrap; /* Firefox */
           white-space: -o-pre-wrap; /* Opera 7 */
           word-wrap: break-word;
-                    position: relative;
-          &::after{
+          position: relative;
+          &::after {
             content: "";
             border: black 1px solid;
             width: 0px;
@@ -416,25 +422,23 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       }
     }
 
- 
-
     &--background {
       background-color: lighten($color: $primary-color, $amount: 80);
     }
   }
 
-     & textarea {
-      font-size: 15px !important
-    }
+  & textarea {
+    font-size: 15px !important;
+  }
 
-    & input[type='submit']{
-      font-size: 15px;
-          &:hover {
+  & input[type="submit"] {
+    font-size: 15px;
+    &:hover {
       transition: 500ms;
       background-color: $primary-color;
       color: $tertiary-color;
     }
-    }
+  }
 
   & .reaction {
     &__button {

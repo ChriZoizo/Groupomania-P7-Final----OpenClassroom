@@ -156,15 +156,24 @@
     <!-- !!! UPDATE SECTION !!! ne s'affiche que lorsque la data 'update' passe a true, faisant disparaitre la section CARD-POST -->
     <div class="post-update-card" v-show="update">
       <h2>Modification</h2>
+      <!-- Bouton Annulation -->
+            <div class="post-update__action">
+        <button
+          class="post-update__action__button"
+          v-on:click="switchUpdateMode()"
+        >
+          Annuler
+        </button>
+      </div>
       <div class="post-update-card__body">
         <!--  FORM BEGIN -->
         <form @submit="updatePost(post.id)" class="post-update-form__content">
           <!-- inputs pour modifier le CONTENUS de la publication -->
-          <div class="form-group">
-            <label for="content">Contenus</label>
+          <div class="update-form-group">
+            <label for="update-content">Contenus</label>
             <textarea
               type="text"
-              id="content"
+              id="update-content"
               class="form-control"
               v-model="postUpdateData.content"
               maxlength="500"
@@ -172,7 +181,7 @@
             />
           </div>
           <!-- Input pour modifier l'image associé a la publication -->
-          <div class="form-group">
+          <div class="update-form-group">
             <label for="postImg">Ajouter une image/GIF</label> :
             <input
               id="imageChanger"
@@ -196,14 +205,6 @@
           </div>
           <!-- sdkjdfkdfd -->
         </form>
-      </div>
-      <div class="post-update__action">
-        <button
-          class="post-update__action__button"
-          v-on:click="switchUpdateMode()"
-        >
-          Annuler
-        </button>
       </div>
     </div>
   </section>
@@ -591,12 +592,8 @@ h1 {
       }
     }
   }
-}
 
-.post-update-card {
-  width: 100%;
-}
-
+  
 form {
   display: flex;
   flex-direction: column;
@@ -671,9 +668,101 @@ textarea::-webkit-scrollbar {
 }
 
 textarea::-webkit-scrollbar-thumb {
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 0px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: $primary-color;
 }
+}
+
+.post-update-card {
+  width: 100%;
+    display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 800px !important;
+  & #update-content {
+    border-radius: 30px;
+    width: 100%;
+  }
+  
+form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+
+  margin-top: 0 !important;
+  & textarea {
+    resize: none;
+    min-height: 100px;
+    font-family: $primary-font;
+    font-size: 18px;
+  }
+}
+/* BOUTON "PUBLIER votre commentaire" */
+input[type="submit"] {
+  font-family: $secondary-font;
+  max-width: 300px;
+  font-size: 16px;
+  padding: 5px 15px;
+  border: $primary-color 3px solid;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  &:hover {
+    transition: 500ms;
+    background-color: $primary-color;
+    color: $tertiary-color;
+  }
+}
+
+/* BOUTTON "Choisir Un fichier" */
+input[type="file"] {
+  &::-webkit-file-upload-button {
+    font-family: $primary-font;
+    border: none;
+    padding: 5px 15px;
+    background-color: $secondary-color;
+    color: $grey-light-color;
+    &:hover {
+      transition: 500ms;
+      background-color: $primary-color;
+      color: $tertiary-color;
+    }
+  }
+}
+
+/* TEXTAREA Style Sup */
+/* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
+::-webkit-input-placeholder {
+  text-align: center;
+  font-family: $secondary-font;
+  font-size: 1.7em;
+  color: $primary-color;
+}
+
+/* Style de la scrollbar */
+textarea::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+  border-radius: 10px 10px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+textarea::-webkit-scrollbar {
+  position: absolute;
+  right: 10px;
+  width: 22px;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 0 30px 30px 0;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  border-radius: 0 0 10px 0px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: $primary-color;
+}
+}
+
 </style>

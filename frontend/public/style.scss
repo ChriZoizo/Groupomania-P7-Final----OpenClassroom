@@ -18,7 +18,7 @@ $text-clear: #eeeeee;
 $primary-font: Montserrat;
 $secondary-font: Montserrat;
 
-$breakpoints: ("phone-small": 600px, "phone": 800px, "tablet": 900px, 'notebook': 1024px, "desktop": 1600px);
+$breakpoints: ("phone-small": 600px, "phone": 800px, "tablet": 1024px, 'notebook': 1280px, "desktop": 1600px);
 
 /* MIXINS */
 /* colorations */
@@ -64,16 +64,20 @@ body {
   margin: 0
 }
 
+label {
+  font-family: $primary-font;
+}
+
 /* Classe de la DIV contenant le router-view (Toute l'app SAUF la Navbar et le Footer */
 .router-view{
   min-height: calc(100vh - 270px);
-  width: calc(100vw - 400px);
+  width: calc(100vw - 600px);
   margin: 0 auto;
   @media screen and (max-width: map-get($breakpoints, "desktop")){
-    width: calc(100vw - 250px);
+    width: calc(100vw - 400px);
   }
   @media screen and (max-width: map-get($breakpoints, "notebook")){
-    width: calc(100vw - 100px);
+    width: calc(100vw - 200px);
   }
   @media screen and (max-width: map-get($breakpoints, "phone")){
     width: 100%;
