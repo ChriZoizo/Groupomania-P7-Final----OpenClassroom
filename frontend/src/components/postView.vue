@@ -21,12 +21,15 @@
           class="post-view-card__action"
         >
           <!-- Bouton modifier (Passe la data 'update' a true, faisant disparaitre cette section au profit de la section UPDATE) -->
-          <button class="action-button" v-on:click="switchUpdateMode()">
+          <button
+            class="action-button button--main"
+            v-on:click="switchUpdateMode()"
+          >
             <i class="fas fa-pencil-alt fa-lg"></i>
           </button>
           <!-- Bouton supprimer -->
           <button
-            class="action-button--delete action-button"
+            class="action-button button--danger"
             v-if="post.userId == currentUserId || userIsAdmin == 'true'"
             v-on:click="deletePost(post.id)"
           >
@@ -42,7 +45,7 @@
         </div>
         <!-- Image de la publication si il y en as une -->
         <a
-          v-if="post.postImageUrl !== 'undefined'"
+          v-if="post.postImageUrl.length > 0"
           target="tab"
           :href="post.postImageUrl"
           class="post-view-card__body__image"
@@ -90,7 +93,7 @@
         <button
           v-on:click="commenting = !commenting"
           v-bind:class="{ active: commenting }"
-          class="comment-button"
+          class="comment-button button--main"
         >
           <i class="far fa-comment-alt fa-lg"></i> Commenter
         </button>
@@ -155,11 +158,14 @@
     </div>
     <!-- !!! UPDATE SECTION !!! ne s'affiche que lorsque la data 'update' passe a true, faisant disparaitre la section CARD-POST -->
     <div class="post-update-card" v-show="update">
-      <h2>Modification</h2>
+      <h2 class="clear-text">Modification</h2>
+            <p class="tuto clear-text">
+        <i class="fas fa-info-circle"></i> Ici vous pouvez modifier le contenus de la publication.
+      </p>
       <!-- Bouton Annulation -->
-            <div class="post-update__action">
+      <div class="post-update-card__action">
         <button
-          class="post-update__action__button"
+          class="post-update-card__action__button button--secondary"
           v-on:click="switchUpdateMode()"
         >
           Annuler
@@ -167,10 +173,11 @@
       </div>
       <div class="post-update-card__body">
         <!--  FORM BEGIN -->
-        <form @submit="updatePost(post.id)" class="post-update-form__content">
+        <form @submit="updatePost(post.id)" class="post-update-form">
           <!-- inputs pour modifier le CONTENUS de la publication -->
           <div class="update-form-group">
-            <label for="update-content">Contenus</label>
+            <!--             <label class="clear-text" for="update-content">Contenus</label>
+ -->
             <textarea
               type="text"
               id="update-content"
@@ -182,7 +189,15 @@
           </div>
           <!-- Input pour modifier l'image associé a la publication -->
           <div class="update-form-group">
-            <label for="postImg">Ajouter une image/GIF</label> :
+            <label
+              v-if="post.postImageUrl.length > 0"
+              class="clear-text"
+              for="postImg"
+              >Modifier l'image
+            </label>
+            <label v-else class="clear-text" for="postImg"
+              >Ajouter une image
+            </label>
             <input
               id="imageChanger"
               type="file"
@@ -190,20 +205,30 @@
               class="form-control"
               accept=".jpeg, .png, .jpg .gif"
               v-on:change="loadAttachment($event)"
+              data-buttonText="Bla"
+            />
+          </div>
+          <!-- Preview Image -->
+          <!-- Si le post contient deja une image, on l'affiche dans la preview -->
+          <div class="post-view-card__body__image">
+            <img
+              v-if="post.postImageUrl.length > 0"
+              :src="post.postImageUrl"
+              alt="'Image actuelle de la publication'"
+              id="update-previewer"
+              class="post-view-image-container"
+            />
+            <!-- Sinon on affiche l'asset correspondant -->
+            <img
+              v-else
+              src="../assets/no-preview.png"
+              alt="'Image actuelle de la publication'"
+              id="update-previewer"
+              class="post-view-image-container"
             />
           </div>
           <!-- Bouton d'enregitrement des modifications -->
           <input type="submit" value="Enregistrer les modifications" />
-          <!-- IMAGE UPDATE -->
-          <div class="post-view-card__body__image">
-          <img
-            :src="post.postImageUrl"
-            alt="'Image actuelle de la publication'"
-            id="previewer"
-            class="post-view-image-container"
-          />
-          </div>
-          <!-- sdkjdfkdfd -->
         </form>
       </div>
     </div>
@@ -397,11 +422,10 @@ export default {
       this.postUpdateData.postImageUrl = event.target.files[0].name;
       this.postUpdateData.file = event.target.files[0];
       let reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('previewer').src =  e.target.result
-      }
-      reader.readAsDataURL(event.target.files[0])
-
+      reader.onload = function (e) {
+        document.getElementById("update-previewer").src = e.target.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
     },
 
     switchUpdateMode() {
@@ -461,18 +485,6 @@ h1 {
       width: 40px;
       height: 40px;
       border: none;
-      background-color: $primary-color;
-      color: $grey-light-color;
-      &:hover {
-        background-color: $secondary-color;
-        transition: 500ms;
-        color: $tertiary-color;
-      }
-      &--delete {
-        &:hover {
-          color: red !important;
-        }
-      }
     }
   }
 
@@ -529,19 +541,6 @@ h1 {
       width: 100%;
       height: 50px;
       font-size: 22px;
-      color: $grey-light-color;
-      background-color: $primary-color;
-      /*     border-radius: 30px; */
-      &:hover {
-        background: $secondary-color;
-        color: $tertiary-color;
-        transition-duration: 500ms;
-      }
-      &.active {
-        background: $secondary-color;
-        color: $tertiary-color;
-        transition-duration: 500ms;
-      }
     }
 
     & p {
@@ -592,177 +591,202 @@ h1 {
       }
     }
   }
-
-  
-form {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  margin: 20px 50px;
-  margin-top: 0 !important;
-  & textarea {
-    width: 90%;
-    resize: none;
-    min-height: 100px;
-    border-radius: 0 0 15px 15px;
-    font-family: $primary-font;
-    font-size: 18px;
+  /* COMMENT FORM STYLE */
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 20px 50px;
+    margin-top: 0 !important;
+    & textarea {
+      width: 90%;
+      resize: none;
+      min-height: 100px;
+      border-radius: 0 0 15px 15px;
+      font-family: $primary-font;
+      font-size: 18px;
+    }
   }
-}
-/* BOUTON "PUBLIER votre commentaire" */
-input[type="submit"] {
-  font-family: $secondary-font;
-  max-width: 300px;
-  font-size: 16px;
-  padding: 5px 15px;
-  border: $primary-color 3px solid;
-  cursor: pointer;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  &:hover {
-    transition: 500ms;
-    background-color: $primary-color;
-    color: $tertiary-color;
-  }
-}
-
-/* BOUTTON "Choisir Un fichier" */
-input[type="file"] {
-  &::-webkit-file-upload-button {
-    font-family: $primary-font;
-    border: none;
+  /* Bouton "PUBLIER votre commentaire" */
+  input[type="submit"] {
+    font-family: $secondary-font;
+    max-width: 300px;
+    font-size: 16px;
     padding: 5px 15px;
-    background-color: $secondary-color;
-    color: $grey-light-color;
+    border: $primary-color 3px solid;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
     &:hover {
       transition: 500ms;
       background-color: $primary-color;
       color: $tertiary-color;
     }
   }
-}
 
-/* TEXTAREA Style Sup */
-/* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
-::-webkit-input-placeholder {
-  text-align: center;
-  font-family: $secondary-font;
-  font-size: 1.7em;
-  color: $primary-color;
-}
+  /* Bouton "Choisir Un fichier" */
+  input[type="file"] {
+    &::-webkit-file-upload-button {
+      font-family: $primary-font;
+      border: none;
+      padding: 5px 15px;
+      background-color: $secondary-color;
+      color: $grey-light-color;
+      &:hover {
+        transition: 500ms;
+        background-color: $primary-color;
+        color: $tertiary-color;
+      }
+    }
+  }
 
-/* Style de la scrollbar */
-textarea::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-  border-radius: 10px 10px;
-  background-color: rgba(0, 0, 0, 0);
+  /* TEXTAREA Style Sup */
+  /* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
+  ::-webkit-input-placeholder {
+    text-align: center;
+    font-family: $secondary-font;
+    font-size: 1.7em;
+    color: $primary-color;
+  }
+  /* Style de la scrollbar */
+  textarea::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    border-radius: 10px 10px;
+    background-color: rgba(0, 0, 0, 0);
+  }
+  textarea::-webkit-scrollbar {
+    position: absolute;
+    right: 10px;
+    width: 22px;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 0 30px 30px 0;
+  }
+  textarea::-webkit-scrollbar-thumb {
+    border-radius: 0 0 10px 0px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: $primary-color;
+  }
 }
-
-textarea::-webkit-scrollbar {
-  position: absolute;
-  right: 10px;
-  width: 22px;
-  background-color: rgba(0, 0, 0, 0);
-  border-radius: 0 30px 30px 0;
-}
-
-textarea::-webkit-scrollbar-thumb {
-  border-radius: 0 0 10px 0px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: $primary-color;
-}
-}
-
+/* - UPDATE SECTION STYLE - */
 .post-update-card {
   width: 100%;
-    display: flex;
+  display: flex;
   flex-direction: column;
   width: 100%;
-  max-height: 800px !important;
+  max-height: 1200px !important;
+  background-color: $primary-color;
+  border-radius: 30px;
+
+  &__action {
+    position: relative;
+    &__button {
+      position: absolute;
+      right: 0px;
+      top: -106px;
+      border:none;
+      border-radius: 0 20px 0 0;
+      width: 150px;
+      height: 40px;
+      font-size: 20px;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   & #update-content {
     border-radius: 30px;
     width: 100%;
   }
-  
-form {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
 
-  margin-top: 0 !important;
-  & textarea {
-    resize: none;
-    min-height: 100px;
-    font-family: $primary-font;
-    font-size: 18px;
-  }
-}
-/* BOUTON "PUBLIER votre commentaire" */
-input[type="submit"] {
-  font-family: $secondary-font;
-  max-width: 300px;
-  font-size: 16px;
-  padding: 5px 15px;
-  border: $primary-color 3px solid;
-  cursor: pointer;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  &:hover {
-    transition: 500ms;
-    background-color: $primary-color;
-    color: $tertiary-color;
-  }
-}
+  & form {
+    display: flex;
+    flex-direction: column;
+    margin: 0 15px;
 
-/* BOUTTON "Choisir Un fichier" */
-input[type="file"] {
-  &::-webkit-file-upload-button {
-    font-family: $primary-font;
-    border: none;
+    margin-top: 0 !important;
+    & textarea {
+      padding: 5px 7px;
+      resize: none;
+      min-height: 100px;
+      font-family: $primary-font;
+      font-size: 18px;
+      border-radius: 7px !important;
+    }
+
+    & label {
+      font-size: 19px;
+      text-align: center;
+    }
+  }
+  /* BOUTON "Enregistrer les modifications" */
+  & input[type="submit"] {
+    font-family: $secondary-font;
+    max-width: 300px;
+    font-size: 16px;
     padding: 5px 15px;
-    background-color: $secondary-color;
-    color: $grey-light-color;
+    border: $primary-color 3px solid;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
     &:hover {
       transition: 500ms;
       background-color: $primary-color;
       color: $tertiary-color;
     }
   }
-}
 
-/* TEXTAREA Style Sup */
-/* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
-::-webkit-input-placeholder {
-  text-align: center;
-  font-family: $secondary-font;
-  font-size: 1.7em;
-  color: $primary-color;
-}
+  /* BOUTTON "Choisir Un fichier" */
+  & input[type="file"] {
+    &::-webkit-file-upload-button {
+      font-family: $primary-font;
+      border: none;
+      padding: 5px 15px;
+      background-color: $secondary-color;
+      color: $grey-light-color;
+      &:hover {
+        transition: 500ms;
+        background-color: $primary-color;
+        color: $tertiary-color;
+      }
+    }
+  }
 
-/* Style de la scrollbar */
-textarea::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-  border-radius: 10px 10px;
-  background-color: rgba(0, 0, 0, 0);
-}
+  /* TEXTAREA Style Sup */
+  /* Centrage du placeholder du TEXTAREA recevant le contenus d'un nouveau post */
+  & ::-webkit-input-placeholder {
+    text-align: center;
+    font-family: $secondary-font;
+    font-size: 1.7em;
+    color: $primary-color;
+  }
 
-textarea::-webkit-scrollbar {
-  position: absolute;
-  right: 10px;
-  width: 22px;
-  background-color: rgba(0, 0, 0, 0);
-  border-radius: 0 30px 30px 0;
-}
+  /* Style de la scrollbar */
+  & textarea::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+  }
 
-textarea::-webkit-scrollbar-thumb {
-  border-radius: 0 0 10px 0px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: $primary-color;
-}
-}
+  & textarea::-webkit-scrollbar {
+    position: absolute;
+    right: 10px;
+    width: 22px;
+    background-color: rgba(0, 0, 0, 0.164);
+    border-radius: 0 7px 7px 0;
+  }
 
+  & textarea::-webkit-scrollbar-thumb {
+    border-radius: 0 5px 5px 0px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: $primary-color;
+  }
+}
 </style>

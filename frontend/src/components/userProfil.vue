@@ -62,21 +62,23 @@
         </button>
       </div>
     </div>
+    <div  v-show="updateMode">
+    <div class="profil__update-section">
     <!-- FORM UPDATE User -->
     <!-- (S'affiche si la Data 'updateMode' est "true") -->
     <form
       @submit.prevent="updateProfil(user.userId)"
-      v-show="updateMode"
+
       class="profil__update-form"
     >
     <!-- Informations -->
-      <p class="tuto">
+      <p class="tuto clear-text">
         <i class="fas fa-info-circle"></i> Ici vous pouvez modifier votre nom
         que les autres utilisateurs peuvent voir
       </p>
       <div class="profil__update-form__form form-group">
         <!-- Input text -->
-        <label for="new-names" class="label"
+        <label for="new-names" class="label clear-text"
           ><i class="far fa-id-card icon-fa"> </i>- Nom complet :
         </label>
         <input
@@ -94,6 +96,15 @@
         onclick="return confirm('Etes-vous sûr des modifications apportés ?')"
       />
     </form>
+
+    </div>
+                    <button
+          class="button--secondary"
+          v-on:click="updateMode = !updateMode"
+        >
+          Annuler
+        </button>
+    </div>
     <!-- DELETE BUTTON -->
     <button
       v-show="!updateMode"
@@ -221,6 +232,14 @@ export default {
     }
   }
 
+  &__update-section{
+    background-color: $primary-color;
+    margin: 20px 0;
+    padding: 20px;
+    width: 800px;
+    border-radius: 30px;
+  }
+
   &__update-form {
     width: 100%;
     margin-top: 10px;
@@ -230,6 +249,8 @@ export default {
       flex-direction: row;
       font-family: $primary-font;
     }
+
+
 
     @media screen and (max-width: map-get($breakpoints, "desktop")) {
       & label {
@@ -307,6 +328,15 @@ export default {
   }
 }
 
+       .button--secondary {
+
+      border:none;
+      font-size: 19px;
+      width: 120px;
+      height: 40px
+
+    }
+
 .button {
   border: none;
   padding: 5px 7px;
@@ -320,26 +350,14 @@ export default {
   &--main {
     height: 50px;
     font-size: 22px;
-    color: $grey-light-color;
-    background-color: $primary-color;
-    &:hover {
-      background-color: $secondary-color;
-      color: white;
-      transition-duration: 500ms;
-      transform: scale(0.96);
-    }
   }
 
   &--danger {
     font-size: 18px;
-    color: rgb(255, 190, 190);
-    background-color: $primary-color;
+width: unset;
     &:hover {
-      background-color: rgb(255, 70, 70);
-      color: $primary-color;
       font-weight: bolder;
-      transition-duration: 500ms;
-      transform: scale(0.96);
+
     }
   }
 }

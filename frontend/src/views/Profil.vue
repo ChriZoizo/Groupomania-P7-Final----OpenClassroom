@@ -1,16 +1,19 @@
 <template>
 <section id="user-profil">
     <UserProfil />
-    </section>
+          <PostList />
+</section>
+
 </template>
 
 <script>
 import UserProfil from '@/components/userProfil.vue'
+import PostList from '@/components/postsList.vue'
 
 export default {
     name: 'Profil',
     components: {
-        UserProfil
+        UserProfil, PostList
     },
 
     data() {

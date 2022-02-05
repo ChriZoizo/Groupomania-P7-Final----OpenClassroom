@@ -43,9 +43,9 @@
         </div>
         <div class="image-preview">
           <img
-            src="../assets/no_preview.png"
+            src="../assets/no-preview.png"
             alt="'Image actuelle de la publication'"
-            id="previewer"
+            id="create-previewer"
             class="post-create-image-container"
           />
         </div>
@@ -78,7 +78,7 @@ export default {
 
       let reader = new FileReader();
       reader.onload = function (e) {
-        document.getElementById("previewer").src = e.target.result;
+        document.getElementById("create-previewer").src = e.target.result;
       };
       reader.readAsDataURL(event.target.files[0]);
     },
