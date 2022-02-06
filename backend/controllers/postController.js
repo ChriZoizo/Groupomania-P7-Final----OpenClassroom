@@ -8,6 +8,7 @@ const { nextTick } = require('process')
 const User = models.User
 const Post = models.Post
 const reactionTable = models.LikePost
+const Comment = models.Comment
 
 /* --------------------------------- Fonctions C R U  ------------------------------------*/
 
@@ -15,7 +16,7 @@ const reactionTable = models.LikePost
  */
 exports.getAllPosts = (req, res) => {
   Post.findAll({
-    include: [{ all: true, nested: true }]
+    include: [{ model: User, nested: true }, {model: Comment, include: [{model: User, nested: true}], nested: true}]
   })
     .then(posts => {
       res.status(200).json({ posts })
@@ -139,12 +140,21 @@ exports.deletePost = (req, res) => {
 
 /* --------------------------------- Fonctions Supplémentaires ------------------------------------*/
 
-exports.getting = (req, res) => {
-  console.log(req.body)
-  reactionTable.findAll({
+exports.findByAuthor = (req, res) => {
+  Post.findAll({
+    where: {
+      UserId: req.params.id
+    },
     include: [{ all: true, nested: true }]
-  }).then(ress => res.json({ress}))
-  .catch(err => res.json({}))
+  })
+    .then(posts => {
+      res.status(200).json({ posts })
+    })
+    .catch(err => {
+      res.json({
+        error: 'Problem with Post findByAuthor : ' + err
+      })
+    })
 }
 
 /* LIKE OF DISLIKE POST
@@ -192,34 +202,6 @@ exports.likeOrDislikePost = (req, res) => {
       .catch(err => console.log(err))
       })
       .catch(err => console.log(err))
-
-    /*     reactionTable
-      .destroy({
-        where: { postId: req.body.postId },
-        include: [
-          {
-            model: User,
-            where: { id: req.body.userId }
-          }
-        ]
-      })
-      .then((res) => {
-        console.log("LIKE FUNCTION RESULT")
-        console.log(res)
-        Post.findByPk(req.body.postId)
-          .then(post => {
-            post.decrement('likeCounter') 
-          })
-          .then(() =>
-            res.status(200).json({ message: 'Deleting like success !' })
-          )
-          .catch(err =>
-            res.json({ error: 'Problem while deleting the like' + err })
-          )
-      })
-      .catch(err =>
-        res.json({ error: 'Problem while deleting the like' + err })
-      ) */
   } else {
     /* Dans les autres cas ( '1' ou '-1'), cherche dans la table 'LikePosts' une occurence */
     reactionTable

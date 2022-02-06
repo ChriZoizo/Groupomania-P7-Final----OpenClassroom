@@ -3,7 +3,7 @@
     <div v-if="isWriting == false">
       <button
         v-on:click="isWriting = !isWriting"
-        class="form-create-post__button-init button-shadow"
+        class="form-create-post__button-init button-shadow button--main"
       >
         Ecrire une publication
       </button>
@@ -12,7 +12,7 @@
       <div class="form-create-post__header">
         <button
           v-on:click="isWriting = !isWriting"
-          class="form-create-post__button-init button-shadow"
+          class="form-create-post__button-init button-shadow button--main"
         >
           Fermer le formulaire
         </button>
@@ -113,21 +113,20 @@ export default {
     width: 80%;
     height: 50px;
     font-size: 22px;
-    color: $grey-light-color;
-    background-color: $primary-color;
     border-radius: 30px;
-    &:hover {
-      background-color: $secondary-color;
-      color: $grey-light-color;
-      transition-duration: 500ms;
-      width: 85%;
-      transform: scale(0.96);
+    @media screen and (max-width: map-get($breakpoints, "phone")) {
+      width: 100%;
+      border-radius: 0;
     }
   }
 
   & label {
     font-family: $primary-font;
     font-size: 18px;
+
+    @media screen and (max-width: map-get($breakpoints, "phone")) {
+      display: none;
+    }
   }
 
   &__formular {
@@ -141,13 +140,19 @@ export default {
       min-height: 8rem;
       height: auto;
       width: 85%;
-      border: $primary-color 1px solid;
+      border: $primary-color 3px solid;
       overflow: auto;
       outline: none;
 
       resize: none;
 
       border-radius: 30px;
+      @media screen and (max-width: map-get($breakpoints, "phone")) {
+        width: 100%;
+        border-radius: 0;
+        border-right: none;
+        border-left: 0;
+      }
     }
 
     & .image-preview {
@@ -156,7 +161,27 @@ export default {
         object-fit: contain;
         max-height: 500px;
         width: 70%;
+        @media screen and (max-width: map-get($breakpoints, "phone")) {
+          width: 100%;
+          
+        }
       }
+    }
+
+        @media screen and (max-width: map-get($breakpoints, "phone")) {
+          width: 100%;
+              & input, textarea {
+      width: 100% !important;
+      padding: 0;
+      height: 60px;
+    }
+        }
+
+    & .form-group{
+      width: 100%;
+      padding-bottom: 0;
+
+
     }
   }
 
@@ -175,6 +200,13 @@ export default {
       background-color: $primary-color;
       color: $tertiary-color;
     }
+
+    @media screen and (max-width: map-get($breakpoints, "phone")) {
+      background-color: $primary-color;
+      color: $tertiary-color;
+      width: 100%;
+      border-radius: 0;
+    }
   }
 
   /* BOUTTON "Choisir Un fichier" */
@@ -189,6 +221,11 @@ export default {
         transition: 500ms;
         background-color: $primary-color;
         color: $tertiary-color;
+      }
+      @media screen and (max-width: map-get($breakpoints, "phone")) {
+        width: 100% !important;
+        border-radius: 0;
+        height: 100%;
       }
     }
   }

@@ -2,139 +2,161 @@
 <template>
   <section class="container-post-list container">
     <!-- LOADER -->
-    <div v-show="loading" class="loader">
+    <div v-show="!dataReady" class="loader">
       <div class="loader__container">
         <div class="loader__container__element"></div>
         <div class="loader__container__element2"></div>
-        <p class="loader__container__text">Chargement des publications ...</p>
+        <p class="loader__container__text">{{ loaderMessage }}</p>
       </div>
     </div>
+    <div class="">
+      <h2 class="">Liste des publications</h2>
+    </div>
     <!-- LOOP (Boucle iterant sur le resultat de la methode GETALLPOST du module (Array))  -->
-    <div
-      v-for="(post, index) in listOfPosts"
-      :key="index"
-      class="post shadow-card"
-    >
-      <!-- CARD BEGIN-->
-      <router-link
-        class="post-card post-card--background remove-decoration"
-        :to="'/post/' + post.id"
+    <div v-if="(dataReady = true)">
+      <div
+        v-for="(post, index) in this.postsArray"
+        :key="index"
+        class="post shadow-card"
       >
-        <!-- CARD-header -->
-        <div class="post-card__header">
-          <!-- Nom (ou email) de l'utilisateur -->
-          <div class="post-card__header-userName">
-            <router-link
-              class="remove-decoration post-card--background bold post-card__header-userName underlined--secondary-color"
-              :to="'/profil/' + post.userId"
-              >{{ post.User.nickname || post.User.email }}</router-link
-            >
-          </div>
-          <!-- Bouton DELETE -->
-          <button
-            v-if="post.userId == this.currentUserId || this.isAdmin == 'true'"
-            class="post-card__header-action"
-            v-on:click="deletePost(post.id)"
-          >
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
-        <!-- BODY DE CARD -->
-        <!-- Contenus -->
-        <!--  SI il y a une image lié affiche cette DIV contenant le content et l'image du Post -->
-        <div v-if="post.postImageUrl.length != 0" class="post-card__body">
-          <div class="post-card__body__content">
-            <p>{{ post.content }}</p>
-          </div>
-          <!-- Image de la publication -->
-          <div class="post-card__body__image">
-            <img
-              :src="post.postImageUrl"
-              v-bind:alt="
-                'Image contenus dans une publication de ' + post.User.email
-              "
-              class="post-image-container"
-            />
-          </div>
-        </div>
-        <div v-else class="post-card__body__content-alt post-card__body">
-          <div class="post-card__body">
-            <p>{{ post.content }}</p>
-          </div>
-        </div>
-        <div class="post-card__footer">
-          <div class="post-card__footer__date">
-            <p>
-              <span>Publiée le : </span>
-              {{ new Date(post.createdAt).getDate() }} /
-              {{ new Date(post.createdAt).getMonth() + 1 }} /
-              {{ new Date(post.createdAt).getFullYear() }}
-            </p>
-          </div>
-          <!-- Bouton de like et dislike -->
-          <!-- like -->
-          <div class="post-card__footer__reaction flex-row">
-            <div v-on:click="reactToPost(1, post.id)" class="reaction__button">
-              <i class="fas fa-thumbs-up grey"></i
-              ><span class="reaction__like--counter">{{
-                post.likeCounter
-              }}</span>
-            </div>
-            <!-- dislike -->
-            <div v-on:click="reactToPost(-1, post.id)" class="reaction__button">
-              <i class="fas fa-thumbs-down grey"></i
-              ><span class="reaction__dislike--counter">{{
-                post.dislikeCounter
-              }}</span>
-            </div>
-          </div>
-        </div>
-      </router-link>
-
-      <!-- CARD APPEND Comments -->
-      <!-- Ecrire un commentaire -->
-      <div class="post-card__comments-section">
-        <form
-          @submit.prevent="addComment(post.id)"
-          class="post-card__comments-section__write-form"
-          id="form-comment-postList"
+        <!-- CARD BEGIN-->
+        <router-link
+          class="post-card post-card--background remove-decoration"
+          :to="'/post/' + post.id"
         >
-          <textarea
-            name="comment"
-            id="comment"
-            v-model="comments[post.id]"
-            placeholder="Commentez cette publication..."
-            maxlength="200"
-            required
-          ></textarea>
-          <input type="submit" value="Publier votre commentaire" />
-        </form>
-        <!-- Liste des commentaires de la publications -->
-        <div
-          v-if="post.Comments.length != 0"
-          class="post-card__comments-section"
-        >
-          <div
-            class="post-card__comments-section__comments flex-row"
-            v-for="(comment, index) in post.Comments.slice(-3)"
-            :key="index"
-          >
-            <div class="post-card__comments-section__comments__left-author">
+          <!-- CARD-header -->
+          <div class="post-card__header">
+            <!-- Nom (ou email) de l'utilisateur -->
+            <div class="post-card__header-userName">
               <router-link
-                class="remove-decoration"
-                :to="'/post/' + comment.UserId"
-                ><i class="far fa-comments"></i> -
-                {{ comment.User.nickname || comment.User.email }}</router-link
+                class="remove-decoration post-card--background bold post-card__header-userName underlined--secondary-color"
+                :to="'/profil/' + post.userId"
+                >{{ post.User.nickname || post.User.email }}</router-link
               >
             </div>
-            <div class="post-card__comments-section__comments__right-content">
-              {{ comment.content }}
+            <!-- Bouton DELETE -->
+            <button
+              v-if="post.userId == this.currentUserId || this.isAdmin == 'true'"
+              class="post-card__header-action"
+              v-on:click="deletePost(post.id)"
+            >
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+          <!-- BODY DE CARD -->
+          <!-- Contenus -->
+          <!--  SI il y a une image lié affiche cette DIV contenant le content et l'image du Post -->
+          <div v-if="post.postImageUrl.length != 0" class="post-card__body">
+            <div class="post-card__body__content">
+              <p>{{ post.content }}</p>
+            </div>
+            <!-- Image de la publication -->
+            <div class="post-card__body__image">
+              <img
+                :src="post.postImageUrl"
+                alt="
+                'Image contenus dans une publication de ' + post.User.email
+              "
+                class="post-image-container"
+              />
             </div>
           </div>
+          <div v-else class="post-card__body__content-alt post-card__body">
+            <div class="post-card__body">
+              <p>{{ post.content }}</p>
+            </div>
+          </div>
+          <div class="post-card__footer">
+            <div class="post-card__footer__date">
+              <p>
+                <span>Publiée le : </span>
+                {{ new Date(post.createdAt).getDate() }} /
+                {{ new Date(post.createdAt).getMonth() + 1 }} /
+                {{ new Date(post.createdAt).getFullYear() }}
+              </p>
+            </div>
+            <!-- Bouton de like et dislike -->
+            <!-- like -->
+            <div class="post-card__footer__reaction flex-row">
+              <div
+                v-on:click="reactToPost(1, post.id)"
+                class="reaction__button"
+              >
+                <i class="fas fa-thumbs-up grey"></i
+                ><span class="reaction__like--counter">{{
+                  post.likeCounter
+                }}</span>
+              </div>
+              <!-- dislike -->
+              <div
+                v-on:click="reactToPost(-1, post.id)"
+                class="reaction__button"
+              >
+                <i class="fas fa-thumbs-down grey"></i
+                ><span class="reaction__dislike--counter">{{
+                  post.dislikeCounter
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </router-link>
+
+        <!-- CARD APPEND Comments -->
+        <!-- Ecrire un commentaire -->
+        <div class="post-card__comments-section">
+          <form
+            @submit.prevent="addComment(post.id)"
+            class="post-card__comments-section__write-form"
+            id="form-comment-postList"
+          >
+            <textarea
+              name="comment"
+              id="comment"
+              v-model="comments[post.id]"
+              placeholder="Commentez cette publication..."
+              maxlength="200"
+              required
+            ></textarea>
+            <input type="submit" value="Publier votre commentaire" />
+          </form>
+          <!-- Liste des commentaires de la publications -->
+          <div
+            v-if="post.Comments.length != 0"
+            class="post-card__comments-section"
+          >
+            <div
+              class="post-card__comments-section__comments flex-row"
+              v-for="(comment, index) in post.Comments.slice(-3)"
+              :key="index"
+            >
+              <div class="post-card__comments-section__comments__left-author">
+                <router-link
+                  class="remove-decoration"
+                  :to="'/post/' + comment.UserId"
+                  ><i class="far fa-comments"></i> -
+                  {{ comment.User.nickname || comment.User.email }}</router-link
+                >
+              </div>
+              <div class="post-card__comments-section__comments__right-content">
+                {{ comment.content }}
+              </div>
+            </div>
+            <router-link
+              class="post-card--background remove-decoration"
+              :to="'/post/' + post.id"
+            >
+              <div
+                class="post-card__comments-section__comments click-append"
+                v-if="post.Comments.length > 3"
+              >
+               ...
+              </div>
+            </router-link>
+          </div>
         </div>
+        <!-- CARD APPEND END -->
+        <!-- CARD END -->
       </div>
-      <!-- CARD APPEND END -->
-      <!-- CARD END -->
     </div>
   </section>
 </template>
@@ -143,13 +165,13 @@
 export default {
   name: "postList",
 
+  props: ["loaderMessage", "postsArray"],
+
   /* DATA :  variables */
   data() {
     return {
-      /* loading: boolean definissant si le composantr charge des elements (modifié via les METHODS) */
-      loading: true,
-      /* listOfPosts: Objet qui Contiendras tous les posts en BDD renvoyé par la methods getAllPost() */
-      listOfPosts: {},
+      /* dataReady: boolean definissant si toutes les données ont été definis et telechargés */
+      dataReady: false,
 
       /* Valeurs recuperés dans le localStorage les infos enregistré lors de la connexion du user ( Script de app.vue) */
       /* Contient l'ID de l'utilisateur */
@@ -163,45 +185,30 @@ export default {
   },
 
   /* HOOK DE CYCLE DE VIE */
-  /* CREATED : appel la method 'setLocalStorageValue' lorsque le composant est rendu pour declarer en Datas
-  des informations sur l'utilisateur connecté*/
-  created() {
-    this.setLocalStorageValue();
+  beforeMount() {
+    /*  this.createCommentsSlot(); */
   },
 
-  /* BEFOREMONT : Appel la methode 'getAllPostAndSetDatas' qui recupere tout les Posts via un apperl a l'API,
-les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
-  beforeMount() {
-    this.getAllPostAndSetData();
+  mounted() {
+    this.createCommentsSlot();
   },
 
   /* METHODS */
   methods: {
-    /* getAllPostAndSetData: recupere tout les POSTs en BDD via appel a API. 
-    Puis créer les datas qui serviront aux formulaires de commentaires. Sans cela, ils seraient tous liés
+    /* createCommentsSlot: recupere la props 'postArray' (Array contenant les Posts a afficher). 
+    Puis créer les datas qui serviront aux formulaires de commentaires en iterant sur la props 'postArray'. Sans cela, ils seraient tous liés
     Enfin, change le data 'loading' en false */
-    getAllPostAndSetData() {
-      /*  Appel a l'API */
-      this.axios
-        .get("http://localhost:3000/api/post/")
-        .then((posts) => {
-          /* Puis, enregistrement des posts reçus dans la data 'listOfPosts' */
-          this.listOfPosts = posts.data.posts.reverse();
-          /* Loop "for...in" sur la Data Array contenant TOUT les Posts) 
-        Et nous allons créer, pour chaque post, une entrée dans notre Data 'comments', qui serviras de point d'ancrage pour
-        les formulaire de commentaires. En effet, chaque Post auras sa propre entrée dans la Data 'comments' ayant l'ID du post comme Key 
-        (PS: desolé pour le mal de tête)*/
-          for (const post of this.listOfPosts) {
-            console.log(post);
-            /* recuperation de l'ID du post qui servira de "key" */
-            let index = post.Id;
-            /* Ajout de l'Objet Vide dans 'initialiBoard'*/
-            this.comments[index];
-          }
-        })
-        .then(() => (this.loading = false))
-        .catch((err) => console.log(err));
-      /* passe la Data Booleen 'loading' en false */
+    createCommentsSlot() {
+      for (const post of this.postsArray) {
+        console.log(post.id);
+        /* recuperation de l'ID du post qui servira de "key" */
+        let index = post.id;
+        /* Ajout de l'Objet Vide dans 'initialiBoard'*/
+        this.comments[index] = "";
+      }
+      if (this.comments.length > 0) {
+        this.dataReady = true;
+      }
     },
 
     deletePost(id) {
@@ -254,7 +261,7 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
         .catch((err) => console.log(err));
     },
 
-/*     checkReact(post) {
+    /*     checkReact(post) {
       post.LikePosts.find((react) => {
         if (react.UserId == this.currentUserId) {
           switch (react.value) {
@@ -271,10 +278,10 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
       });
     }, */
 
-    setLocalStorageValue() {
+    /*     setLocalStorageValue() {
       this.currentUserId = localStorage.getItem("userId");
       this.isAdmin = localStorage.getItem("userIsAdmin");
-    },
+    }, */
   },
 };
 </script>
@@ -291,6 +298,14 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
   content: "\f274";
   position: absolute;
   right: 6px;
+}
+
+.container-post-list {
+  margin-top: 40px;
+}
+
+.title {
+  position: absolute;
 }
 
 .post {
@@ -419,6 +434,11 @@ les enregistre dans la Data 'listsOfPosts' et créer des datas necessaires */
             bottom: 0;
           }
         }
+      }
+
+      & .click-append {
+        background-color: $primary-color;
+        color: white
       }
     }
 

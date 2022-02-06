@@ -17,4 +17,6 @@ router.delete('/:id', postController.deletePost)
 
 router.post('/like', postController.likeOrDislikePost)
 
+router.get('/author/:id', postController.findByAuthor)
+
 module.exports = router

@@ -159,8 +159,9 @@
     <!-- !!! UPDATE SECTION !!! ne s'affiche que lorsque la data 'update' passe a true, faisant disparaitre la section CARD-POST -->
     <div class="post-update-card" v-show="update">
       <h2 class="clear-text">Modification</h2>
-            <p class="tuto clear-text">
-        <i class="fas fa-info-circle"></i> Ici vous pouvez modifier le contenus de la publication.
+      <p class="tuto clear-text">
+        <i class="fas fa-info-circle"></i> Ici vous pouvez modifier le contenus
+        de la publication.
       </p>
       <!-- Bouton Annulation -->
       <div class="post-update-card__action">
@@ -476,6 +477,7 @@ h1 {
 .post-view-card {
   background-color: lighten($color: $primary-color, $amount: 80);
   min-width: 50%;
+  width: 100%;
 
   &__header {
     display: flex;
@@ -679,17 +681,31 @@ h1 {
   background-color: $primary-color;
   border-radius: 30px;
 
+  @media screen and (max-width: map-get($breakpoints, "phone")) {
+    border-radius: 0;
+
+    & .post-update-form {
+          margin: 0
+    }
+
+  }
+
   &__action {
     position: relative;
     &__button {
       position: absolute;
       right: 0px;
       top: -106px;
-      border:none;
+      border: none;
       border-radius: 0 20px 0 0;
       width: 150px;
       height: 40px;
       font-size: 20px;
+        @media screen and (max-width: map-get($breakpoints, "phone")) {
+    border-radius: 0;
+position: unset !important;
+width: 100%;
+  }
     }
   }
 
@@ -697,6 +713,7 @@ h1 {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    
   }
 
   & #update-content {
@@ -710,6 +727,7 @@ h1 {
     margin: 0 15px;
 
     margin-top: 0 !important;
+
     & textarea {
       padding: 5px 7px;
       resize: none;
@@ -717,11 +735,20 @@ h1 {
       font-family: $primary-font;
       font-size: 18px;
       border-radius: 7px !important;
+      @media screen and (max-width: map-get($breakpoints, "phone")) {
+        width: 100% !important;
+        border-radius: 0 !important;
+        background-color: $grey-light-color;
+     }
+      
     }
-
     & label {
       font-size: 19px;
       text-align: center;
+            @media screen and (max-width: map-get($breakpoints, "phone")) {
+            display:none
+
+            }
     }
   }
   /* BOUTON "Enregistrer les modifications" */
@@ -739,6 +766,10 @@ h1 {
       background-color: $primary-color;
       color: $tertiary-color;
     }
+
+                @media screen and (max-width: map-get($breakpoints, "phone")) {
+            width: 100% !important
+            }
   }
 
   /* BOUTTON "Choisir Un fichier" */

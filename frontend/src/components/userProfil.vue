@@ -8,7 +8,7 @@
         <div class="profil__header__names">
           <!-- SI l'utilisateur affiché est le meme que celui connecté, affiche un message personnalisé -->
           <h3 v-if="user.userId == currentUserId">
-            Bienvenue
+            Bienvenue {{userInfos}}
             <span class="informations">{{ user.nickname }}</span>
           </h3>
           <!-- SINON Nom complet OU email de l'utilisateur affiché -->
@@ -121,6 +121,8 @@
 export default {
   name: "UserProfil",
 
+  props: ["profilId", "userInfos"],
+
   data() {
     return {
       updateMode: false,
@@ -131,46 +133,29 @@ export default {
 
       userIdToDisplay: 0,
 
-      user: {
-        userId: 0,
-        email: "",
-        nickname: "",
-        isAdmin: false,
-        createdAt: "",
-      },
+      user: ""
     };
   },
 
-  created() {
-    this.getIdInUrl(), this.getUserInfos(this.userIdToDisplay);
+  computed: {
+    profilIdToDisplayComputed : function() {
+      return this.profilId
+    },
+
+    userInfosComputed: function () {
+      return this.userInfos
+    }
+  },
+
+  beforeUpdate() {
+this.setUserData();
   },
 
   methods: {
-    getIdInUrl() {
-      const url = this.$route.path.split("/");
-      const id = parseInt(url[2]);
-      this.userIdToDisplay = id;
-      return id;
-    },
-
-    setUserInData(data) {
-      this.user.email = data.email;
-      this.user.nickname = data.firstName;
-    },
-
-    getUserInfos(id) {
-      this.axios
-        .get(`http://localhost:3000/api/user/${id}`)
-        .then((user) => {
-          let userInfo = user.data.user;
-          (this.user.userId = userInfo.id),
-            (this.user.email = userInfo.email),
-            (this.user.nickname = userInfo.nickname),
-            (this.user.createdAt = userInfo.createdAt),
-            (this.user.isAdmin = userInfo.isAdmin);
-          console.log(this.user);
-        })
-        .catch((err) => console.log(err));
+    setUserData() {
+      console.log(this.userInfosComputed)
+      this.user = this.userInfosComputed;
+      this.userIdToDisplay = this.profilToDisplayComputed
     },
 
     updateProfil(id) {
