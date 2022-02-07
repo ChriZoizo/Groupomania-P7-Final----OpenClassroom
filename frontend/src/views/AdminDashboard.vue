@@ -23,16 +23,7 @@ export default{
 <style lang="scss">
 
 .admin-dashboard {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around; /* ??? */
 
-    &__user-section {
-        width: 35%;
-    }
-    &__post-section {
-        width: 50%;
-    }
 }
 
 </style>

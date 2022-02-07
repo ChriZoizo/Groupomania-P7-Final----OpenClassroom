@@ -11,6 +11,7 @@
     </div>
     <div class="">
       <h2 class="">Liste des publications</h2>
+      <button v-on:click="createReactionSlot">AAAAA</button>
     </div>
     <!-- LOOP (Boucle iterant sur le resultat de la methode GETALLPOST du module (Array))  -->
     <div v-if="(dataReady = true)">
@@ -36,7 +37,7 @@
             </div>
             <!-- Bouton DELETE -->
             <button
-            pre
+              pre
               v-if="post.userId == this.currentUserId || this.isAdmin == 'true'"
               class="post-card__header-action"
               v-on:click.prevent="deletePost(post.id)"
@@ -80,7 +81,7 @@
             <!-- like -->
             <div class="post-card__footer__reaction flex-row">
               <div
-                v-on:click="reactToPost(1, post.id)"
+                v-on:click.prevent="reactToPost(1, post.id)"
                 class="reaction__button"
               >
                 <i class="fas fa-thumbs-up grey"></i
@@ -90,7 +91,7 @@
               </div>
               <!-- dislike -->
               <div
-                v-on:click="reactToPost(-1, post.id)"
+                v-on:click.prevent="reactToPost(-1, post.id)"
                 class="reaction__button"
               >
                 <i class="fas fa-thumbs-down grey"></i
@@ -150,7 +151,7 @@
                 class="post-card__comments-section__comments click-append"
                 v-if="post.Comments.length > 3"
               >
-               ...
+                ...
               </div>
             </router-link>
           </div>
@@ -182,12 +183,15 @@ export default {
 
       /* Objet vide qui contiendras les "slots" pour les commentaires des Posts (sans cela, tout les forms ont le même contenus) */
       comments: {},
+
+      reactionSlot: {}
     };
   },
 
   /* HOOK DE CYCLE DE VIE */
   beforeMount() {
     /*  this.createCommentsSlot(); */
+    this.createReactionSlot();
   },
 
   mounted() {
@@ -211,6 +215,42 @@ export default {
         this.dataReady = true;
       }
     },
+
+    createReactionSlot() {
+         for (const post of this.postsArray) {
+      let reaction = post.LikePosts.find(
+        (react) => react.UserId == this.currentUserId && react.PostId == post.id
+      );
+      console.log(reaction);
+      if (typeof reaction !== "undefined") {
+        switch (reaction.value) {
+          case 1:
+            this.reactionSlot[post.id] = {
+              liked: true,
+              disliked: false
+            }
+            break;
+          case -1:
+            this.reactionSlot[post.id] = {
+              liked: false,
+              disliked: true
+            }
+            break;
+          case 0:
+            this.reactionSlot[post.id] = {
+              liked: false,
+              disliked: false
+            }
+            break;
+          default:
+            console.log("@@@@@@@@@@@@@@@@@@@@@");
+            break;
+        }
+      } else {
+        this.reactionSlot[post.id].disliked = false;
+        this.reactionSlot[post.id].liked = false;
+      }
+    }},
 
     deletePost(id) {
       if (
@@ -244,20 +284,18 @@ export default {
     },
 
     reactToPost(val, postId) {
+      console.log(val)
       let value = val;
-      if (this.liked == true || this.disliked == true) {
-        value = 0;
-      }
       const likeDatas = {
         postId: postId,
         userId: this.currentUserId,
-        value,
+        value: value,
       };
-      console.log(likeDatas);
       this.axios
         .post("http://localhost:3000/api/post/like", likeDatas)
-        .then(() => {
-          history.go(0);
+        .then((res) => {
+          console.log(res);
+           history.go(0)
         })
         .catch((err) => console.log(err));
     },
@@ -289,8 +327,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../public/style.scss";
-
-
 
 .container-post-list {
   margin-top: 40px;
@@ -431,7 +467,7 @@ export default {
 
       & .click-append {
         background-color: $primary-color;
-        color: white
+        color: white;
       }
     }
 

@@ -16,7 +16,7 @@ const Comment = models.Comment
  */
 exports.getAllPosts = (req, res) => {
   Post.findAll({
-    include: [{ model: User, nested: true }, {model: Comment, include: [{model: User, nested: true}], nested: true}]
+    include: [{ model: User, nested: true }, {model: Comment, include: [{model: User, nested: true}], nested: true}, {model: reactionTable, nested: true}]
   })
     .then(posts => {
       res.status(200).json({ posts })
@@ -258,7 +258,43 @@ exports.likeOrDislikePost = (req, res) => {
       })
       .then(value => {
         if (alreadyReact === true && value != 0) {
-          res.json({ message: 'Already liked. Nothing to do !' })
+            /* Cherche dans la table 'LikePosts' pour detruire le like ou dislike */
+    reactionTable
+    .findOne({
+      where: { UserId: req.body.userId },
+      include: [
+        {
+          model: Post,
+          where: { id: req.body.postId }
+        }
+      ]
+    })
+    .then(result => {
+      console.log(result.Post)
+      if (result.value == 1) {
+        console.log(result)
+        result.Post.decrement('likeCounter')
+      }
+      else if (result.value == -1) {
+        result.Post.decrement('dislikeCounter')
+      }
+      else {
+        console.log('Value of object invalid (like or dislike')
+      }
+      reactionTable
+    .destroy({
+      where: { PostId: result.Post.id },
+      include: [
+        {
+          model: User,
+          where: { id: req.body.userId }
+        }
+      ]
+    })
+    .then(()=> res.status(200).json("Like or dislike deleted success ! ") )
+    .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
         }
       })
       .catch(err =>
