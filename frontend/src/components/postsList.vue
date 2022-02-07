@@ -36,9 +36,10 @@
             </div>
             <!-- Bouton DELETE -->
             <button
+            pre
               v-if="post.userId == this.currentUserId || this.isAdmin == 'true'"
               class="post-card__header-action"
-              v-on:click="deletePost(post.id)"
+              v-on:click.prevent="deletePost(post.id)"
             >
               <i class="fas fa-trash-alt"></i>
             </button>
@@ -221,7 +222,7 @@ export default {
           .delete(`http://localhost:3000/api/post/${id}`)
           .then(() => {
             console.log("POST DELETED");
-            this.$router.go("/home");
+            history.go(0);
           })
           .catch((err) => console.log(err));
       }
@@ -289,16 +290,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../public/style.scss";
 
-.input-wrapper {
-  display: inline-block;
-  position: relative;
-}
-.input-wrapper:after {
-  font-family: "FontAwesome";
-  content: "\f274";
-  position: absolute;
-  right: 6px;
-}
+
 
 .container-post-list {
   margin-top: 40px;
@@ -338,6 +330,7 @@ export default {
         color: white;
         height: 100%;
         width: 50px;
+        z-index: 4;
       }
     }
 

@@ -4,7 +4,7 @@
     
     <div class="home__title"><h1>Bienvenue sur Groupomania</h1></div>
 
-    <img alt="Vue logo" src="../assets/logo.png" />
+<!--     <img alt="Vue logo" src="../assets/logo.png" /> -->
     <section>
       <PostCreateFormular/>
       <PostList
@@ -44,6 +44,10 @@ export default {
         console.log(posts)
         this.allPosts = posts.data.posts.slice(-20)
       })
+      .then(() =>{
+        this.allPosts = this.allPosts.reverse()
+      })
+      .catch(err => console.log('Error in GetAllPosts of Home View :' + err))
     }
   }
 };

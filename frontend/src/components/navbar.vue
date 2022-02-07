@@ -10,7 +10,7 @@
         />
       </router-link>
     </div>
-    <div class="navbar__right" v-if="isSigned == true">
+    <div class="navbar__right flex-row" v-if="isSigned == true">
       <router-link class="remove-decoration clear-text bold nav-link" to="/home"
         ><span class="home-button">Home</span></router-link
       >
@@ -100,7 +100,7 @@ export default {
   max-height: 130px;
   display: flex;
   justify-content: space-between;
-  @include set-background-color($primary-color);
+  background-color: $primary-color;
 
   &__left {
     width: 200px;
@@ -111,16 +111,11 @@ export default {
   }
 
   &__right {
-    display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
 
     & .nav-link {
       margin: 5px 15px;
-      @media screen and (max-width: map-get($breakpoints, "notebook")) {
-        margin: 5px -1px;
-      }
     }
 
     & span {
@@ -129,7 +124,7 @@ export default {
 
       &:hover {
         transition: 500ms;
-        @include set-color($tertiary-color);
+        color: $tertiary-color;
         &::after {
           background: $tertiary-color;
           content: "";
@@ -207,7 +202,7 @@ export default {
     background-color: white;
     color: #0c2444;
     &:hover {
-      transform: scale(1.15);
+      transform: scale(1.02);
       opacity: 0.85;
       -webkit-transition: 0.3s ease-in;
       transition: 0.3s ease-out;
@@ -223,19 +218,15 @@ export default {
     width: 9rem;
     margin: 5px 15px;
     &:hover {
-      transform: scale(1.15);
-      opacity: 0.85;
-      -webkit-transition: 0.3s ease-in;
-      transition: 0.3s ease-out;
-      @include set-background-color(lighten($tertiary-color, 50%));
+      background-color: lighten($tertiary-color, 50%);
     }
     & p {
       margin: 0;
     }
     border: none;
   }
-  & .home-button {
-    font-size: 26px;
+  & .home-button::after {
+    background: $tertiary-color;
   }
 }
 </style>

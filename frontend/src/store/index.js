@@ -15,3 +15,5 @@ export default new Vuex.Store({
 
     }
 }) */
+
+/* J'avais crée un Store avec VueX, mais on m'as dis de l'enlever. */

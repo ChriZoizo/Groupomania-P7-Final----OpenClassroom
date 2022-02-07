@@ -42,34 +42,49 @@ export default {
 
       loading: true,
 
+      updateMode: false,
+
       userPosts: "",
     };
   },
 
   beforeMount() {
     this.getIdInUrl(),
-      this.getUserInfos(this.userIdToDisplay);
+    this.getUserInfos(this.userIdToDisplay),
+      this.getUserPosts(this.userIdToDisplay);
   },
 
   methods: {
     getIdInUrl() {
       const url = this.$route.path.split("/");
       const id = parseInt(url[2]);
+
       this.userIdToDisplay = id;
+            console.log('@@@@@@@@@@@@' +this.userIdToDisplay)
       return id;
     },
 
-    getUserInfos(id) {
+    getUserPosts(id) {
       this.axios
         .get(`http://localhost:3000/api/post/author/${id}`, { timeout: 5000 })
         .then((posts) => {
-          const userInfoOrigin = posts.data.posts[0].User;
-          this.userProfilData = userInfoOrigin;
           this.userPosts = posts.data.posts;
           this.loading = false;
         })
+        .then(() => this.userPosts = this.userPosts.reverse())
         .catch((err) => console.log(err));
     },
+
+    getUserInfos(id){
+            this.axios
+        .get(`http://localhost:3000/api/user/${id}`, { timeout: 6000 })
+        .then((user) => {
+          const userInfoOrigin = user.data.user;
+          this.userProfilData = userInfoOrigin;
+          this.loading = false;
+        })
+        .catch((err) => console.log(err));
+    }
   },
 };
 </script>
