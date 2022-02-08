@@ -10,8 +10,7 @@
       </div>
     </div>
     <div class="">
-      <h2 class="">Liste des publications</h2>
-      <button v-on:click="createReactionSlot">AAAAA</button>
+      <h2 class="title text-center">Liste des publications</h2>
     </div>
     <!-- LOOP (Boucle iterant sur le resultat de la methode GETALLPOST du module (Array))  -->
     <div v-if="(dataReady = true)">
@@ -39,7 +38,7 @@
             <button
               pre
               v-if="post.userId == this.currentUserId || this.isAdmin == 'true'"
-              class="post-card__header-action"
+              class="post-card__header-action button--danger"
               v-on:click.prevent="deletePost(post.id)"
             >
               <i class="fas fa-trash-alt"></i>
@@ -299,28 +298,6 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-
-    /*     checkReact(post) {
-      post.LikePosts.find((react) => {
-        if (react.UserId == this.currentUserId) {
-          switch (react.value) {
-            case 1:
-              return { like: true, dislike: false };
-
-            case -1:
-              return { like: false, dislike: true };
-
-            default:
-              return { like: false, dislike: false };
-          }
-        }
-      });
-    }, */
-
-    /*     setLocalStorageValue() {
-      this.currentUserId = localStorage.getItem("userId");
-      this.isAdmin = localStorage.getItem("userIsAdmin");
-    }, */
   },
 };
 </script>
@@ -333,7 +310,8 @@ export default {
 }
 
 .title {
-  position: absolute;
+  position:relative;
+  margin:40px 0;
 }
 
 .post {
@@ -377,7 +355,9 @@ export default {
       justify-content: center;
       flex-wrap: wrap;
       align-items: center;
+      text-align: left ;
       & p {
+        text-align: left ;
         font-size: 28px;
       }
 
@@ -399,6 +379,12 @@ export default {
 
       &__content-alt {
         justify-content: center !important;
+      }
+
+      @media screen and (max-width: map-get($breakpoints, "phone")) {
+      & p, a {
+        font-size: 18px !important;
+      }
       }
     }
 

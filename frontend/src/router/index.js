@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '../views/Home.vue'
-/* import formSignup from '../views/Signup.vue'
-import formLogin from '../views/Login.vue' */
 import Post from '../views/Post.vue'
 import userProfil from '../views/Profil.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
@@ -22,22 +20,6 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
-/*   {
-    path: '/signup',
-    name: 'Signup',
-    component: formSignup
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: formLogin
-  }, */
-/*   {
-
-    path: '/profil',
-    name: "Profil",
-    component: userProfil
-  }, */
   {
     path: '/post/:id',
     name: "Post",

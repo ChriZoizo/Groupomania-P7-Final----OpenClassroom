@@ -1,6 +1,6 @@
 <template>
   <div class="form-create-post">
-    <div v-if="isWriting == false">
+    <div class="text-center"  v-if="isWriting == false">
       <button
         v-on:click="isWriting = !isWriting"
         class="form-create-post__button-init button-shadow button--main"
@@ -8,7 +8,7 @@
         Ecrire une publication
       </button>
     </div>
-    <div v-if="isWriting == true">
+    <div class="text-center" v-if="isWriting == true">
       <div class="form-create-post__header">
         <button
           v-on:click="isWriting = !isWriting"
@@ -111,7 +111,7 @@ export default {
     border: none;
     padding: 5px 7px;
     width: 80%;
-    height: 50px;
+    min-height: 50px;
     font-size: 22px;
     border-radius: 30px;
     @media screen and (max-width: map-get($breakpoints, "phone")) {

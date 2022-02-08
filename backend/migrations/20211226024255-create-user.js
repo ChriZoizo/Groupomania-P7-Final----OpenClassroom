@@ -20,25 +20,10 @@ module.exports = {
         type: Sequelize.STRING,
         len: [7, 50]
       },
-      firstName: {
-        allowNull: true,
-        type: Sequelize.STRING,
-        len: [2,40]
-      },
-      lastName: {
-        allowNull: true,
-        type: Sequelize.STRING,
-        len: [1, 40]
-      },
       nickname: {
         allowNull: true,
         type: Sequelize.STRING,
         len: [2,30]
-      },
-      bio: {
-        allowNull: true,
-        type: Sequelize.STRING,
-        len: [2, 300]
       },
       isAdmin: {
         allowNull: false,

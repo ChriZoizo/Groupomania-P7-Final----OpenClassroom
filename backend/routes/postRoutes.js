@@ -7,16 +7,16 @@ const multer = require('../middlewares/multer-config')
 
 const postController = require('../controllers/postController')
 
-router.get('/', postController.getAllPosts)
-router.get('/:id', postController.getOnePost)
+router.get('/', auth, postController.getAllPosts)
+router.get('/:id', auth, postController.getOnePost)
 
-router.post('/', multer, postController.createPost)
-router.put('/:id', multer, postController.updatePost)
+router.post('/', auth, multer, postController.createPost)
+router.put('/:id', auth, multer, postController.updatePost)
 
-router.delete('/:id', postController.deletePost)
+router.delete('/:id', auth, postController.deletePost)
 
-router.post('/like', postController.likeOrDislikePost)
+router.post('/like', auth, postController.likeOrDislikePost)
 
-router.get('/author/:id', postController.findByAuthor)
+router.get('/author/:id', auth, postController.findByAuthor)
 
 module.exports = router

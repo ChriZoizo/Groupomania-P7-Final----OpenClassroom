@@ -157,17 +157,7 @@ exports.deleteUser = (req, res) => {
 }
 
 /* --------------------------------- Fonctions Supplémentaires ------------------------------------*/
-/* FIND BY NAME */
-exports.findByName = (req, res) => {
-  User.findOne({ where: { nickname: req.body.nickname }, include: models.Post }).then(user => {
-    res
-      .status(200)
-      .json({ user })
-      .catch(err => {
-        res.json({ error: 'Request findByName have an issue ' + err })
-      })
-  })
-}
+
 /* ADMIN FUNCTION ??? */
 
 exports.transformIntoAdmin = (req, res) => {

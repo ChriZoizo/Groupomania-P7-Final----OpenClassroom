@@ -4,7 +4,7 @@
   <div class="container-user-list container">
     <div class="user-list">
       <!-- LOOP (boucle iterant sur le resultat de la methode GETALLUSERS du module (Array))-->
-      <div v-for="(user, index) in allUsers" :key="index" class="user rounded">
+      <div v-for="(user, index) in allUsers" :key="index" class="user rounded text-center">
         <!-- CARD begin -->
         <router-link
           class="user-card card-link remove-decoration"

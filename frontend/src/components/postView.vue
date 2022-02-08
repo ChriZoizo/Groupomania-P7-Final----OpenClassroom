@@ -352,9 +352,6 @@ export default {
             this.disliked = false;
             this.liked = false;
             break;
-          default:
-            console.log("@@@@@@@@@@@@@@@@@@@@@");
-            break;
         }
       } else {
         this.disliked = false;
@@ -496,6 +493,7 @@ h1 {
     flex-wrap: wrap;
 
     &__content {
+      padding: 0 2rem;
       & .post-content {
         font-size: 30px;
       }
@@ -506,6 +504,7 @@ h1 {
       min-height: 300px;
       max-height: 550px;
       overflow: hidden;
+      text-align: center;
       & img {
         object-fit: cover;
         max-width: 100%;

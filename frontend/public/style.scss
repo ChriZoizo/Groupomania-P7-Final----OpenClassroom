@@ -63,9 +63,6 @@ $breakpoints: ("phone-small": 600px, "phone": 800px, "phone-big": 900px, "tablet
   transform: scale(1.005)
 }
 
-/* MAPS */
-
-
 /* GLOBALE */
 /* BALISE */
 
@@ -139,6 +136,11 @@ height: 100%;
     text-decoration: none;
     color: $primary-color
   }
+
+  .text-center{
+    text-align: center;
+  }
+  
   .clear-text {
     color: $text-clear
   }
@@ -289,6 +291,7 @@ height: 100%;
       transition-duration: 500ms;
       @include button-transform-main
     }
+    
     &.active {
       background: $secondary-color;
       color: $danger-color;

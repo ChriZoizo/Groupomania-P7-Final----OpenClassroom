@@ -2,7 +2,6 @@
   <nav id="navbar" class="navbar">
     <div class="navbar__left">
       <router-link to="/home" class="contained">
-        {{}}
         <img
           class="main-logo"
           alt="Logo de l'entreprise Groupomania"
@@ -91,7 +90,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../public/style.scss";
 
 .navbar {
@@ -116,6 +115,16 @@ export default {
 
     & .nav-link {
       margin: 5px 15px;
+      &:active{
+        color: $tertiary-color !important
+        }
+      &:focus{
+
+        color: $tertiary-color !important
+        }
+/*       &:visited{
+        color: red !important
+        } */
     }
 
     & span {
@@ -225,8 +234,6 @@ export default {
     }
     border: none;
   }
-  & .home-button::after {
-    background: $tertiary-color;
-  }
+
 }
 </style>

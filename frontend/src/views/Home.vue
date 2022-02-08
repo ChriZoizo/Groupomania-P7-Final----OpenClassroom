@@ -61,7 +61,7 @@ export default {
     flex-direction: row;
     justify-content: center;
     & h1 {
-      width: 500px;
+
     }
   }
 }

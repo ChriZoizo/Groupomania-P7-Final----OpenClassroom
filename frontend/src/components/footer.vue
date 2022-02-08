@@ -1,19 +1,13 @@
 <template>
   <footer id="footer">
     <div class="footer clear-text">
-      <!--       <div class="footer__top">
-        <img
-          src="../assets/logo.png"
-          alt="Logo de l'entreprise Groupomania"
-        />
-      </div> -->
       <div class="footer__middle">
         <div class="footer__middle__side">
           <a href="mailto:groupomania-support@yopmail.com" class="clear-text"
             >Contactez nous</a
           >
         </div>
-        <div v-on:click="scrollToTop" class="footer__middle__up-page">
+        <div v-on:click="scrollToTop" class="footer__middle__up-page text-center">
           <i class="fas fa-angle-double-up fa-2x tertiary-colored"></i>
           <p>Haut de page</p>
         </div>
@@ -43,13 +37,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../public/style.scss";
-
-/* NOTE: breakpoints =
-"phone-small": 600px,
-"phone": 800px,
-"tablet": 900px,
-'notebook': 1024px,
-"desktop": 1600px) */
 
 footer {
   z-index: 6;
@@ -95,34 +82,31 @@ footer {
       display: flex;
       flex-direction: row;
       justify-content: center;
-/*       margin: 50px 0; */
+      /*       margin: 50px 0; */
       & span {
         display: contents;
       }
     }
   }
 
+  @media screen and (max-width: map-get($breakpoints, "phone")) {
+    height: 300px;
 
-      @media screen and (max-width: map-get($breakpoints, "phone")) {
-
-        height: 300px;
-
-      & .footer{
-        height:90%;
+    & .footer {
+      height: 90%;
       &__middle {
-      flex-direction: column;
-      align-items: center;
-      height: 200px;
-      &__up-page{
-        order: -1
-      }
-      }
-
-      &__bottom{
-        margin-top: 40px 0 !important
-      }
+        flex-direction: column;
+        align-items: center;
+        height: 200px;
+        &__up-page {
+          order: -1;
+        }
       }
 
+      &__bottom {
+        margin-top: 40px 0 !important;
+      }
     }
+  }
 }
 </style>

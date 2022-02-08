@@ -212,6 +212,7 @@ export default {
   margin: 20px 0;
   padding: 20px;
   position: relative;
+  text-align: center;
   @media screen and (max-width: map-get($breakpoints, "phone")) {
     width: 100% !important;
     padding: 5px 0 0 0;
@@ -240,6 +241,7 @@ export default {
 
   /* Section Update Profil */
   &__update-section {
+      text-align: center;
     background-color: $primary-color;
     margin: 20px 0;
     padding: 20px;
