@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Post from '../views/Post.vue'
 import userProfil from '../views/Profil.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
+import Error404 from '../views/Error404.vue'
 
 const routes = [
   {
@@ -37,7 +38,19 @@ const routes = [
     path:'/admin-dashboard',
     name: "AdminDashboard",
     component: AdminDashboard
+  },
+
+  {
+    path: "/page-not-found",
+    name: "Error404",
+    component: Error404
+  },
+
+  { path: '/:catchAll(.*)', 
+  beforeEnter () {
+    window.location = `/page-not-found`
   }
+}
 
 ]
 

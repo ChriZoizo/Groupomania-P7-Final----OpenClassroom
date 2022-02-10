@@ -1,17 +1,14 @@
-/* A - Importation des modules */
+/* - Importation des modules */
 const bcrypt = require('bcrypt') /* Module "Bcrypt" pour le hashage (securité) */
 const jwt = require('jsonwebtoken') /* Module "JsonWebToken" pour l'authentification (securité) */
 
-const dotenv = require('dotenv') /* NON UTILISé ! */
-const auth = require('../middlewares/auth') /* NON UTILISé ! */
-
-/* Importation BDD */
+/* Importation BDD (voir migration et/ou models pour plus de details)  */
 const models = require('../models')
-/* Table 'User' contenant les utilisateurs (voir migration et/ou models pour plus de details) */
+/* Table 'User'*/
 const User = models.User
 
 /* ---------------------------------- Fonctions C R U D --------------------------------------*/
-/* B - 1 - GET ALL USERS (GET)
+/* - GET ALL USERS (GET)
 Fonction retournant tout les "Users" inscrit dans la BDD "User" en utilisant la methode "Sequelize" 'findAll' (Promise) */
 exports.getAllUsers = (req, res) => {
   User.findAll({
@@ -50,7 +47,7 @@ exports.getOneUser = (req, res) => {
 
 /* B - 3 - a - SIGNUP (= createUser) (POST) 
 Fonction permettant d'inscrire un nouveau 'user' dans la table 'User' de la BDD. Le mots de passe recuperé dans la 
-requête (key 'password') est hashé via "bcrypt" (Promise).PUIS utilise la methode "Sequelize" 'create' pour creé le 'user' dans la table, 
+requête (key: 'password') est hashé via "bcrypt" (Promise). PUIS utilise la methode "Sequelize" 'create' pour creé le 'user' dans la table, 
 enregistrant l''Email', le 'password' ainsi que le 'nickname' que l'utilisateur as renseigné. 
 */
 exports.signup = (req, res) => {
@@ -105,7 +102,7 @@ exports.login = (req, res) => {
           res.status(200).json({
             /* Voir avec le FRONT pour savoir qui en faire (envoyer dans le header des req et/ou params) */
             token: jwt.sign({ userId: user._id }, process.env.ILOVESALT, {
-              expiresIn: '24h'
+              expiresIn: '168h'
             }),
             userInfos: userFinded
           })

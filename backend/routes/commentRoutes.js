@@ -4,7 +4,7 @@ const router = express.Router()
 const auth = require('../middlewares/auth')
 const commentController = require('../controllers/commentController')
 
-router.get('/', auth, commentController.getAllComments)
+router.get('/', commentController.getAllComments)
 router.get('/:id', auth, commentController.getOneComment)
 
 router.post('/', auth, commentController.createComment)

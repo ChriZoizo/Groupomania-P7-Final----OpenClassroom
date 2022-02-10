@@ -10,7 +10,7 @@ const Post = models.Post
 const reactionTable = models.LikePost
 const Comment = models.Comment
 
-/* --------------------------------- Fonctions C R U  ------------------------------------*/
+/* --------------------------------- Fonctions C.R.U.D ------------------------------------*/
 
 /* GET ALL POSTS (GET)
  */
@@ -47,13 +47,12 @@ exports.getOnePost = (req, res) => {
     })
 }
 
-/* CREATE POST (POST)
+/*  - CREATE POST (POST)
 Fonction de creation de 'Post' (publication) */
 exports.createPost = (req, res) => {
   let newPost = {}
-  /*   console.log(req.body.UserId) */
   if (req.file) {
-    console.log('File attached...')
+    console.log('Post Create Request : File attached...')
     newPost = {
       ...req.body,
       postImageUrl: `${req.protocol}://${req.get('host')}/images/${
@@ -61,36 +60,20 @@ exports.createPost = (req, res) => {
       }`
     }
   } else {
-    console.log('no file attached to request !')
+    console.log('Post Create Request : No file attached !')
     newPost = {
       ...req.body
     }
   }
-  console.log('request infos OK. Create function begin ...' + newPost)
   Post.create(newPost)
     .then(post =>
-      res.status(200).json({ message: 'Publication créé avec succés !' + post })
+      res.status(200).json({ post })
     )
     .catch(err => {
       res
         .status(500)
-        .json(console.log(`ERREUR !${err}`) /* { error: 'PROBLEME ' + err } */)
+        .json( { error: 'Problem with Post create function : ' + err })
     })
-  /* Utiliser le token pour l'id  */
-  /*   const postObject = JSON.parse(req.body.sauce)  !!! POSE PROBLéME*/
-  /*   const newPost = Post.create({
-    UserId: req.body.userId,
-    content: req.body.content,
-       postImageUrl: `${req.protocol}://${req.get('host')}/images/${
-    req.file.filename
-  }`
-  })
-    .then(post => {
-      res.status(200).json(post)
-    })
-    .catch(err => {
-      res.json({ error: 'Problem with posts POST request' + err })
-    }) */
 }
 
 /* UPDATE POST (PUT)
