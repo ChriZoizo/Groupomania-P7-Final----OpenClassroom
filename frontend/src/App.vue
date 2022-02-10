@@ -10,23 +10,25 @@
     </div>
     <!-- - Router-View - contient un attribut special ':key' utile pour l'itilsation du  -->
     <div class="router-view" v-if="isSigned == true">
-      <router-view :key="$route.fullPath"/>
+      <router-view :key="$route.fullPath" v-on:alert="displayAlert" :alertFunction="this.displayAlert"/>
     </div>
 <!-- Footer -->
     <Footer />
+<vue-basic-alert ref="alert" :closeIn="3000" />
   </div>
 </template>
 
 <script>
 /* * - SCRIPT */
 /* Import des composants utilisé */
+import VueBasicAlert from 'vue-basic-alert'
 import Navbar from "@/components/navbar.vue";
 import Login from "@/components/formLogin.vue";
 import Footer from "@/components/footer.vue";
 
 export default {
   name: "app",
-  components: { Navbar, Login, Footer },
+  components: { Navbar, Login, Footer, VueBasicAlert },
 
   /* - Datas */
   data() {
@@ -56,6 +58,7 @@ export default {
     deconnect() {
       localStorage.clear();
       this.$router.go("/home");
+      this.displayAlert({'type': "success", 'content': "Votre compte a été deconnecté", "header": "Deconnexion !"})
     },
 
     /* SIGNED() : 
@@ -75,7 +78,7 @@ export default {
       localStorage.setItem("userIsAdmin", userDatas.isAdmin);
       this.user.userId = userDatas.id;
       this.user.isAdmin = userDatas.isAdmin;
-      this.$router.go("/home");
+      this.displayAlert({'type': "success", 'content': `Bienvenu ${userDatas.nickname} `, "header": "Connexion !"})
     },
 
     checkPreviousConnection() {
@@ -87,8 +90,14 @@ export default {
         this.isSigned = false;
       }
     },
+
+    displayAlert(alertDatas) {
+      console.log(alertDatas)
+      this.$refs.alert.showAlert( alertDatas.type, alertDatas.content, alertDatas.header)
+    }
   },
 };
+
 </script>
 
 <style lang="scss">

@@ -11,6 +11,7 @@
     <UserProfil
       :profilId="this.userIdToDisplay"
       :userInfos="this.userProfilData"
+      v-bind="$attrs"
     />
     <PostList
       loaderMessage="Chargement du profil"
@@ -29,6 +30,8 @@ export default {
     UserProfil,
     PostList,
   },
+
+  props: ["alertFunction"],
 
   data() {
     return {
@@ -60,7 +63,6 @@ export default {
       const id = parseInt(url[2]);
 
       this.userIdToDisplay = id;
-            console.log('@@@@@@@@@@@@' +this.userIdToDisplay)
       return id;
     },
 
@@ -84,7 +86,11 @@ export default {
           this.loading = false;
         })
         .catch((err) => console.log(err));
-    }
+    },
+
+    transmitAlert(data) {
+      this.alertFunction(data)
+    } 
   },
 };
 </script>

@@ -1,12 +1,11 @@
 <template>
   <!-- View contenant les composant 'postCreate' et 'postList'. C'est la page d'accueil de l'App  -->
   <div class="home">
-    
     <div class="home__title"><h1>Bienvenue sur Groupomania</h1></div>
 
 <!--     <img alt="Vue logo" src="../assets/logo.png" /> -->
     <section>
-      <PostCreateFormular/>
+      <PostCreateFormular v-bind="$attrs"/>
       <PostList
         loaderMessage="Chargement de la page d'accueil ..."
         :postsArray="this.allPosts"

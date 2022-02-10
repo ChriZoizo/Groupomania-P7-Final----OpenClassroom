@@ -154,15 +154,30 @@ export default {
 
     /*. updateProfil : Methode qui enregistre en BDD les modification apporté au 'User'. Accepte un parametre 'id'. Ce parametre
     est ajouté a l'URI lors de l'appela a l'API (PUT). (Promise).
-     Puis 'then' actualise la page. Sinon 'catch' affiche en console l'erreurs communiqué par l'API.
+     Puis 'then' Envoie une commande pour afficher une alerte 'success' a l'utilisateur via la methode "Vue" $emit. La constante 'alertData' 
+     contient les données pour l'alerte tel que le type, contenus et 'titre'. Enfin, passe la data 'updateMode' a false
+     Sinon 'catche' affiche en console l'erreur communiqué par l'API.
     @param
       << id = Number
+    $emit 
+      ^^ alertData = Object { "type": STRING, 'content', STRING, 'header' STRING}
     @return
       >> NO RETURN*/
     updateProfil(id) {
       this.axios
         .put(`http://localhost:3000/api/user/${id}`, this.user)
-        .then(() => history.go(0) /* Actualisation page */)
+        .then(() => {
+          /* declaration de la constante contenant les données de l'alerte */
+          const alertData = ({
+            "type": "success",
+            "content": "Votre profil a été mis a jour !",
+            "header": "Profil"
+          });
+          /* Emission de l'evenement (nommé 'alert') accompagné par la constante ci-dessus */
+          this.$emit("alert", alertData );
+          /* Repasse le composant en mode vue normal */
+          this.updateMode = false
+        })
         .catch((err) => console.log(err));
     },
 
@@ -182,6 +197,7 @@ export default {
         if (this.currentUserId == id) {
           /* Si oui : Efface le localStorage */
           localStorage.clear();
+            /* Redirection */ this.$router.go("/home");
         }
         /* Appel API */
         this.axios

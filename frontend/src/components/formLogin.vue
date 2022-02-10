@@ -134,9 +134,6 @@ export default {
       this.axios
         .post("http://localhost:3000/api/user/login", inputDatas)
         .then((res) => {
-          
-          console.log("Utilisateur connecté ! ", res);
-          this.$router.push("/home");
           this.$emit("signed", res.data);
         })
         .catch((err) => console.log(err));

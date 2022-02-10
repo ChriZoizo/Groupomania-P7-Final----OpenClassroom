@@ -93,7 +93,9 @@ export default {
         .post("http://localhost:3000/api/post", formData)
         .then((res) => {
           console.log("Publication créé !", res);
-          this.$router.go("/home/");
+          this.isWriting = false;
+          const alertDatas = ({'type': "success", 'content': "Vous publication a été.... publié ! (j'ai pas trouvé mieux XD)' ", "header": "Publication accepté !"})
+          this.$emit('alert', alertDatas )
         })
         .catch((err) => console.log(err));
     },
