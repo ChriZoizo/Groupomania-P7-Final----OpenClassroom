@@ -77,9 +77,18 @@
               </p>
             </div>
             <!-- Bouton de like et dislike -->
-            <!-- like -->
             <div class="post-card__footer__reaction flex-row">
-              <div
+            <!-- like -->
+              <div  v-if="reactionSlot[post.id].liked"
+                v-on:click.prevent="reactToPost(0, post.id)"
+                class="reaction__button"
+              >
+                <i class="fas fa-thumbs-up green"></i
+                ><span class="reaction__like--counter">{{
+                  post.likeCounter
+                }}</span>
+              </div>
+              <div  v-if="!reactionSlot[post.id].liked"
                 v-on:click.prevent="reactToPost(1, post.id)"
                 class="reaction__button"
               >
@@ -89,7 +98,16 @@
                 }}</span>
               </div>
               <!-- dislike -->
-              <div
+              <div v-if="reactionSlot[post.id].disliked"
+                v-on:click.prevent="reactToPost(0, post.id)"
+                class="reaction__button"
+              >
+                <i class="fas fa-thumbs-down red"></i
+                ><span class="reaction__dislike--counter">{{
+                  post.dislikeCounter
+                }}</span>
+              </div>
+              <div v-if="!reactionSlot[post.id].disliked"
                 v-on:click.prevent="reactToPost(-1, post.id)"
                 class="reaction__button"
               >
@@ -188,13 +206,13 @@ export default {
   },
 
   /* HOOK DE CYCLE DE VIE */
-  beforeMount() {
+  beforeUpdate() {
     /*  this.createCommentsSlot(); */
     this.createReactionSlot();
+    this.createCommentsSlot();
   },
 
   mounted() {
-    this.createCommentsSlot();
   },
 
   /* METHODS */
@@ -212,16 +230,18 @@ export default {
       }
       if (this.comments.length > 0) {
         this.dataReady = true;
+        this.createReactionSlot()
       }
     },
 
     createReactionSlot() {
          for (const post of this.postsArray) {
+           console.log(post)
       let reaction = post.LikePosts.find(
-        (react) => react.UserId == this.currentUserId && react.PostId == post.id
+        (react) => react.UserId === this.currentUserId
       );
       console.log(reaction);
-      if (typeof reaction !== "undefined") {
+       if (typeof reaction !== "undefined") {
         switch (reaction.value) {
           case 1:
             this.reactionSlot[post.id] = {
@@ -242,13 +262,15 @@ export default {
             }
             break;
           default:
-            console.log("@@@@@@@@@@@@@@@@@@@@@");
             break;
         }
       } else {
-        this.reactionSlot[post.id].disliked = false;
-        this.reactionSlot[post.id].liked = false;
+            this.reactionSlot[post.id] = {
+              liked: false,
+              disliked: false
+            }
       }
+      console.log(this.reactionSlot)
     }},
 
     deletePost(id) {
@@ -260,7 +282,7 @@ export default {
         this.axios
           .delete(`http://localhost:3000/api/post/${id}`)
           .then(() => {
-            console.log("POST DELETED");
+
             history.go(0);
           })
           .catch((err) => console.log(err));
@@ -283,8 +305,12 @@ export default {
     },
 
     reactToPost(val, postId) {
-      console.log(val)
       let value = val;
+            if (this.reactionSlot[postId].liked === true || this.reactionSlot[postId].disliked === true) {
+        value = 0;
+      }
+      console.log(this.reactionSlot[postId])
+      console.log(value)
       const likeDatas = {
         postId: postId,
         userId: this.currentUserId,
@@ -298,6 +324,19 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+
+    setReactionButton(post) {
+     const reaction = post.LikePosts.filter(react => react.userId === this.currentUserId);
+     if (reaction.value == 1){
+       return true
+     }
+     if (reaction.value == -1){
+       return false
+     }
+     else {
+       return NaN
+     }
+    }
   },
 };
 </script>

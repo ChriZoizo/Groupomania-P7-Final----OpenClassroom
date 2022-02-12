@@ -282,7 +282,7 @@ export default {
 
   /* - METHODS - */
   methods: {
-    /* Methods qui recupere l'id du post dans l'URL, le transforme en Number pui l'enregistre dans la varible 'postId'
+    /*. setPostDataFromUrlId:  Methods qui recupere l'id du post dans l'URL, le transforme en Number pui l'enregistre dans la varible 'postId'
     Puis la methode 'getPostInfos' est appeler en passant la variable 'id' en parametre */
     setPostDataFromUrlId() {
       /* decoupe l'url et recupere uniquement la derniere partie contenant l'ID */
@@ -295,7 +295,9 @@ export default {
       this.getPostInfos(postId);
     },
 
-    /* Methode qui recupere grace a un appel a la BDD via l'API les informations du post */
+    /*. getPostInfos: Methode qui recupere les infos du post a affiché grace a un appel a l'API. Accepte un Number 'id' en parametre. Cet 'id'
+    est ajouté a la fin de l'URI afin de selectionné le bon Post.
+     */
     getPostInfos(id) {
       /* fait un appel a l'API en integrant l''id' du parametre de la fonction a l'URI */
       this.axios
@@ -335,12 +337,13 @@ export default {
     likedDisliked() {
       let reaction = this.post.LikePosts.find(
         (react) =>
-          react.UserId == this.currentUserId && react.PostId == this.post.id
+          react.UserId == this.currentUserId
       );
       console.log(reaction);
       if (typeof reaction !== "undefined") {
         switch (reaction.value) {
           case 1:
+                        console.log('CAS 1')
             this.liked = true;
             this.disliked = false;
             break;

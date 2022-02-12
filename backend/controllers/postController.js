@@ -141,7 +141,13 @@ exports.findByAuthor = (req, res) => {
 }
 
 /* LIKE OF DISLIKE POST
- Fonction qui gére les 'Like' et 'Dislike' */
+ Fonction qui gére les 'Like' et 'Dislike' des diffeents 'Posts'. Chaque appel a cette fonction demande une VALEUR. Cette valeur peut etre "1" = LIKE,
+  "-1" = DISLIKE, et "0" = Effacer la reaction. Cette fonction recupere dans le body de la requete la valeur 'value' et l'enregitre dans une variable 'likeValue'.
+  Declare aussi une variable 'alreadyReact' a "false". 
+  Si la 'value' est 0, alors le frontEnd sait qu'il y a une reaction. On la cherche en BDD, on decremente le compteur
+  du 'Post' joint selon la valeur de la reaction, puis on detruit cette reaction de la BDD.
+  Si la 'value' n'est pas de "0", verifie si aucune reaction n'est déja présente en utilisant la methode "Sequelize" 'count()'. Si le resultat n'est pas de 0, passe 
+  la variable 'alreadyReact' a true */
 exports.likeOrDislikePost = (req, res) => {
   console.log(req.body)
   const likeValue = req.body.value
@@ -181,10 +187,12 @@ exports.likeOrDislikePost = (req, res) => {
           }
         ]
       })
-      .then(()=> res.status(200).json("Like or dislike deleted success ! ") )
-      .catch(err => console.log(err))
+      .then(()=> {
+        res.status(200).json({message: "reaction deleted request success ! "}) 
       })
-      .catch(err => console.log(err))
+      .catch(err => res.status(400).json({ error: err}))
+      })
+      .catch(err => res.status(500).json({ error: err}))
   } else {
     /* Dans les autres cas ( '1' ou '-1'), cherche dans la table 'LikePosts' une occurence */
     reactionTable
@@ -204,11 +212,12 @@ exports.likeOrDislikePost = (req, res) => {
         }
       })
       .then(() => {
-        /* Si aucune occurence est trouvé */
+        /* Si la variable 'alreadyReact' est toujours "false" */
         if (alreadyReact === false) {
           /* Cherche le post correspondant a 'postId' via son ID */
           Post.findByPk(req.body.postId)
             .then(post => {
+              /* Incremente le compteur de reaction correspondant */
               if (likeValue > 0) {
                 post.increment('likeCounter')
               }
@@ -216,7 +225,8 @@ exports.likeOrDislikePost = (req, res) => {
                 post.increment('dislikeCounter')
               }
             })
-            .then(() => {
+            .then(() => { 
+              /* Puis créé une nouvelle entrée (réaction) dans la BDD 'LikePost' en recuperant les informations necessaire dans le body de la requête */
               reactionTable
                 .create({
                   UserId: req.body.userId,
@@ -229,16 +239,17 @@ exports.likeOrDislikePost = (req, res) => {
                   })
                 })
                 .catch(err => {
-                  res.json({
+                  res.status(400).json({
                     error:
                       'Problem with posts POST request when findByPk in like section of likeOrDislikePost' +
                       err
                   })
                 })
             })
-            .catch(err => res.json({ error: 'Problem in findByPk ' + err }))
+            .catch(err => res.status(500).json({ error: 'Problem in Post findByPk function in likeDislike function : ' + err }))
         }
       })
+      /* SUPERFLU  !!! */
       .then(value => {
         if (alreadyReact === true && value != 0) {
             /* Cherche dans la table 'LikePosts' pour detruire le like ou dislike */
@@ -274,7 +285,7 @@ exports.likeOrDislikePost = (req, res) => {
         }
       ]
     })
-    .then(()=> res.status(200).json("Like or dislike deleted success ! ") )
+    .then(()=> res.status(200).json({message:"Reaction deleted success"}) )
     .catch(err => console.log(err))
     })
     .catch(err => console.log(err))

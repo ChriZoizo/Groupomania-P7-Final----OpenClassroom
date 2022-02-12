@@ -101,7 +101,7 @@ exports.login = (req, res) => {
           }
           res.status(200).json({
             /* Voir avec le FRONT pour savoir qui en faire (envoyer dans le header des req et/ou params) */
-            token: jwt.sign({ userId: user._id }, process.env.ILOVESALT, {
+            token: jwt.sign({ userId: user.id }, process.env.ILOVESALT, {
               expiresIn: '168h'
             }),
             userInfos: userFinded

@@ -23,7 +23,7 @@ $text-clear: #eeeeee;
 $primary-font: Montserrat;
 $secondary-font: Montserrat;
 
-$breakpoints: ("phone-small": 600px, "phone": 800px, "phone-big": 900px, "tablet": 1024px, 'notebook': 1280px, "desktop": 1600px);
+$breakpoints: ("xxs" :400px, "phone-small": 600px, "phone": 800px, "phone-big": 900px, "tablet": 1024px, 'notebook': 1280px, "desktop": 1600px);
 
 /* MIXINS */
 /* colorations */
@@ -66,8 +66,11 @@ $breakpoints: ("phone-small": 600px, "phone": 800px, "phone-big": 900px, "tablet
 /* GLOBALE */
 /* BALISE */
 
-body {
-  margin: 0
+body, html {
+  margin: 0;
+  @media screen and (max-width: map-get($breakpoints, "xxs")){
+    width: 100%;
+  }
 }
 
 label {

@@ -96,9 +96,14 @@ export default {
           this.isWriting = false;
           const alertDatas = ({'type': "success", 'content': "Vous publication a été.... publié ! (j'ai pas trouvé mieux XD)' ", "header": "Publication accepté !"})
           this.$emit('alert', alertDatas )
+          setTimeout(this.refreshView, 2500)
         })
         .catch((err) => console.log(err));
     },
+
+    refreshView() {
+      history.go(0)
+    }
   },
 };
 </script>

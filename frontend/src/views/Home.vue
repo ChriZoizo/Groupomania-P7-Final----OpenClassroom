@@ -9,6 +9,7 @@
       <PostList
         loaderMessage="Chargement de la page d'accueil ..."
         :postsArray="this.allPosts"
+         v-bind="$attrs"
       />
     </section>
   </div>
