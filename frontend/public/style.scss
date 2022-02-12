@@ -23,7 +23,7 @@ $text-clear: #eeeeee;
 $primary-font: Montserrat;
 $secondary-font: Montserrat;
 
-$breakpoints: ("xxs" :400px, "phone-small": 600px, "phone": 800px, "phone-big": 900px, "tablet": 1024px, 'notebook': 1280px, "desktop": 1600px);
+$breakpoints: ("xxs":400px, "phone-small": 600px, "phone": 800px, "phone-big": 900px, "tablet": 1024px, 'notebook': 1280px, "desktop": 1600px);
 
 /* MIXINS */
 /* colorations */
@@ -119,13 +119,35 @@ height: 100%;
   button {
     font-family: "Montserrat", sans-serif;
   }
+
+  h1,h2 {
+    text-align: center;
+  }
   
   p,
   span {
     font-size: 16px;
+    @media screen and (max-width: map-get($breakpoints, "phone")){
+      font-size: 14px !important;
+    }
+  }
+  
+  /* classes utilitaires */
+  .text-app {
+    font-size: 17px;
+    @media screen and (max-width: map-get($breakpoints, "phone")){
+      font-size: 14px !important;
+    }
+
+    &--sec {
+    font-size: 16px;
+    @media screen and (max-width: map-get($breakpoints, "phone")){
+        font-size: 11px !important;
+      }
+    }
   }
 
-  /* classes utilitaires */
+
   .tuto {
     font-family: $primary-font;
     font-size: 14px;

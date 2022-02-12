@@ -195,7 +195,7 @@ export default {
     }
 
     &__text {
-      font-size: 40px;
+      font-size: 40px !important;
       font-family: $secondary-font;
     }
   }

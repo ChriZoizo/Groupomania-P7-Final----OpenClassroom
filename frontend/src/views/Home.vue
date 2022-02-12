@@ -1,9 +1,7 @@
 <template>
-  <!-- View contenant les composant 'postCreate' et 'postList'. C'est la page d'accueil de l'App  -->
+  <!-- - *** - View contenant les composant 'postCreate' et 'postList'. C'est la page d'accueil de l'App  -->
   <div class="home">
     <div class="home__title"><h1>Bienvenue sur Groupomania</h1></div>
-
-<!--     <img alt="Vue logo" src="../assets/logo.png" /> -->
     <section>
       <PostCreateFormular v-bind="$attrs"/>
       <PostList
@@ -61,7 +59,15 @@ export default {
     flex-direction: row;
     justify-content: center;
     & h1 {
-
+    @media screen and (max-width: map-get($breakpoints, "phone")){
+      font-size: 24px !important;
+    }
+    @media screen and (max-width: map-get($breakpoints, "phone-small")){
+      font-size: 22px !important;
+    }
+    @media screen and (max-width: map-get($breakpoints, "xxs")){
+      font-size: 19px !important;
+    }
     }
   }
 }

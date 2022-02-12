@@ -114,6 +114,15 @@ export default {
   display: flex;
   flex-direction: column;
 
+  & h2 {
+        @media screen and (max-width: map-get($breakpoints, "phone")){
+      font-size: 19px !important;
+    }
+        @media screen and (max-width: map-get($breakpoints, "xxs")){
+      font-size: 16px !important;
+    }
+  }
+
   &__button-init {
     border: none;
     padding: 5px 7px;

@@ -96,13 +96,34 @@ export default {
 .navbar {
   z-index: 6;
   padding: 0 50px;
-  max-height: 130px;
+  height: 130px;
   display: flex;
   justify-content: space-between;
   background-color: $primary-color;
+  @media screen and (max-width: map-get($breakpoints, "xxs")) {
+    flex-direction: column;
+    height: unset !important;
+    padding: 0 0 10px 0;
+  }
 
   &__left {
     width: 200px;
+    @media screen and (max-width: map-get($breakpoints, "xxs")) {
+      width: 100%;
+      padding: 0 10px
+    }
+
+    & .main-logo {
+      max-height: 120px !important;
+      max-width: 120px;
+      @media screen and (max-width: map-get($breakpoints, "xxs")) {
+        max-height: 100px !important;
+        max-width: unset;
+        width: calc(100% - 20px);
+        object-fit: cover;
+
+      }
+    }
 
     & .main-logo {
       max-height: 100%;
@@ -115,14 +136,13 @@ export default {
 
     & .nav-link {
       margin: 5px 15px;
-      &:active{
-        color: $tertiary-color !important
-        }
-      &:focus{
-
-        color: $tertiary-color !important
-        }
-/*       &:visited{
+      &:active {
+        color: $tertiary-color !important;
+      }
+      &:focus {
+        color: $tertiary-color !important;
+      }
+      /*       &:visited{
         color: red !important
         } */
     }
@@ -160,19 +180,26 @@ export default {
     }
 
     &--dropdown {
-      @media screen and (min-width: map-get($breakpoints,"phone" )) {
-        display: none;
-      }
       position: relative;
       float: left;
       width: 150px;
       display: flex;
       align-items: center;
+                @media screen and (min-width: map-get($breakpoints,"phone" )) {
+                  display: none;
+                }
+              @media screen and (max-width: map-get($breakpoints, "xxs")) {
+          width: 100%;
+        }
 
       & .dropdown-button {
         font-family: $primary-font; /* Important for vertical align on mobile phones */
         font-size: 22px;
         margin: 0;
+        @media screen and (max-width: map-get($breakpoints, "xxs")) {
+          width: 100%;
+          border-radius: 0
+        }
       }
 
       & .dropdown-content {
@@ -234,6 +261,5 @@ export default {
     }
     border: none;
   }
-
 }
 </style>

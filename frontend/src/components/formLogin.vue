@@ -1,3 +1,4 @@
+<!-- * - COMPOSANT : Login / Logout Forumlaire -->
 <template>
   <section class="formularLog container">
   <div class="formularLog-container">
@@ -166,8 +167,15 @@ label {
   display: block;
   width: 25%;
   text-align: right;
-  font-size: 1.5em;
+  font-size: 22px;
   margin: auto;
+
+      @media screen and (max-width: map-get($breakpoints, "notebook")){
+      font-size: 19px !important;
+    }
+      @media screen and (max-width: map-get($breakpoints, "tablet")){
+      font-size: 16px !important;
+    }
 }
 input,
 textarea {
@@ -179,6 +187,15 @@ textarea {
   margin: auto;
   font-family: $primary-font;
   font-size: 19px;
+        @media screen and (max-width: map-get($breakpoints, "phone")){
+      font-size: 16px !important;
+      width: 65%;
+      margin-left: 0
+    }
+        @media screen and (max-width: map-get($breakpoints, "phone-small")){
+      width: 100%;
+      margin-right: 0
+    }
 
   &:focus {
     border-color: white;
@@ -190,6 +207,9 @@ textarea {
   justify-content: flex-start;
   padding-bottom: 15px;
   margin: auto;
+        @media screen and (max-width: map-get($breakpoints, "phone-small")){
+      flex-direction: column;
+    }
 }
 
 /* .border-box {
@@ -198,13 +218,14 @@ textarea {
 .formularLog {
   margin: auto;
   width: 60%;
-  opacity: 0.95;
   padding-top: 20px;
-  border-radius: 30px;
   text-align: center;
   margin-top: 20px;
   margin-bottom: 40px;
   align-items: center;
+      @media screen and (max-width: map-get($breakpoints, "phone")){
+      width: 100%
+    }
   & p,
   h2 {
     padding: 0 15px 0 15px;
@@ -213,6 +234,10 @@ textarea {
   &__header-buttons {
     display: flex;
     justify-content: center;
+          @media screen and (max-width: map-get($breakpoints, "phone")){
+     width: 100%;
+     flex-direction: column;
+    }
   }
 
   button {
@@ -224,24 +249,35 @@ textarea {
     font-size: 18px;
     color: $grey-light-color;
       background-color: $primary-color;
+                @media screen and (max-width: map-get($breakpoints, "phone")){
+     width: 100%;
+     border-radius: 0;
+     padding: 5px 0;
+     margin: 5px 0;
+    }
     &:hover {
       background-color: $secondary-color;
   color: $tertiary-color;
       transition-duration: 500ms;
-      transform: scale(0.96);
     }
 }
 
 & .log-button {
   font-size: 30px;
   height: 60px;
-  margin: 7px 10px;
   width: 60%;
       &:hover {
       background-color: $secondary-color;
   color: $tertiary-color;
       transition-duration: 500ms;
-      transform: scale(0.96);
+    }
+
+              @media screen and (max-width: map-get($breakpoints, "phone")){
+    border-radius: 30px !important  ;
+    }
+              @media screen and (max-width: map-get($breakpoints, "phone-small")){
+     width: 100%;
+border-radius: 0 !important;
     }
 }
 
