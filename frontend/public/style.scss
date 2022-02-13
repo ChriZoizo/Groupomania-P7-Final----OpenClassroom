@@ -1,8 +1,8 @@
-/* Fonts ( 'Montserrat' ) */
-@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+/* Fonts ( 'Montserrat' + 'Lobster' Inutilisé) */
+@import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
 
-/* VARIABLES */
+/* - VARIABLES - */
 /* Couleurs  */
 $primary-color: #171c22;
 $secondary-color: #393e46;
@@ -19,21 +19,22 @@ $grey-color: #7e7e7e;
 
 $text-clear: #eeeeee;
 
-
+/* Fonts */
 $primary-font: Montserrat;
 $secondary-font: Montserrat;
 
-$breakpoints: ("xxs":400px, "phone-small": 600px, "phone": 800px, "phone-big": 900px, "tablet": 1024px, 'notebook': 1280px, "desktop": 1600px);
+/* Map contenant les breakpoints */
+$breakpoints: (
+  "xxs": 400px,
+  "phone-small": 600px,
+  "phone": 800px,
+  "phone-big": 900px,
+  "tablet": 1024px,
+  "notebook": 1280px,
+  "desktop": 1600px,
+);
 
 /* MIXINS */
-/* colorations */
-@mixin set-color($color) {
-  color: $color;
-}
-
-@mixin set-background-color($color) {
-  background-color: $color;
-}
 
 /* FlexBox */
 @mixin flexCol-spacearound {
@@ -55,20 +56,22 @@ $breakpoints: ("xxs":400px, "phone-small": 600px, "phone": 800px, "phone-big": 9
   flex-direction: column;
 }
 
+/* Filtre / transformation basic */
 @mixin blur-filter {
-  filter: blur(1px)
+  filter: blur(1px);
 }
 
 @mixin button-transform-main {
-  transform: scale(1.005)
+  transform: scale(1.005);
 }
 
-/* GLOBALE */
-/* BALISE */
+/* - GLOBALE - */
+/* Balise */
 
-body, html {
+body,
+html {
   margin: 0;
-  @media screen and (max-width: map-get($breakpoints, "xxs")){
+  @media screen and (max-width: map-get($breakpoints, "xxs")) {
     width: 100%;
   }
 }
@@ -77,249 +80,255 @@ label {
   font-family: $primary-font;
 }
 
-/* Classe de la DIV contenant le router-view (Toute l'app SAUF la Navbar et le Footer */
-.router-view{
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+span,
+button {
+  font-family: "Montserrat", sans-serif;
+}
+
+h1,
+h2 {
+  text-align: center;
+}
+
+p,
+span {
+  font-size: 16px;
+  @media screen and (max-width: map-get($breakpoints, "phone")) {
+    font-size: 14px !important;
+  }
+}
+
+/* Classes et ID */
+
+.router-view {
+  /* Classe de la DIV contenant le router-view (scope sur toute l'app SAUF la Navbar et le Footer)
+  Elle est surtout utilisé pour gerer le 'width' du <router-view> */
   min-height: calc(100vh - 270px);
   width: calc(100vw - 600px);
   margin: 0 auto;
-  @media screen and (max-width: map-get($breakpoints, "desktop")){
+  @media screen and (max-width: map-get($breakpoints, "desktop")) {
     width: calc(100vw - 400px);
   }
-  @media screen and (max-width: map-get($breakpoints, "notebook")){
+  @media screen and (max-width: map-get($breakpoints, "notebook")) {
     width: calc(100vw - 200px);
   }
-  @media screen and (max-width: map-get($breakpoints, "phone")){
+  @media screen and (max-width: map-get($breakpoints, "phone")) {
     width: 100%;
   }
-  @media screen and (max-width: map-get($breakpoints, "phone")){
+  @media screen and (max-width: map-get($breakpoints, "phone")) {
     width: 100%;
   }
-
 }
 
 #view {
-   position: relative;
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   min-height: 100vh;
- } 
-
-.container {
-height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
 }
 
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  span,
-  button {
-    font-family: "Montserrat", sans-serif;
+.container {
+  height: 100%;
+}
+
+/* classes utilitaires */
+.text-app {
+  font-size: 17px;
+  @media screen and (max-width: map-get($breakpoints, "phone")) {
+    font-size: 14px !important;
   }
 
-  h1,h2 {
-    text-align: center;
-  }
-  
-  p,
-  span {
+  &--sec {
     font-size: 16px;
-    @media screen and (max-width: map-get($breakpoints, "phone")){
-      font-size: 14px !important;
+    @media screen and (max-width: map-get($breakpoints, "phone")) {
+      font-size: 11px !important;
     }
   }
-  
-  /* classes utilitaires */
-  .text-app {
-    font-size: 17px;
-    @media screen and (max-width: map-get($breakpoints, "phone")){
-      font-size: 14px !important;
-    }
+}
 
-    &--sec {
-    font-size: 16px;
-    @media screen and (max-width: map-get($breakpoints, "phone")){
-        font-size: 11px !important;
-      }
-    }
-  }
+.tuto {
+  /* la classe '.tuto' est utilisé pour le style des petites informations affiché a l'utilisateur */
+  font-family: $primary-font;
+  font-size: 14px;
+  color: $primary-color;
+  margin-top: 5px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
 
+.remove-decoration {
+  /* Utilisé pour supprimé le 'underline' des liens */
+  text-decoration: none;
+  color: $primary-color;
+}
 
-  .tuto {
-    font-family: $primary-font;
-    font-size: 14px;
-    color: $primary-color;
-    margin-top: 5px;
-    margin-right: 10px;
-    margin-left: 10px;
-  }
+.text-center {
+  text-align: center;
+}
 
-  .remove-decoration {
-    text-decoration: none;
-    color: $primary-color
-  }
+.clear-text {
+  color: $text-clear;
+}
 
-  .text-center{
-    text-align: center;
-  }
-  
-  .clear-text {
-    color: $text-clear
-  }
-  .bold {
-    font-weight: bold;
-  }
-  .primary-font {
-      font-family: montserrat;
-  }
-  .contained {
-    object-fit: contain;
-  }
+.bold { /* Met en gras le text */
+  font-weight: bold;
+}
 
-  .flex-row {
-    display: flex; 
-    flex-direction: row;
-  }
-  
-  .flex-col {
-    display: flex; 
-    flex-direction: column;
-  }
+.primary-font { /* Applique la font primaire */
+  font-family: montserrat;
+}
 
-  .rounded {
-    border-radius: 30px
-  }
+.contained {
+  object-fit: contain;
+}
 
-  /* Colorisation */
-  .primary-colored {
-    color: $primary-color
-  }
-  .tertiary-colored {
-    color: $tertiary-color
-  }
-  .green {
-    color: green !important;
-  }
-  
-  .grey {
-    color: grey;
-  }
+.flex-row { /* Pour appliqué d'office display 'flex' en direction 'row' */
+  display: flex;
+  flex-direction: row;
+}
 
-  .red {
-    color: darkred !important;
-  }
+.flex-col {/* Pour appliqué d'office display 'flex' en direction 'column' */
+  display: flex;
+  flex-direction: column;
+}
 
-  /* Style */
+.rounded {/* Pour arrondir les angles de certains objets */
+  border-radius: 30px;
+}
 
-  .shadowed{
-    -webkit-box-shadow: 1px 1px 12px 0 #000000;
-    -moz-box-shadow: 1px 1px 12px 0 #000000;
-    box-shadow: 1px 1px 12px 0 #000000;
-  }
-  .shadow-card{
-    -webkit-box-shadow: 1px 1px 8px 0 $primary-color;
-    -moz-box-shadow: 1px 1px 8px 0 $primary-color;
-    box-shadow: 1px 1px 8px 0 $primary-color;
-    &:hover{
-      transition: 500ms;
+/* Colorisation */
+.primary-colored {
+  color: $primary-color;
+}
+.tertiary-colored {
+  color: $tertiary-color;
+}
+.green {/* Utilisé pour les 'like' */
+  color: green !important;
+}
+
+.grey {/* Utilisé pour les bouton 'like'/'dislike' lorsque non actif */
+  color: grey;
+}
+
+.red {/* Utilisé pour les 'dislike' */
+  color: darkred !important;
+}
+
+/* Style */
+
+/* Ajouter un ombrage */
+.shadowed {
+  -webkit-box-shadow: 1px 1px 12px 0 #000000;
+  -moz-box-shadow: 1px 1px 12px 0 #000000;
+  box-shadow: 1px 1px 12px 0 #000000;
+}
+.shadow-card {
+  -webkit-box-shadow: 1px 1px 8px 0 $primary-color;
+  -moz-box-shadow: 1px 1px 8px 0 $primary-color;
+  box-shadow: 1px 1px 8px 0 $primary-color;
+  &:hover {
+    transition: 500ms;
     -webkit-box-shadow: 1px 1px 15px 0 $primary-color;
     -moz-box-shadow: 1px 1px 15px 0 $primary-color;
     box-shadow: 1px 1px 15px 0 $primary-color;
-
   }
-  }
+}
 
-
-  .underlined{
-    position:relative;
-    &::after {
-      content: "";
-      height: 2px;
-      width: 100px;
-      background: $tertiary-color;
-      position: absolute;
-      left: 50px;
-      bottom: -5px;
-    }
+/* Ajouter un soulignement partiel */
+.underlined {
+  position: relative;
+  &::after {
+    content: "";
+    height: 2px;
+    width: 100px;
+    background: $tertiary-color;
+    position: absolute;
+    left: 50px;
+    bottom: -5px;
   }
-  .underlined--secondary-color{
-    position:relative;
-    &::after {
-      content: "";
-      height: 2px;
-      width: 80%;
+}
+.underlined--secondary-color {
+  position: relative;
+  &::after {
+    content: "";
+    height: 2px;
+    width: 80%;
+    background: $secondary-color;
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+  }
+}
+.underlined--grey {
+  position: relative;
+  &::after {
+    content: "";
+    height: 1px;
+    width: 80%;
+    background: $grey-color;
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+  }
+}
+
+/* - BOUTONS - */
+
+.button { /* Boutton principal */
+  &--main {
+    cursor: pointer;
+    color: $grey-light-color;
+    background-color: $primary-color;
+    &:hover {
       background: $secondary-color;
-      position: absolute;
-      left: 0;
-      bottom: -5px;
+      color: $tertiary-color;
+      transition-duration: 500ms;
+      @include button-transform-main;
     }
-  }
-  .underlined--grey{
-    position:relative;
-    &::after {
-      content: "";
-      height: 1px;
-      width: 80%;
-      background: $grey-color;
-      position: absolute;
-      left: 0;
-      bottom: -2px;
+    &.active {
+      background: $secondary-color;
+      color: $tertiary-color;
     }
   }
 
-  /* Bouttons */
-
-  .button {
-    &--main{
-      cursor: pointer;
-      color: $grey-light-color;
-      background-color: $primary-color;
-      &:hover {
-        background: $secondary-color;
-        color: $tertiary-color;
-        transition-duration: 500ms;
-        @include button-transform-main
-      }
-      &.active {
-        background: $secondary-color;
-        color: $tertiary-color;
-      }
+  &--secondary { /* Bouton secondaire */
+    cursor: pointer;
+    color: $grey-light-color;
+    background-color: $secondary-color;
+    &:hover {
+      background: $primary-color;
+      color: $tertiary-color;
+      transition-duration: 500ms;
+      @include button-transform-main;
     }
-    
-    &--secondary{
-      cursor: pointer;
-      color: $grey-light-color;
-      background-color: $secondary-color;
-      &:hover {
-        background: $primary-color;
-        color: $tertiary-color;
-        transition-duration: 500ms;
-        @include button-transform-main
-      }
-      &.active {
-        background: $primary-color;
-        color: $tertiary-color;
-      }
+    &.active {
+      background: $primary-color;
+      color: $tertiary-color;
     }
+  }
 
-    &--danger {
-      cursor: pointer;
-      color: $grey-light-color;
-      background-color: $primary-color;
+  &--danger { /* Bouton 'danger' utilisé pour les actions de suppression */
+    cursor: pointer;
+    color: $grey-light-color;
+    background-color: $primary-color;
     &:hover {
       background: $secondary-color;
       color: $danger-color-lighter;
       font-weight: bolder;
       transition-duration: 500ms;
-      @include button-transform-main
+      @include button-transform-main;
     }
-    
     &.active {
       background: $secondary-color;
       color: $danger-color;
     }
-    }
   }
+}

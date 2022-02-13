@@ -34,7 +34,7 @@ sequelize
     console.log('connection etablis')
   })
   .catch(err => {
-    console.error('Problémé de conneciton:', err)
+    console.error('Problémé de connection:', err)
   })
 
 /* Configuration de "cors" pour eviter les erreurs de cross-origin */

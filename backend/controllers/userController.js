@@ -129,7 +129,7 @@ exports.updateUserProfil = (req, res) => {
     { where: { id: req.params.id } }
   )
     .then(user => {
-      res.status(200).json({ message: 'Informations utilisateur modifié !' })
+      res.status(200).json({ user })
     })
     .catch(err => {
       res.json({ error: 'Problem in updateUserProfil' + err })
@@ -145,8 +145,8 @@ exports.deleteUser = (req, res) => {
     .then(user => {
       user.destroy()
     })
-    .then(val => {
-      res.status(200).json({ message: val })
+    .then(user => {
+      res.status(200).json({ message: user })
     })
     .catch(err => {
       res.json({ error: err })

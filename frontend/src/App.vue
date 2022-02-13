@@ -6,7 +6,7 @@
     <!-- - Login/Signup Section - emet un evenement 'signed' contenant les infos du user (voir la methode 'signed')
     (i)ignorée lorsque la data 'isSigned' devient true -->
     <div v-if="isSigned != true">
-      <Login v-on:signed="signed"/>
+      <Login v-on:signed="signed" v-on:alert="displayAlert"/>
     </div>
     <!-- - Router-View - contient un attribut special ':key' utile pour l'itilsation du  -->
     <div class="router-view" v-if="isSigned == true">

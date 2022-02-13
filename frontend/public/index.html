@@ -1,21 +1,25 @@
 <!DOCTYPE html>
+<!-- Page HTML dans laquelle l'App 'VUE' va etre injecté -->
 <html lang="">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no">
-    <!-- FontAwesome ! -->
+    <!-- Import FontAwesome ! -->
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="icon" href="<%= BASE_URL %>favicon.png">
+    <!-- Style basic CSS -->
     <link rel="stylesheet" href="style.css">
+    <!-- Style Basic SCSS (contient variable, maps, etc...) -->
     <link rel="stylesheet" href="style.scss">
+    <!-- Titre de l'onglet -->
     <title>Groupomania</title>
   </head>
   <body>
-    <noscript>
+    <noscript><!-- Dans le cas ou le navigateur de l'utilisateur n'aurait pas Javascript activé, ce message s'affiche  -->
       <strong> Nous sommes désolé, le service de reseau social d'entreprise Groupomania ne fonctionne pas correctement si JavaScript n'est pas activé dans votre navigateur. Veuillez l'activer puis reéssayer.</strong>
     </noscript>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <!-- <div> dans laquelle l'app est injecté -->
   </body>
 </html>

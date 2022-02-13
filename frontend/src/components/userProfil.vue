@@ -133,7 +133,7 @@ export default {
       /* currentUserToken = STRING : Token generé lors de la connexion par JWT (backend) */
       currentUserToken: localStorage.getItem("userToken"),
 
-      /* user = OBJECT : contiens les données de l'utilisateur. Utilisé par les input text lors des modifications du profil */
+      /* user = OBJECT : contiens les données de l'utilisateur. Utilisé par les input text lors des modifications du profil (voir Backend User Modele ou Controlleur pour plus de details) */
       user: {},
     };
   },

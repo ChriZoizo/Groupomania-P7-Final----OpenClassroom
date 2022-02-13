@@ -1,3 +1,4 @@
+/* Importation modul "JsonWebToken" */
 const jwt = require('jsonwebtoken')
 
 

@@ -1,0 +1,23 @@
+# Sel pour les hashages. Notemment celui des tokens
+ILOVESALT='SALT_FOR_HASH'
+
+
+# Mots de passe de la BDD (Connexion MySql)
+DB_PASSWORD=Freedom7256
+
+
+# Mots de passe de la BDD (Connexion Sequelize)
+DB_CONNECTION_PASSWORD=newpassword
+
+# Utilisateur pour connection a la BDD  (Connexion Sequelize)
+DB_CONNECTION_USER=newuser
+
+# Nom d'hote pour connection a la BDD  (Connexion Sequelize)
+DB_CONNECTION_HOST=localhost
+
+# Nom de la BDD  (Connexion Sequelize)
+DB_CONNECTION_DATABASE=groupomania_db_dev  
+
+
+# Numero du port 'localhost'
+PORT=3000
