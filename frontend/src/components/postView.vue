@@ -7,7 +7,7 @@
     <h3 class="post-view-card__subtitle">
       <span class="bold">de </span>
       <router-link class="remove-decoration" :to="'/profil/' + post.userId">{{
-        post.User.nickname || post.User.email
+        post.User.nickname || post.User.email ||"Utilisateur Inconnus"
       }}</router-link>
     </h3>
     <!-- CARD BEGIN -->
@@ -128,7 +128,7 @@
                   class="remove-decoration"
                   :to="'/profil/' + comment.User.id"
                   ><p>
-                    {{ comment.User.nickname || comment.User.email }} :
+                    {{ comment.User.nickname || comment.User.email ||"Utilisateur Inconnus"}} :
                   </p></router-link
                 >
               </div>

@@ -31,7 +31,7 @@
               <router-link
                 class="remove-decoration post-card--background bold post-card__header-userName underlined--secondary-color"
                 :to="'/profil/' + post.userId"
-                >{{ post.User.nickname || post.User.email }}</router-link
+                >{{ post.User.nickname || post.User.email || "Utilisateur Inconnus" }}</router-link
               >
             </div>
             <!-- Bouton DELETE -->
@@ -158,7 +158,7 @@
                   :to="'/post/' + comment.UserId"
                   ><p class="text-app--sec">
                     <i class="far fa-comments"></i> -
-                    {{ comment.User.nickname || comment.User.email }}
+                    {{ comment.User.nickname || comment.User.email || "Utilisateur Inconnus"}}
                   </p></router-link
                 >
               </div>
