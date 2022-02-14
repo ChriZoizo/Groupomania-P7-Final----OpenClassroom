@@ -31,7 +31,11 @@
               <router-link
                 class="remove-decoration post-card--background bold post-card__header-userName underlined--secondary-color"
                 :to="'/profil/' + post.userId"
-                >{{ post.User.nickname || post.User.email || "Utilisateur Inconnus" }}</router-link
+                >{{
+                  post.User.nickname ||
+                  post.User.email ||
+                  "Utilisateur Inconnus"
+                }}</router-link
               >
             </div>
             <!-- Bouton DELETE -->
@@ -81,7 +85,7 @@
               <!-- like -->
               <div
                 v-if="reactionSlot[post.id].liked"
-                v-on:click.prevent="reactToPost(0, post.id)"
+                v-on:click="reactToPost(0, post.id)"
                 class="reaction__button"
               >
                 <i class="fas fa-thumbs-up green"></i
@@ -91,7 +95,7 @@
               </div>
               <div
                 v-if="!reactionSlot[post.id].liked"
-                v-on:click.prevent="reactToPost(1, post.id)"
+                v-on:click="reactToPost(1, post.id)"
                 class="reaction__button"
               >
                 <i class="fas fa-thumbs-up grey"></i
@@ -102,7 +106,7 @@
               <!-- dislike -->
               <div
                 v-if="reactionSlot[post.id].disliked"
-                v-on:click.prevent="reactToPost(0, post.id)"
+                v-on:click="reactToPost(0, post.id)"
                 class="reaction__button"
               >
                 <i class="fas fa-thumbs-down red"></i
@@ -112,7 +116,7 @@
               </div>
               <div
                 v-if="!reactionSlot[post.id].disliked"
-                v-on:click.prevent="reactToPost(-1, post.id)"
+                v-on:click="reactToPost(-1, post.id)"
                 class="reaction__button"
               >
                 <i class="fas fa-thumbs-down grey"></i
@@ -122,15 +126,25 @@
               </div>
             </div>
           </div>
-              <div id="appendice"
-                class="post-card__comments-section__comments appendice"
-              >
-               Pour commenter, cliquez ici..
-              </div>
         </router-link>
 
         <!-- CARD APPEND Comments -->
         <div class="post-card__comments-section">
+          <form
+            @submit.prevent="addComment(post.id)"
+            class="post-card__comments-section__write-form"
+            id="form-comment-postList"
+          >
+            <textarea
+              name="comment"
+              id="comment"
+              v-model="comments[post.id]"
+              placeholder="Commentez cette publication..."
+              maxlength="200"
+              required
+            ></textarea>
+            <input type="submit" value="Publier votre commentaire" />
+          </form>
           <!-- Liste des commentaires de la publications -->
           <div
             v-if="post.Comments.length != 0"
@@ -147,7 +161,11 @@
                   :to="'/post/' + comment.UserId"
                   ><p class="text-app--sec">
                     <i class="far fa-comments"></i> -
-                    {{ comment.User.nickname || comment.User.email || "Utilisateur Inconnus"}}
+                    {{
+                      comment.User.nickname ||
+                      comment.User.email ||
+                      "Utilisateur Inconnus"
+                    }}
                   </p></router-link
                 >
               </div>
@@ -159,6 +177,12 @@
               class="post-card--background remove-decoration"
               :to="'/post/' + post.id"
             >
+              <div
+                class="post-card__comments-section__comments appendice"
+                v-if="post.Comments.length > 3"
+              >
+                ...
+              </div>
             </router-link>
           </div>
         </div>
@@ -196,32 +220,11 @@ export default {
 
   /* HOOK DE CYCLE DE VIE */
   beforeUpdate() {
-    /*  this.createCommentsSlot(); */
     this.createReactionSlot();
-    this.createCommentsSlot();
   },
-
-  mounted() {},
 
   /* METHODS */
   methods: {
-    /* createCommentsSlot: recupere la props 'postArray' (Array contenant les Posts a afficher). 
-    Puis créer les datas qui serviront aux formulaires de commentaires en iterant sur la props 'postArray'. Sans cela, ils seraient tous liés
-    Enfin, change le data 'loading' en false */
-    createCommentsSlot() {
-      for (const post of this.postsArray) {
-        console.log(post.id);
-        /* recuperation de l'ID du post qui servira de "key" */
-        let index = post.id;
-        /* Ajout de l'Objet Vide dans 'initialiBoard'*/
-        this.comments[index] = "";
-      }
-      if (this.comments.length > 0) {
-        this.dataReady = true;
-        this.createReactionSlot();
-      }
-    },
-
     createReactionSlot() {
       for (const post of this.postsArray) {
         let reaction = post.LikePosts.find(
@@ -344,13 +347,6 @@ export default {
   margin: 40px 0;
 }
 
-/* Petite zone noire visible lorsque il y a plusq de trois commentaires au Post */
-      #appendice {
-        background-color: $primary-color;
-        color: white;
-        background-color: $primary-color !important;
-      }
-
 /* Section Post */
 .post {
   margin: 35px 0;
@@ -432,26 +428,26 @@ export default {
         justify-content: center !important;
       }
     }
-/* POST Card footer */
+    /* POST Card footer */
     &__footer {
       padding: 0 30px;
       display: flex;
       flex-direction: row-reverse;
       align-items: center;
       justify-content: space-between;
-/* Like/Dislike Section */
+      /* Like/Dislike Section */
       &__reaction {
         min-width: 120px;
         justify-content: space-between;
       }
-/* Date */
+      /* Date */
       &__date {
         & span {
           font-size: 13px;
         }
       }
     }
-/* COMMENT Post  */
+    /* COMMENT Post  */
     &__comments-section {
       /* Formulaire Comment */
       & form {
@@ -475,7 +471,7 @@ export default {
         @media screen and (max-width: map-get($breakpoints, "phone-small")) {
           padding: 4px 5px;
         }
-/* Auteur du commentaire */
+        /* Auteur du commentaire */
         &__left-author {
           color: $secondary-color;
           min-width: 15%;
@@ -484,7 +480,7 @@ export default {
           flex-direction: column;
           justify-content: center;
         }
-/* Contenus du commentaire */
+        /* Contenus du commentaire */
         &__right-content {
           width: 75%;
           font-size: 15px;
@@ -496,7 +492,7 @@ export default {
           @media screen and (max-width: map-get($breakpoints, "phone-small")) {
             width: 70%;
           }
-/* Separateur entre auteur et contenus de commenbtaire */
+          /* Separateur entre auteur et contenus de commenbtaire */
           &::after {
             content: "";
             border: black 1px solid;
@@ -509,20 +505,25 @@ export default {
         }
       }
 
+      & .appendice {
+        background-color: $primary-color;
+        color: white;
+        background-color: $primary-color !important;
+      }
     }
-/* Modificateur pour changer la couleur du fond */
+    /* Modificateur pour changer la couleur du fond */
     &--background {
       background-color: lighten($color: $primary-color, $amount: 80);
     }
   }
-/* TEXTAREA COMMENT style */
+  /* TEXTAREA COMMENT style */
   & textarea {
     font-size: 15px !important;
     @media screen and (max-width: map-get($breakpoints, "phone-small")) {
       font-size: 12px !important;
     }
   }
-/* SUBMIT COMMENT bouton */
+  /* SUBMIT COMMENT bouton */
   & input[type="submit"] {
     font-size: 15px;
     height: 100%;
@@ -535,7 +536,7 @@ export default {
       color: $tertiary-color;
     }
   }
-/* Bouton like/dislike */
+  /* Bouton like/dislike */
   & .reaction {
     &__button {
       min-width: 60px;

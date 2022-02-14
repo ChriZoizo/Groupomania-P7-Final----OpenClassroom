@@ -34,7 +34,7 @@ export default {
     };
   },
 
-  beforeMount() {
+  created() {
     this.getAllPosts() 
   },
 
