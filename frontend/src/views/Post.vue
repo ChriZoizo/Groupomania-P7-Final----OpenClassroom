@@ -1,4 +1,6 @@
+<!-- *** - Publication View-->
 <template>
+<!-- Composant : View d'une publication -->
     <PostView/>
 </template>
 
@@ -12,6 +14,4 @@ components: {
 }
 }
 </script>
-<style lang="scss">
 
-</style>

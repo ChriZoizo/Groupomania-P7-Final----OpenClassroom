@@ -1,4 +1,8 @@
+<!-- Mythique page!! -->
 <template>
+<!-- Page sacrée d'internet. Ce texte béni retrouvé dans le cratéere du nouveau mexique 'Chicxulub'. On suppose qu'il grandement participé au declin des dinosaures. Tôt ou tard, il risque de faire de meme avec l'espece humaine-->
+<!-- XDD  -->
+<!-- Heu... Je tiens par avance a m'excuser si cette blague deplaît. J'espere sincérement que l'humour est accepté, et surtout que je n'ai heurté personne en comparant l'erreure 404 avec un text saint. (on sait jamais) -->
 <section id="error-404-page container">
 <p>OoOops.. Nous n'avons pas trouver la page que vous desirez.. c'est une :</p>
 <h1>Erreurs <span>404</span></h1>

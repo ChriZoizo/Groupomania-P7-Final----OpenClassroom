@@ -1,6 +1,8 @@
+<!-- *** - Dashboard Administrateur. Affiche la liste des utilisateur-->
 <template>
     <div class="admin-dashboard">
         <section class="admin-dashboard__user-section">
+            <!-- Composant :Liste des utilisateurs -->
         <UserList/>
         </section>
     </div>
@@ -13,17 +15,9 @@ export default{
     components: {
         UserList, 
     },
-
-    data() {
-        
-    },
 }
 </script>
 
 <style lang="scss">
-
-.admin-dashboard {
-
-}
 
 </style>

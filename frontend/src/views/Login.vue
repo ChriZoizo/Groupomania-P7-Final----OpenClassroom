@@ -1,19 +1,16 @@
+<!-- *** - Login/Logout -->
 <template>
-    <LoginFormular/>
+    <LoginSignupForm/>
 </template>
 
 
 <script>
-import LoginFormular from '@/components/formLogin.vue'
+import LoginSignupForm from '@/components/formLogin.vue'
 
 export default {
 name: 'Login',
 components: {
-    LoginFormular
+    LoginSignupForm
 }
 }
 </script>
-
-<style lang="scss">
-
-</style>

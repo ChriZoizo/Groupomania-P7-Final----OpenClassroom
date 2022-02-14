@@ -35,6 +35,7 @@
           <div class="form-group">
             <label for="email">E-mail :</label>
             <input
+              @keypress="checkEmail('email__login')"
               type="email"
               id="email__login"
               name="emailLogin"
@@ -53,6 +54,7 @@
               name="passwordLogin password"
               class="form-control__login"
               placeholder="exemple: pasazertysvp"
+              @keypress="checkPassword('password__login')"
               v-model="inputForm.password"
               required
             />
@@ -84,6 +86,7 @@
               name="emailSignup"
               class="form-control__signup email"
               placeholder="exemple@gogole.com"
+              @keypress="checkEmail('email__signup')"
               v-model="inputForm.email"
               required
             />
@@ -97,11 +100,12 @@
               name="passwordSignup"
               class="form-control__signup password"
               placeholder="Ex: pasazertysvp  ( 7 Charactéres MINIMUM )"
+              @keypress="checkPassword('password__signup')"
               v-model="inputForm.password"
               required
             />
           </div>
-                    <!-- Input Nickname (Nom complet) - lié a la Data 'inputForm.nickname-->
+          <!-- Input Nickname (Nom complet) - lié a la Data 'inputForm.nickname-->
           <div class="form-group">
             <label for="nickname"> Nom complet :</label>
             <input
@@ -110,19 +114,19 @@
               name="nicknameSignup"
               class="form-control__signup nickname"
               placeholder="Ex: Jean Desmoulin"
+              @keypress="checkNickname('nickname__signup')"
               v-model="inputForm.nickname"
               required
             />
           </div>
-                    <!-- Bouton 'Inscription !' declenche la methode 'signup' -->
+          <!-- Bouton 'Inscription !' declenche la methode 'signup' -->
           <button class="log-button">
             <i class="fas fa-sign-in-alt"></i> Inscription !
           </button>
         </form>
-              <!-- END SIGNUP FORM END -->
+        <!-- END SIGNUP FORM END -->
       </div>
     </div>
-    <div v-on:click="test">edfdfdf</div>
   </section>
   <!-- * END SECTION formularLog END -->
 </template>
@@ -130,9 +134,9 @@
 <script>
 /* -- SCRIPT -- */
 export default {
-  name: "Login",
+  name: "LoginSignup",
 
-/* - Data */
+  /* - Data */
   data() {
     return {
       /* displayLoginForm = Boolean : Utilisé pour affiché le formulaire Login */
@@ -154,14 +158,13 @@ export default {
 
   /* - Methodes */
   methods: {
-
     /*. dispayLogin : Methode qui passe la data 'displayLoginForm' en true, et 'displaySignupForm' a false. Ce qui as pour effet d'afficher le formulaire login et 
     faire disparaite le formulaire Signup */
     displayLogin() {
       this.displayLoginForm = true;
       this.displaySignupForm = false;
     },
-        /*. dispaySignup = Methode qui passe la data 'displaySignupForm' en true, et 'displayLoginForm' a false. Ce qui as pour effet d'afficher le formulaire Signup et 
+    /*. dispaySignup = Methode qui passe la data 'displaySignupForm' en true, et 'displayLoginForm' a false. Ce qui as pour effet d'afficher le formulaire Signup et 
     faire disparaite le formulaire login  */
     displaySignup() {
       this.displayLoginForm = false;
@@ -173,69 +176,184 @@ export default {
     - Si 'Then', l'enregistrement est un succées, utilise alors la methode 'displayLogin' pour basculer sur le formulaire de connexion
     - sinon 'Catch' affiche en console une erreur*/
     signup() {
+      this.checkInputDatas(this.inputForm);
       this.axios
         .post("http://localhost:3000/api/user/signup", this.inputForm)
-        .then(() => {this.displayLogin();
-        this.checkInputDatas(this.inputForm)})
-        .catch((err) =>{
-          console.log(err)
-
+        .then(() => {
+          this.displayLogin();
+          this.checkInputDatas(this.inputForm);
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
 
+    /*. checkInputDatas : Methode qui est appelé lors d'une tentative de connexion/inscriptions par la methode 'login()'
+    Elle affiche des alertes si des characteres non valide sont entrées */
     checkInputDatas(datas) {
-/*     let email = datas.email; */
-console.log(datas)
-    let password = datas.password;
-    let nickname = datas.nickname || false;
-    let regExChecker = new RegExp("/[&<>\\`\"{}]/");
-    let checkResult =  regExChecker.test(password)
-
-    if (password.length < 7 || checkResult === true ) {
-console.log('Probleme with password')
-          /* declaration de la constante contenant les données de l'alerte */
-          const alertData = ({
-            "type": "error",
-            "content": "Mot de passe incorrect !",
-            "header": "Connexion Echoué !"
-          });
-                    /* Emission de l'evenement (nommé 'alert') accompagné par la constante ci-dessus */
-          this.$emit("alert", alertData );
-    }
-    if (nickname.length > 0){
-      if (nickname.length > 40 || regExChecker.test(nickname)) {
-          /* declaration de la constante contenant les données de l'alerte */
-          const alertData = ({
-            "type": "error",
-            "content": "Nom complet trop long",
-            "header": "Connexion Echoué !"
-          });
-          /* Emission de l'evenement (nommé 'alert') accompagné par la constante ci-dessus */
-          this.$emit("alert", alertData );
+      let email = datas.email;
+      let password = datas.password;
+      let nickname = datas.nickname || false;
+      const regExChecker = /[&<>\\`"{}]/; /* RegEx qui verifie le format et la validitée globale des charactéres  */ /* RegEx qui permet de detecter les characteres dangeureux. Previent les injections de codes */
+        /* Email Checking */
+      if (regExChecker.test(email)) {
+        /* declaration de la constante contenant les données de l'alerte */
+        const alertData = {
+          type: "error",
+          content: "Votre Email contient un ou plusieurs charactére non valide",
+          header: "Email Incorrect !",
+        };
+        /* Emission de l'evenement (nommé 'alert') accompagné par la constante ci-dessus */
+        this.$emit("alert", alertData);
       }
-    }
-/*     if (email.length >) */
+      /* Mot de passe Checking */
+      if (regExChecker.test(password)) {
+        const alertData = {
+          /* declaration de la constante contenant les données de l'alerte */
+          type: "error",
+          content: `votre Mot de Passe contient un ou plusieurs charactéres non valide`,
+          header: `Mot de Passe incorrect !`,
+        };
+        /* Emission de l'evenement (nommé 'alert') accompagné par la constante ci-dessus */
+        this.$emit("alert", alertData);
+      }
+      /* Nickname Checking */
+      if (nickname !== false && regExChecker.test(nickname)) {
+        /* declaration de la constante contenant les données de l'alerte */
+        const alertData = {
+          type: "error",
+          content:
+            "Votre nom, surnom, appelez ça comme vous voulez, mais il y a des charactéres invalide !",
+          header: "Inscription Echoué !",
+        };
+        /* Emission de l'evenement (nommé 'alert') accompagné par la constante ci-dessus */
+        this.$emit("alert", alertData);
+      }
     },
 
-    /* LOGIN */
+    /*. checkEmail : Methode qui est appelé a change fois que l'utilisateur entre une lettre dans un des textInput 'email'.
+    Accepte en parametre l''id' de l'element HTML concerné (du formulaire login ou signup).
+    Elle posséde 2 constante qui contiennent deux "RegEx" different.
+    'regExChecker' : verifie la presence de charactéres dangeureux, qui pourrait etre utilisé pour injecter du code
+    'emailRegExChecker : qui verifie si le format et les lettres utilisé sont correct pour un email.
+    - A chaque frappe utilisateur dans ce champ, la methode verifie la Data v-bind a a l'input. 
+    - Si il n'y as pas de charactére dangeureux et que son format respect le format "Email", appel la fonction 'displayDOMValidator' en passant
+    l''ID' du champ concerné, ainsi que le String 'valid'.
+    - Si il y a un characteres dangereux ou que le format n'est pas valide et que il y a plus de 7 charactere, appel la fonction 'displayDOMValidator' en passant
+    l''ID' du champ concerné, ainsi que le String 'invalid'. */
+    checkEmail(inputField) {
+      const email = this.inputForm
+        .email; /* Data email qui est v-bind avec les champs 'email' des formulaires */
+      const regExChecker = /[&<>\\`"{}]/; /* RegEx qui permet de detecter les characteres dangeureux. Previent les injections de codes */
+      const emailRegexChecker = /^[^@]+@[^@]+\.[^@]+$/; /* RegEx qui verifie le format et la validitée globale des charactéres  */
+
+      this.displayDOMValidator(
+        inputField,
+        "none"
+      ); /* Enleve le style. Invisible a l'oeil. Cela permet d'enlever l'alerte lorsque il n'y a pas de problemes */
+
+      /* Si 'email' ne contient pas un charactere dangeureux et qu'il respecte le format "Email" */
+      if (!regExChecker.test(email) && emailRegexChecker.test(email)) {
+        /* Appelle cette fonction qui affichera une border verte autour du champ, signifiant a l'utilisateur que tout vas bien */
+        this.displayDOMValidator(inputField, "valid");
+      } else if (
+        /* Si 'email' contient un charactere dangeureux et qu'il ne respecte pas le format "Email" apres 7 characteres entré */
+        (regExChecker.test(email) && !emailRegexChecker.test(email)) ||
+        email.length > 7
+      ) {
+        /* Appelle cette fonction qui affichera une border rouge autour du champ, signifiant a l'utilisateur qu'il y a un probleme */
+        this.displayDOMValidator(inputField, "invalid");
+      }
+    },
+
+    /*. checkPassword : Fonctionne comme la fonction 'checkEmail'. Verifie uniquement la presence de charactere dangeureux et la longueur 
+    Declare 'password' qui est la Data 'inputForm.password'. Le RegEx 'regExChecker' qui sert toujours a verifier la presence de cvharactere dangeureux.
+    -Si 'password' ne contient pas de charactere dangeureux, et qu'il y au moins 7 charactere, appel la fonction 'displayDOMValidator' en passant
+    l''ID' du champ concerné, ainsi que le String 'valid'.
+    - Si 'password' contient un charactere dnageureux OU fait moins de 7 characteres, , appel la fonction 'displayDOMValidator' en passant
+    l''ID' du champ concerné, ainsi que le String 'invalid'.
+    */
+    checkPassword(inputField) {
+      let password = this.inputForm.password; /* Data 'password' */
+      const regExChecker = /[&<>\\`"{}]/; /* RegEx qui permet de detecter les characteres dangeureux. Previent les injections de codes */
+      /* Si le test() avec le 'RegExChecker' est negatif, et qu'il y a plus de 6 charactere */
+      if (!regExChecker.test(password) && password.length > 5) {
+        this.displayDOMValidator(
+          inputField,
+          "valid"
+        ); /* Appelle cette fonction qui affichera une border verte autour du champ, signifiant a l'utilisateur que tout vas bien */
+        /* Sinon */
+      } else if (regExChecker.test(password) || password.length < 7) {
+        this.displayDOMValidator(
+          inputField,
+          "invalid"
+        ); /* Appelle cette fonction qui affichera une border rouge autour du champ, signifiant a l'utilisateur qu'il y a un probleme */
+      }
+    },
+
+    /*. checkNickname : Fonctionne de la meme façon que la methode ci-dessus, mais avec lme 'nickname' */
+    checkNickname(inputField) {
+      let nickname = this.inputForm.nickname; /* Data 'nickname */
+      const regExChecker = /[&<>\\`"{}]/; /* RegEx Checker */
+      /* Si tout va bien */
+      if (!regExChecker.test(nickname) && nickname.length > 1) {
+        this.displayDOMValidator(inputField, "valid");
+        /* Sinon */
+      } else if (regExChecker.test(nickname) || nickname.length <2) {
+        this.displayDOMValidator(inputField, "invalid");
+      }
+    },
+
+    /*. displayDOMValidator : Cette methode est appelé par d'autres methodes afin d'jouter un contour de couleur, pour donner des indications visuelles a l'utilisateur.
+Elle accepte deux String en parametre. le parametre 'field' est l"ID" HTML du l'input concerné. Le parametre 'status' est une String. 
+-Si 'Case' cette string est 'valid', alors la methode va chqnger la border-color de l'input de la couleur primaire de l'application.
+-Si 'Case' cette string est 'invalid', alors la methode va changer la border-color de l'input en rouge.
+-Par defaut, defini la border-color sur 'Unset'
+
+@params
+  << field = String 
+  << status = String  
+*/
+    displayDOMValidator(field, status) {
+      /* Declare dans une variable l'element DOM 'champ' */
+      const element = document.getElementById(field);
+      /* Switch qui va se baser sur le parametre 'field' */
+      switch (status) {
+        case "valid":
+          element.style.borderColor = "#00adb5";
+          break;
+        case "invalid":
+          element.style.borderColor = "red";
+          break;
+        default:
+          element.style.borderColor = "unset";
+      }
+    },
+
+    /*. login : Cette methode permet a l'utilisateur de se connecter a l'application via un appel a l'API (POST) avec l'email et le MdP renseigné (Promise)
+    - Elle recupere les Datas 'inputForm.email' et 'inputForm.password', créer un nouvel objet 'inputDatas' avec.
+    - Appelle la fonction checkInputDatas en passant l'objet créé precedemment en parametre.
+    - Puis fait un appel a l'API en passant l'objet (toujours lui) dans le body de la requete
+    - Puis 'Then' emet un Event grace a "$emit" pour communiquer a l'application que l'utilisateur est bien connecté + les données de l'utilisateur qui s'est connecté
+    - Sinon 'Catch' affiche l'erreur dans la console */
     login() {
+      /* Creation d'un nouvel objet avec les Datas necessaires */
       let inputDatas = {
         email: this.inputForm.email,
         password: this.inputForm.password,
       };
-
-      this.checkInputDatas(inputDatas)
-
-
-
+      /* Appel une methode pour checker si les données sont conforme, et afficher une alerte si il y a un probleme */
+      this.checkInputDatas(inputDatas);
+      /*  Appel a l'API en passant l'objet 'inputDatas' */
       this.axios
         .post("http://localhost:3000/api/user/login", inputDatas)
         .then((res) => {
+          /* Si tout ce passe bien, envoit un event a App.Vue, avec les données du 'User' connecté que la BDD a renvoyé */
           this.$emit("signed", res.data);
         })
         .catch((err) => {
-          console.log(err)
-});
+          console.log(err);
+        });
     },
   },
 };

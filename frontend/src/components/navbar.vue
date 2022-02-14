@@ -1,6 +1,10 @@
 <template>
+<!-- * - COMPOSANT : NavBar -->
+<!-- NAVBAR BEGIN -->
   <nav id="navbar" class="navbar">
+    <!-- Partie de gauche -->
     <div class="navbar__left">
+      <!-- Logo entreprise = Lien vers Acuueil -->
       <router-link to="/home" class="contained">
         <img
           class="main-logo"
