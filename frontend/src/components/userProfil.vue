@@ -160,7 +160,7 @@ export default {
     @param
       << id = Number
     $emit 
-      ^^ alertData = Object { "type": STRING, 'content', STRING, 'header' STRING}
+      -- alertData = Object { "type": STRING, 'content', STRING, 'header' STRING}
     @return
       >> NO RETURN*/
     updateProfil(id) {
@@ -192,13 +192,9 @@ export default {
     @return
       >> NO RETURN */
     deleteProfil(id) {
-      if (confirm("Etes-vous sûr ?! \nToutes suppression est definitive !")) {
+
         /* Check si les IDs concordent */
-        if (this.currentUserId == id) {
-          /* Si oui : Efface le localStorage */
-          localStorage.clear();
-            /* Redirection */ this.$router.go("/home");
-        }
+
         /* Appel API */
         this.axios
           .delete(`http://localhost:3000/api/user/${id}`)
@@ -206,7 +202,7 @@ export default {
             /* Redirection */ this.$router.go("/home");
           })
           .catch((err) => console.log(err));
-      }
+      
     },
   },
 };

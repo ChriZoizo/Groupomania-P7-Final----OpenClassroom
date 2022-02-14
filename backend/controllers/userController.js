@@ -141,16 +141,11 @@ exports.updateUserProfil = (req, res) => {
 /* DELETE USER (DELETE)
  */
 exports.deleteUser = (req, res) => {
-  User.findByPk(req.params.id)
-    .then(user => {
-      user.destroy()
-    })
-    .then(user => {
-      res.status(200).json({ message: user })
-    })
-    .catch(err => {
-      res.json({ error: err })
-    })
+  User.destroy({ where: { id: req.params.id } })
+    .then(result => res.status(200).json({ result }))
+    .catch(err =>
+      res.json({ error: 'Problem with users DELETE request' + err })
+    )
 }
 
 /* --------------------------------- Fonctions Supplémentaires ------------------------------------*/

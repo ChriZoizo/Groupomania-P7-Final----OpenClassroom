@@ -104,13 +104,14 @@ export default {
     },
 
     deleteUser(id) {
+      console.log(id)
       if (
         confirm(
           "Etes-vous sûr(e) d'effacer cet utilisateur ? \nToute suppression est definitive !"
         )
       ) {
         this.axios
-          .delete(`http://localhost:3000/api/user/${id}`)
+          .delete(`http://localhost:3000/api/user/:${id}`)
           .then(() => history.go(0))
           .catch((err) => console.log(err));
       }

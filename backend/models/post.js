@@ -13,10 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, {
         foreignKey: {
           allowNull: false
-        }
+        },
+        onDelete: 'CASCADE',
       })
-      this.hasMany(models.LikePost)
-      this.hasMany(models.Comment)
+      this.hasMany(models.LikePost, { onDelete: 'cascade' })
+      this.hasMany(models.Comment, { onDelete: 'cascade' })
     }
   };
   Post.init({
