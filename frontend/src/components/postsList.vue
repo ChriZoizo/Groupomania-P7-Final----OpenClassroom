@@ -122,7 +122,7 @@
               </div>
             </div>
           </div>
-              <div
+              <div id="appendice"
                 class="post-card__comments-section__comments appendice"
               >
                Pour commenter, cliquez ici..
@@ -344,6 +344,13 @@ export default {
   margin: 40px 0;
 }
 
+/* Petite zone noire visible lorsque il y a plusq de trois commentaires au Post */
+      #appendice {
+        background-color: $primary-color;
+        color: white;
+        background-color: $primary-color !important;
+      }
+
 /* Section Post */
 .post {
   margin: 35px 0;
@@ -501,11 +508,7 @@ export default {
           }
         }
       }
-/* Petite zone noire visible lorsque il y a plusq de trois commentaires au Post */
-      & .appendice {
-        background-color: $primary-color;
-        color: white;
-      }
+
     }
 /* Modificateur pour changer la couleur du fond */
     &--background {
