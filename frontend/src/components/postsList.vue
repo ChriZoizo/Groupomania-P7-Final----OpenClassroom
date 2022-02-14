@@ -122,15 +122,15 @@
               </div>
             </div>
           </div>
-        </router-link>
-
-        <!-- CARD APPEND Comments -->
-        <div class="post-card__comments-section">
               <div
                 class="post-card__comments-section__comments appendice"
               >
                Pour commenter, cliquez ici..
               </div>
+        </router-link>
+
+        <!-- CARD APPEND Comments -->
+        <div class="post-card__comments-section">
           <!-- Liste des commentaires de la publications -->
           <div
             v-if="post.Comments.length != 0"
