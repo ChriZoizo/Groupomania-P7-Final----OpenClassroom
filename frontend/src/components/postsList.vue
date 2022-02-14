@@ -125,23 +125,12 @@
         </router-link>
 
         <!-- CARD APPEND Comments -->
-        <!-- Ecrire un commentaire -->
         <div class="post-card__comments-section">
-          <form
-            @submit.prevent="addComment(post.id)"
-            class="post-card__comments-section__write-form"
-            id="form-comment-postList"
-          >
-            <textarea
-              name="comment"
-              id="comment"
-              v-model="comments[post.id]"
-              placeholder="Commentez cette publication..."
-              maxlength="200"
-              required
-            ></textarea>
-            <input type="submit" value="Publier votre commentaire" />
-          </form>
+              <div
+                class="post-card__comments-section__comments appendice"
+              >
+               Pour commenter, cliquez ici..
+              </div>
           <!-- Liste des commentaires de la publications -->
           <div
             v-if="post.Comments.length != 0"
@@ -170,12 +159,6 @@
               class="post-card--background remove-decoration"
               :to="'/post/' + post.id"
             >
-              <div
-                class="post-card__comments-section__comments appendice"
-                v-if="post.Comments.length > 3"
-              >
-                ...
-              </div>
             </router-link>
           </div>
         </div>
@@ -241,7 +224,6 @@ export default {
 
     createReactionSlot() {
       for (const post of this.postsArray) {
-        console.log(post);
         let reaction = post.LikePosts.find(
           (react) => react.UserId === this.currentUserId
         );

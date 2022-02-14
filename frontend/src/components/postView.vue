@@ -471,8 +471,6 @@ h1 {
   align-items: center;
 }
 
-.post-view-image-container {
-}
 
 .post-view-card {
   background-color: lighten($color: $primary-color, $amount: 80);
