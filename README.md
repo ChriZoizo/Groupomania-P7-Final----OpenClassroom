@@ -3,6 +3,8 @@
 
 ps: Commentaires de code et annotations toujours en cours + quelques optimisations probables
 
+TRADUCTION ANGLAISE !
+
 - ## Preface
 Ceci est le repository du projet 7 de ma formation de Developpeur Web chez OpenClassrooms.
 
